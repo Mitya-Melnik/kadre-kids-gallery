@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 const CTA = () => {
   return (
-    <section className="py-20 bg-gradient-primary relative overflow-hidden">
+    <section id="cta" className="py-20 bg-gradient-primary relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern opacity-20"></div>
       
       <div className="container mx-auto px-4 relative z-10">

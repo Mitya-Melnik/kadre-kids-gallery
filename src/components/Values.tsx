@@ -1,4 +1,4 @@
-import { Star, Shield, Heart, Smartphone, Camera } from "lucide-react";
+import { Star, Shield, Heart, Smartphone, Camera, Users } from "lucide-react";
 
 const Values = () => {
   const values = [
@@ -26,11 +26,16 @@ const Values = () => {
       icon: Camera,
       title: "Атмосфера",
       description: "Тематический декор и проф-свет делают съёмку праздником"
+    },
+    {
+      icon: Users,
+      title: "Профессионализм",
+      description: "Опытная команда с медицинскими книжками и 15-летним стажем работы с детьми"
     }
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section id="values" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
