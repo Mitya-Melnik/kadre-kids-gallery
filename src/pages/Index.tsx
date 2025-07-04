@@ -8,6 +8,7 @@ import Process from "@/components/Process";
 import Pricing from "@/components/Pricing";
 import CTA from "@/components/CTA";
 import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
       <Pricing />
       <CTA />
       <FAQ />
+      <Footer />
     </div>
   );
 };

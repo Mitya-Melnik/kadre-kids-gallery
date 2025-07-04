@@ -62,11 +62,64 @@ const Hero = () => {
             </div>
           </div>
           
+          {/* Ключевые ценности */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">🔒</div>
+              <div className="text-sm font-medium text-foreground">Доступ по паролю</div>
+              <div className="text-xs text-muted-foreground">Фото только для родителей</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">💰</div>
+              <div className="text-sm font-medium text-foreground">Без предоплаты</div>
+              <div className="text-xs text-muted-foreground">Платите только за понравившиеся снимки</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">🤖</div>
+              <div className="text-sm font-medium text-foreground">Поддержка 24/7</div>
+              <div className="text-xs text-muted-foreground">Через Telegram-бот</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">🎭</div>
+              <div className="text-sm font-medium text-foreground">Игра вместо позирования</div>
+              <div className="text-xs text-muted-foreground">Ребёнок расслаблен и в кадре настоящий</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">🌿</div>
+              <div className="text-sm font-medium text-foreground">Атмосферные декорации</div>
+              <div className="text-xs text-muted-foreground">Уют и атмосфера</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+              <div className="text-2xl mb-2">💳</div>
+              <div className="text-sm font-medium text-foreground">Оплата без хлопот</div>
+              <div className="text-xs text-muted-foreground">Карты, СБП, QR, чек на e-mail</div>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="xl">
+            <Button 
+              variant="default" 
+              size="xl"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={() => {
+                const element = document.querySelector("#cta");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
               Получить презентацию
             </Button>
-            <Button variant="outline" size="xl">
+            <Button 
+              variant="outline" 
+              size="xl"
+              onClick={() => {
+                const element = document.querySelector("#gallery");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
               Наши работы
             </Button>
           </div>
@@ -74,11 +127,6 @@ const Hero = () => {
           <p className="text-muted-foreground mt-8 italic">
             "Ценим моменты и создаем их для вас"
           </p>
-          
-          <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground mb-2">Руководитель Дмитрий</p>
-            <p className="text-primary font-semibold text-lg">+7 911 706 1782</p>
-          </div>
         </div>
       </div>
     </section>
