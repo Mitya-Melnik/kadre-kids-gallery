@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { useCountUp } from "@/hooks/useCountUp";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Hero = () => {
-  const yearsCount = useCountUp({ end: 15, duration: 2000, delay: 500 });
-  const sessionsCount = useCountUp({ end: 2100, duration: 2500, delay: 700 });
-  const photosCount = useCountUp({ end: 168, duration: 2000, delay: 900 });
-  const institutionsCount = useCountUp({ end: 75, duration: 1800, delay: 1100 });
+  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation(0.3);
+  const { ref: valuesRef, isVisible: valuesVisible } = useScrollAnimation(0.2);
+  
+  const yearsCount = useCountUp({ end: 15, duration: 2000, delay: 500, trigger: statsVisible });
+  const sessionsCount = useCountUp({ end: 2100, duration: 2500, delay: 700, trigger: statsVisible });
+  const photosCount = useCountUp({ end: 168, duration: 2000, delay: 900, trigger: statsVisible });
+  const institutionsCount = useCountUp({ end: 75, duration: 1800, delay: 1100, trigger: statsVisible });
 
   const formatNumber = (num: number, suffix: string) => {
     if (suffix === "k+") {
@@ -35,27 +39,27 @@ const Hero = () => {
             Яркие, живые кадры в тематических декорациях через игру и знакомство.
           </p>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto">
+          <div ref={statsRef} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
                 {formatNumber(yearsCount.count, "")}
               </div>
               <div className="text-sm text-muted-foreground">лет опыта</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
                 {formatNumber(sessionsCount.count, "+")}
               </div>
               <div className="text-sm text-muted-foreground">фотосессий</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
                 {formatNumber(photosCount.count, "k+")}
               </div>
               <div className="text-sm text-muted-foreground">фотографий куплено</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
                 {formatNumber(institutionsCount.count, "+")}
               </div>
               <div className="text-sm text-muted-foreground">учреждений оформлено</div>
@@ -63,7 +67,7 @@ const Hero = () => {
           </div>
           
           {/* Ключевые ценности */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
+          <div ref={valuesRef} className={`grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto transition-all duration-700 delay-200 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
               <div className="text-2xl mb-2">🔒</div>
               <div className="text-sm font-medium text-foreground">Доступ по паролю</div>

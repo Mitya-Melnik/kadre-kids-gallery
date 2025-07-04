@@ -68,7 +68,7 @@ const TopBar = () => {
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium text-lg"
             >
               <Phone className="w-5 h-5" />
-              <span>+7 911 706 1782</span>
+              <span className="hidden sm:inline">+7 911 706 1782</span>
             </a>
           </div>
           

@@ -4,13 +4,16 @@ interface UseCountUpProps {
   end: number;
   duration?: number;
   delay?: number;
+  trigger?: boolean;
 }
 
-export const useCountUp = ({ end, duration = 2000, delay = 0 }: UseCountUpProps) => {
+export const useCountUp = ({ end, duration = 2000, delay = 0, trigger = true }: UseCountUpProps) => {
   const [count, setCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
+    if (!trigger) return;
+    
     const timer = setTimeout(() => {
       setIsAnimating(true);
       const startTime = Date.now();
@@ -37,7 +40,7 @@ export const useCountUp = ({ end, duration = 2000, delay = 0 }: UseCountUpProps)
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [end, duration, delay]);
+  }, [end, duration, delay, trigger]);
 
   return { count, isAnimating };
 };

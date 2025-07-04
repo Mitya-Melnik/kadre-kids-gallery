@@ -1,4 +1,9 @@
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
 const Process = () => {
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
+  const { ref: bottomRef, isVisible: bottomVisible } = useScrollAnimation(0.2);
   const steps = [
     {
       number: "1",
@@ -45,7 +50,7 @@ const Process = () => {
   return (
     <section id="process" className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Как проходит фотосессия
           </h2>
@@ -55,11 +60,15 @@ const Process = () => {
         </div>
         
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
               <div
                 key={index}
-                className="relative"
+                className={`relative transition-all duration-700 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ 
+                  transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
+                  transitionDuration: '700ms'
+                }}
               >
                 {/* Connection line */}
                 {index < steps.length - 1 && (
@@ -82,7 +91,7 @@ const Process = () => {
           </div>
         </div>
         
-        <div className="text-center mt-16">
+        <div ref={bottomRef} className={`text-center mt-16 transition-all duration-700 ${bottomVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <p className="text-lg text-primary font-semibold">
             Приедем в сад и привезем образцы на каждую группу
           </p>
