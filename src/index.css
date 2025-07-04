@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Современная минималистичная цветовая схема для "Дети в кадре" */
+/* Теплая цветовая схема для мам - "Дети в кадре" */
 
 @layer base {
   :root {
@@ -15,38 +15,38 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 15% 15%;
 
-    --primary: 142 76% 36%;
+    --primary: 340 65% 52%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 142 50% 60%;
+    --primary-glow: 340 65% 72%;
 
-    --secondary: 210 40% 98%;
+    --secondary: 20 100% 97%;
     --secondary-foreground: 222 15% 15%;
 
-    --muted: 210 40% 98%;
+    --muted: 20 100% 97%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 98%;
+    --accent: 320 30% 95%;
     --accent-foreground: 222 15% 15%;
-    --accent-soft: 210 40% 95%;
+    --accent-soft: 320 30% 92%;
 
-    --success: 142 76% 36%;
+    --success: 340 65% 52%;
     --success-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 142 76% 36%;
+    --border: 320 20% 88%;
+    --input: 320 20% 88%;
+    --ring: 340 65% 52%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 50% 60%));
-    --gradient-accent: linear-gradient(135deg, hsl(210 40% 98%), hsl(214 32% 91%));
-    --gradient-hero: linear-gradient(135deg, hsl(142 76% 36% / 0.03), hsl(210 40% 98%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-primary: linear-gradient(135deg, hsl(340 65% 52%), hsl(340 65% 72%));
+    --gradient-accent: linear-gradient(135deg, hsl(20 100% 97%), hsl(320 30% 95%));
+    --gradient-hero: linear-gradient(135deg, hsl(340 65% 52% / 0.05), hsl(20 100% 97%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(320 30% 95%));
 
     --shadow-soft: 0 1px 3px hsl(0 0% 0% / 0.1), 0 1px 2px hsl(0 0% 0% / 0.06);
-    --shadow-glow: 0 0 20px hsl(142 76% 36% / 0.15);
-    --shadow-accent: 0 4px 20px hsl(0 0% 0% / 0.05);
+    --shadow-glow: 0 0 20px hsl(340 65% 52% / 0.15);
+    --shadow-accent: 0 4px 20px hsl(340 65% 52% / 0.08);
 
     --radius: 0.75rem;
 
