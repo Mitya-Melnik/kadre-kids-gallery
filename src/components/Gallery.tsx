@@ -63,12 +63,9 @@ const Gallery = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-white text-xl font-semibold mb-2">
+                        <h3 className="text-white text-xl font-semibold">
                           {gallery.title}
                         </h3>
-                        <Button variant="outline" size="sm" className="text-white border-white hover:bg-white hover:text-black">
-                          Посмотреть все фото
-                        </Button>
                       </div>
                     </div>
                   </div>
