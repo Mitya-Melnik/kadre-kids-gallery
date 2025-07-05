@@ -95,7 +95,7 @@ const TopBar = () => {
                 </Button>
               </SheetTrigger>
               
-              <SheetContent side="right" className="w-80">
+              <SheetContent side="right" className="w-80 animate-slide-in-right">
                 <div className="flex flex-col gap-6 mt-8">
                   <h2 className="text-2xl font-bold text-foreground mb-4">Меню</h2>
                   

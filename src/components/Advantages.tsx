@@ -54,7 +54,7 @@ const Advantages = () => {
           {advantages.map((advantage, index) => (
             <div
               key={index}
-              className={`group hover:bg-gradient-card p-8 rounded-xl transition-all duration-300 hover:shadow-soft hover:-translate-y-1 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group hover-lift hover:bg-gradient-card p-8 rounded-xl transition-all duration-300 hover:shadow-glow hover:-translate-y-2 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ 
                 transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
                 transitionDuration: '700ms'

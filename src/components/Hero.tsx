@@ -112,7 +112,7 @@ const Hero = () => {
                 }
               }}
             >
-              Получить презентацию
+              Хочу подробности
             </Button>
             <Button 
               variant="outline" 

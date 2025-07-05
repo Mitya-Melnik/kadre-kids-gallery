@@ -17,7 +17,7 @@ const CTA = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Button variant="accent" size="xl" className="shadow-accent">
-              Получить презентацию
+              Хочу подробности
             </Button>
             <Button variant="outline" size="xl" className="text-white border-white hover:bg-white hover:text-primary">
               Связаться с нами
