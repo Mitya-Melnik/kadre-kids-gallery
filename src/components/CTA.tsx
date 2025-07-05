@@ -51,7 +51,7 @@ const CTA = () => {
           <div className="mt-12 text-center">
             <p className="text-white/80 mb-2">Готовы обсудить детали?</p>
             <p className="text-white text-xl font-semibold">
-              Дмитрий: +7 911 706 1782
+              Дмитрий: +7 995 600 2111
             </p>
           </div>
         </div>

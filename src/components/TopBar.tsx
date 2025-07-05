@@ -64,11 +64,11 @@ const TopBar = () => {
           {/* Центр - телефон */}
           <div className="flex-1 flex justify-center">
             <a 
-              href="tel:+79117061782" 
+              href="tel:+79956002111" 
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium text-lg"
             >
               <Phone className="w-5 h-5" />
-              <span className="hidden sm:inline">+7 911 706 1782</span>
+              <span className="hidden sm:inline">+7 995 600 2111</span>
             </a>
           </div>
           

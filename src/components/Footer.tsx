@@ -34,11 +34,11 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Контакты</h3>
             <div className="space-y-3">
               <a 
-                href="tel:+79117061782" 
+                href="tel:+79956002111" 
                 className="flex items-center gap-3 text-background/80 hover:text-background transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                +7 911 706 1782
+                +7 995 600 2111
               </a>
               <a 
                 href="mailto:info@detivkadre.ru" 
