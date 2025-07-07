@@ -1,9 +1,12 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useState } from "react";
 
 const Process = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
-  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
+  const { ref: carouselRef, isVisible: carouselVisible } = useScrollAnimation(0.1);
   const { ref: bottomRef, isVisible: bottomVisible } = useScrollAnimation(0.2);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const steps = [
     {
       number: "1",
@@ -60,34 +63,66 @@ const Process = () => {
         </div>
         
         <div className="max-w-6xl mx-auto">
-          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((step, index) => (
-              <div
-                key={index}
-                className={`relative transition-all duration-700 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                style={{ 
-                  transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
-                  transitionDuration: '700ms'
-                }}
-              >
-                {/* Connection line */}
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-primary z-0 transform translate-x-4"></div>
-                )}
-                
-                <div className="relative z-10 bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 text-center group">
-                  <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300">
-                    {step.number}
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div ref={carouselRef} className={`transition-all duration-700 ${carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <Carousel 
+              opts={{
+                align: "center",
+                loop: true,
+                slidesToScroll: 1
+              }}
+              className="w-full"
+              setApi={(api) => {
+                if (api) {
+                  api.on("select", () => {
+                    setCurrentSlide(api.selectedScrollSnap());
+                  });
+                }
+              }}
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {steps.map((step, index) => (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-full md:basis-1/3">
+                    <div className="relative h-full">
+                      <div className="bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 text-center group h-full cursor-pointer">
+                        <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300">
+                          {step.number}
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
+                          Шаг {step.number}: {step.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              
+              <CarouselPrevious className="hidden md:flex -left-12 h-10 w-10 border-2 border-primary/20 bg-background/80 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/40 transition-all duration-200" />
+              <CarouselNext className="hidden md:flex -right-12 h-10 w-10 border-2 border-primary/20 bg-background/80 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/40 transition-all duration-200" />
+              
+              {/* Mobile navigation arrows */}
+              <CarouselPrevious className="md:hidden left-2 h-8 w-8 border border-primary/30 bg-background/90 backdrop-blur-sm" />
+              <CarouselNext className="md:hidden right-2 h-8 w-8 border border-primary/30 bg-background/90 backdrop-blur-sm" />
+            </Carousel>
+            
+            {/* Dots indicators */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {steps.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    Math.floor(currentSlide) === index
+                      ? 'bg-primary scale-125'
+                      : 'bg-primary/30 hover:bg-primary/50'
+                  }`}
+                  onClick={() => {
+                    // This would require carousel API to scroll to specific slide
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
         
