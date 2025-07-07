@@ -111,32 +111,27 @@ const Pricing = () => {
                       </p>
                     </div>
                   )}
-                  <div className="mt-6 text-center">
-                    <Button 
-                      variant="default" 
-                      size="lg"
-                      className="transition-all duration-200 ease-in-out hover:scale-[1.03] hover:brightness-95 active:scale-97"
-                    >
-                      Выбрать пакет
-                    </Button>
-                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
 
-        {/* Mobile версия - горизонтальный свайпер */}
-        <div className="md:hidden">
-          <Carousel className="w-full max-w-sm mx-auto">
-            <CarouselContent>
-              {packages.map((pkg) => (
-                <CarouselItem key={pkg.id}>
-                  <div className={`border border-border rounded-xl p-6 bg-gradient-card ${
-                    pkg.popular ? 'ring-2 ring-primary' : ''
-                  }`}>
-                    <div className="text-center mb-4">
-                      <div className="flex items-center justify-center gap-2 mb-2">
+        {/* Mobile версия - вертикальный аккордеон */}
+        <div className="md:hidden max-w-md mx-auto">
+          <Accordion type="single" collapsible className="space-y-4">
+            {packages.map((pkg) => (
+              <AccordionItem 
+                key={pkg.id} 
+                value={pkg.id} 
+                className={`border border-border rounded-xl overflow-hidden ${
+                  pkg.popular ? 'ring-2 ring-primary' : ''
+                }`}
+              >
+                <AccordionTrigger className="hover:no-underline px-4 py-4 bg-gradient-card hover:bg-gradient-card/80 transition-all duration-200 ease-in-out hover:scale-[1.01] [&[data-state=open]>div>span]:rotate-90">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="text-left">
+                      <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-lg font-semibold text-foreground">
                           {pkg.title}
                         </h3>
@@ -146,50 +141,47 @@ const Pricing = () => {
                           </span>
                         )}
                       </div>
-                      <div className="text-2xl font-bold text-primary mb-2">
+                      <div className="text-xl font-bold text-primary">
                         {pkg.price}
                       </div>
                       <p className="text-sm text-muted-foreground">
                         {pkg.description}
                       </p>
                       {pkg.note && (
-                        <p className="text-xs text-muted-foreground mt-2 italic">
+                        <p className="text-xs text-muted-foreground mt-1 italic">
                           {pkg.note}
                         </p>
                       )}
                     </div>
-                    
-                    {pkg.items && (
-                      <div className="space-y-2 mb-4">
-                        {pkg.items.slice(0, 2).map((item, index) => (
-                          <div key={index} className="bg-background p-3 rounded-lg border border-border">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-foreground">{item.size}</span>
-                              <span className="text-sm font-bold text-primary">{item.price}</span>
-                            </div>
-                          </div>
-                        ))}
-                        {pkg.items.length > 2 && (
-                          <p className="text-xs text-muted-foreground text-center">
-                            +{pkg.items.length - 2} размеров
-                          </p>
-                        )}
-                      </div>
-                    )}
-                    
-                    <Button 
-                      variant="default" 
-                      className="w-full transition-all duration-200 ease-in-out hover:scale-[1.03] hover:brightness-95 active:scale-97"
-                    >
-                      Выбрать пакет
-                    </Button>
+                    <span className="text-primary text-lg transition-transform duration-300 ease-in-out">
+                      ▶
+                    </span>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-4">
+                  {pkg.items ? (
+                    <div className="space-y-3 mt-4">
+                      {pkg.items.map((item, index) => (
+                        <div key={index} className="bg-background p-3 rounded-lg border border-border">
+                          <div className="flex justify-between items-center mb-1">
+                            <h4 className="font-medium text-foreground">{item.size}</h4>
+                            <span className="text-lg font-bold text-primary">{item.price}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{item.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mt-4">
+                      <p className="text-muted-foreground">
+                        Получите все фотографии с фотосессии в цифровом формате
+                      </p>
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
         
         <div className="mt-16 bg-accent-soft p-8 rounded-xl max-w-4xl mx-auto text-center">
