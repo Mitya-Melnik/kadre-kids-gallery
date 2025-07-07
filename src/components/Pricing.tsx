@@ -1,50 +1,41 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const Pricing = () => {
-  const prices = [
+  const packages = [
     {
-      title: "Электронные фото",
+      id: "online",
+      title: "Файлы онлайн",
       price: "399 ₽",
+      description: "Цифровые фотографии в высоком качестве",
       note: "При заказе от 1890₽ — в подарок!",
       popular: true
     },
     {
-      title: "Фото 10×15",
-      price: "410 ₽",
-      note: "Классический размер для альбома"
+      id: "print",
+      title: "Печать фото",
+      price: "От 410 ₽",
+      description: "Классическая печать разных форматов",
+      items: [
+        { size: "10×15", price: "410 ₽", note: "Классический размер для альбома" },
+        { size: "15×21", price: "479 ₽", note: "Увеличенный формат" },
+        { size: "21×30", price: "600 ₽", note: "Для рамки на стол" },
+        { size: "30×45", price: "900 ₽", note: "Большой формат для стены" }
+      ]
     },
     {
-      title: "Фото 15×21", 
-      price: "479 ₽",
-      note: "Увеличенный формат"
-    },
-    {
-      title: "Фото 21×30",
-      price: "600 ₽", 
-      note: "Для рамки на стол"
-    },
-    {
-      title: "Фото 30×45",
-      price: "900 ₽",
-      note: "Большой формат для стены"
-    },
-    {
-      title: "Магнит 7×10",
-      price: "500 ₽",
-      note: "На холодильник"
-    },
-    {
-      title: "Магнит 10×15",
-      price: "550 ₽", 
-      note: "Увеличенный магнит"
-    },
-    {
-      title: "Холст 20×30",
-      price: "2900 ₽",
-      note: "Художественная печать"
-    },
-    {
-      title: "Холст 30×45",
-      price: "4500 ₽",
-      note: "Большой художественный холст"
+      id: "gifts",
+      title: "Фото-подарки",
+      price: "От 500 ₽",
+      description: "Магниты и художественная печать на холсте",
+      items: [
+        { size: "Магнит 7×10", price: "500 ₽", note: "На холодильник" },
+        { size: "Магнит 10×15", price: "550 ₽", note: "Увеличенный магнит" },
+        { size: "Холст 20×30", price: "2900 ₽", note: "Художественная печать" },
+        { size: "Холст 30×45", price: "4500 ₽", note: "Большой художественный холст" }
+      ]
     }
   ];
 
@@ -60,35 +51,145 @@ const Pricing = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {prices.map((item, index) => (
-            <div
-              key={index}
-              className={`relative bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1 ${
-                item.popular ? 'ring-2 ring-primary' : ''
-              }`}
-            >
-              {item.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-accent text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Популярное
-                  </span>
-                </div>
-              )}
-              
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {item.title}
-                </h3>
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {item.price}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {item.note}
-                </p>
-              </div>
-            </div>
-          ))}
+        {/* Desktop версия - вертикальный аккордеон */}
+        <div className="hidden md:block max-w-4xl mx-auto">
+          <Accordion type="single" collapsible className="space-y-4">
+            {packages.map((pkg) => (
+              <AccordionItem 
+                key={pkg.id} 
+                value={pkg.id} 
+                className={`border border-border rounded-xl overflow-hidden ${
+                  pkg.popular ? 'ring-2 ring-primary' : ''
+                }`}
+              >
+                <AccordionTrigger className="hover:no-underline px-6 py-4 bg-gradient-card hover:bg-gradient-card/80 transition-all duration-200 ease-in-out hover:scale-[1.01]">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="text-left">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-xl font-semibold text-foreground">
+                          {pkg.title}
+                        </h3>
+                        {pkg.popular && (
+                          <span className="bg-gradient-accent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Популярное
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {pkg.description}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-primary">
+                        {pkg.price}
+                      </div>
+                      {pkg.note && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {pkg.note}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  {pkg.items ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      {pkg.items.map((item, index) => (
+                        <div key={index} className="bg-background p-4 rounded-lg border border-border">
+                          <div className="flex justify-between items-center mb-2">
+                            <h4 className="font-medium text-foreground">{item.size}</h4>
+                            <span className="text-lg font-bold text-primary">{item.price}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{item.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center mt-4">
+                      <p className="text-muted-foreground mb-4">
+                        Получите все фотографии с фотосессии в цифровом формате
+                      </p>
+                    </div>
+                  )}
+                  <div className="mt-6 text-center">
+                    <Button 
+                      variant="default" 
+                      size="lg"
+                      className="transition-all duration-200 ease-in-out hover:scale-[1.03] hover:brightness-95 active:scale-97"
+                    >
+                      Выбрать пакет
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
+        {/* Mobile версия - горизонтальный свайпер */}
+        <div className="md:hidden">
+          <Carousel className="w-full max-w-sm mx-auto">
+            <CarouselContent>
+              {packages.map((pkg) => (
+                <CarouselItem key={pkg.id}>
+                  <div className={`border border-border rounded-xl p-6 bg-gradient-card ${
+                    pkg.popular ? 'ring-2 ring-primary' : ''
+                  }`}>
+                    <div className="text-center mb-4">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <h3 className="text-lg font-semibold text-foreground">
+                          {pkg.title}
+                        </h3>
+                        {pkg.popular && (
+                          <span className="bg-gradient-accent text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            Популярное
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-2xl font-bold text-primary mb-2">
+                        {pkg.price}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {pkg.description}
+                      </p>
+                      {pkg.note && (
+                        <p className="text-xs text-muted-foreground mt-2 italic">
+                          {pkg.note}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {pkg.items && (
+                      <div className="space-y-2 mb-4">
+                        {pkg.items.slice(0, 2).map((item, index) => (
+                          <div key={index} className="bg-background p-3 rounded-lg border border-border">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-foreground">{item.size}</span>
+                              <span className="text-sm font-bold text-primary">{item.price}</span>
+                            </div>
+                          </div>
+                        ))}
+                        {pkg.items.length > 2 && (
+                          <p className="text-xs text-muted-foreground text-center">
+                            +{pkg.items.length - 2} размеров
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    
+                    <Button 
+                      variant="default" 
+                      className="w-full transition-all duration-200 ease-in-out hover:scale-[1.03] hover:brightness-95 active:scale-97"
+                    >
+                      Выбрать пакет
+                    </Button>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
         
         <div className="mt-16 bg-accent-soft p-8 rounded-xl max-w-4xl mx-auto text-center">

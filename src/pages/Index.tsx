@@ -1,7 +1,6 @@
 import TopBar from "@/components/TopBar";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import Values from "@/components/Values";
 import Gallery from "@/components/Gallery";
 import Advantages from "@/components/Advantages";
 import Process from "@/components/Process";
@@ -16,9 +15,8 @@ const Index = () => {
       <TopBar />
       <Navigation />
       <Hero />
-      <Values />
-      <Gallery />
       <Advantages />
+      <Gallery />
       <Process />
       <Pricing />
       <CTA />
