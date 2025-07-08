@@ -9,6 +9,9 @@ const Process = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slidesToShow = 2;
 
+  // Debug info
+  console.log('Process component render:', { titleVisible, contentVisible, currentSlide, activeStep });
+
   const steps = [
     {
       number: "1",
@@ -80,7 +83,7 @@ const Process = () => {
         
         {/* Desktop Slider */}
         <div className="hidden md:block max-w-5xl mx-auto">
-          <div ref={contentRef} className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div ref={contentRef} className="opacity-100 translate-y-0">{/* Temporary: removed animation for debug */}
             <div className="relative">
               {/* Slider container */}
               <div className="overflow-hidden">
@@ -93,7 +96,7 @@ const Process = () => {
                       key={index}
                       className="flex-none w-1/2 px-4"
                     >
-                      <div className="bg-background rounded-xl p-6 shadow-soft border border-border transition-all duration-300 ease hover:scale-[1.02] hover:shadow-glow cursor-pointer">
+                      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 transition-all duration-300 ease hover:scale-[1.02] hover:shadow-lg cursor-pointer">{/* Simplified classes for debug */}
                         <div className="flex flex-col items-center text-center">
                           {/* Step icon */}
                           <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-soft">
