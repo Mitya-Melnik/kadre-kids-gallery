@@ -29,14 +29,14 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Дети в{" "}
+            Студия "Дети в{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               кадре
-            </span>
+            </span>"
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Выездные фотосессии в детских садах Санкт-Петербурга. 
+            <span className="font-bold">Выездные фотосессии</span> в детских садах Санкт-Петербурга. 
             Яркие, живые кадры в тематических декорациях через игру и знакомство.
           </p>
           

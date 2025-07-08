@@ -28,7 +28,7 @@ const TopBar = () => {
     <div className="sticky top-0 z-50 bg-white border-b border-border py-3 shadow-soft">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Левая часть - соцсети */}
+          {/* Левая часть - соцсети и телефон */}
           <div className="flex items-center gap-4">
             <a 
               href="#" 
@@ -59,28 +59,47 @@ const TopBar = () => {
                 <path d="M12.785 16.241s.288-.032.436-.194c.136-.148.131-.427.131-.427s-.019-1.306.587-1.496c.597-.187 1.36.263 2.17.757.616.376 1.083.293 1.083.293l2.175-.03s1.139-.071.599-.965c-.044-.072-.31-.652-1.597-1.846-1.347-1.249-1.167-.1.456-1.655 1.005-1.649 1.483-2.139 1.35-2.486-.127-.331-.91-.244-.91-.244l-2.448.015s-.182-.024-.315.056-.218.183-.218.183-.41 1.09-.958 2.015c-1.156 1.952-1.617 2.056-1.805 1.934-.438-.284-.328-1.14-.328-1.748 0-1.902.288-2.696-.563-2.899-.282-.067-.49-.112-1.21-.119-.925-.009-1.708.003-2.15.22-.295.145-.523.467-.384.486.171.023.559.105.765.385.265.36.255 1.169.255 1.169s.151 2.24-.353 2.516c-.346.189-.822-.197-1.843-1.985-.522-.9-.917-1.896-.917-1.896s-.076-.186-.212-.286c-.164-.121-.394-.159-.394-.159l-2.324.015s-.35.01-.478.161c-.114.135-.009.413-.009.413s1.924 4.506 4.101 6.778c1.994 2.081 4.259 1.945 4.259 1.945z"/>
               </svg>
             </a>
+            
+            {/* Телефон для мобильных */}
+            <a 
+              href="tel:+79956002111" 
+              className="w-10 h-10 bg-foreground/5 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/10 transition-colors sm:hidden"
+              aria-label="Позвонить"
+            >
+              <Phone className="w-5 h-5" />
+            </a>
           </div>
 
-          {/* Центр - телефон */}
-          <div className="flex-1 flex justify-center">
+          {/* Центр - телефон (только для десктопа) */}
+          <div className="flex-1 justify-center hidden sm:flex">
             <a 
               href="tel:+79956002111" 
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium text-lg"
             >
               <Phone className="w-5 h-5" />
-              <span className="hidden sm:inline">+7 995 600 2111</span>
+              <span>+7 995 600 2111</span>
             </a>
           </div>
           
           {/* Правая часть - кнопка и меню */}
           <div className="flex items-center gap-4">
-            {/* Кнопка */}
+            {/* Кнопка для десктопа */}
             <Button 
               variant="default" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:inline-flex px-6 py-3 shadow-soft hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
               onClick={() => scrollToSection("#cta")}
             >
               Пригласить в сад
+            </Button>
+            
+            {/* Кнопка для мобильных */}
+            <Button 
+              variant="default" 
+              size="sm"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground sm:hidden px-4 py-2 shadow-soft hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
+              onClick={() => scrollToSection("#cta")}
+            >
+              Пригласить
             </Button>
             
             {/* Гамбургер меню */}
@@ -111,16 +130,6 @@ const TopBar = () => {
                     ))}
                   </nav>
                   
-                  <div className="mt-8 pt-6 border-t border-border">
-                    <Button 
-                      variant="default" 
-                      size="lg" 
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={() => scrollToSection("#cta")}
-                    >
-                      Пригласить в сад
-                    </Button>
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
