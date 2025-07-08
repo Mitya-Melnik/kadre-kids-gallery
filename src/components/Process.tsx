@@ -62,65 +62,90 @@ const Process = () => {
           </p>
         </div>
         
-        <div className="max-w-6xl mx-auto">
+        {/* Desktop Timeline */}
+        <div className="hidden md:block max-w-6xl mx-auto">
           <div ref={carouselRef} className={`transition-all duration-700 ${carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <Carousel 
-              opts={{
-                align: "center",
-                loop: true,
-                slidesToScroll: 1
-              }}
-              className="w-full"
-              setApi={(api) => {
-                if (api) {
-                  api.on("select", () => {
-                    setCurrentSlide(api.selectedScrollSnap());
-                  });
-                }
-              }}
-            >
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {steps.map((step, index) => (
-                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-full md:basis-1/3">
-                    <div className="relative h-full">
-                      <div className="bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 text-center group h-full cursor-pointer">
-                        <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300">
-                          {step.number}
-                        </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          Шаг {step.number}: {step.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          {step.description}
-                        </p>
+            <div className="relative">
+              {/* Timeline line */}
+              <div className="absolute top-8 left-0 right-0 h-0.5 bg-gradient-primary"></div>
+              
+              {/* Timeline steps */}
+              <div className="grid grid-cols-4 gap-4 mb-8">
+                {steps.slice(0, 4).map((step, index) => (
+                  <div key={index} className="relative group">
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-glow relative z-10">
+                        {step.number}
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2 text-center">
+                        {step.title.split(' ').slice(0, 2).join(' ')}
+                      </h3>
+                      
+                      {/* Tooltip */}
+                      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 shadow-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 w-64 pointer-events-none">
+                        <h4 className="font-semibold text-foreground mb-2">Шаг {step.number}: {step.title}</h4>
+                        <p className="text-sm text-muted-foreground">{step.description}</p>
                       </div>
                     </div>
-                  </CarouselItem>
+                  </div>
                 ))}
-              </CarouselContent>
+              </div>
               
-              <CarouselPrevious className="hidden md:flex -left-12 h-10 w-10 border-2 border-primary/20 bg-background/80 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/40 transition-all duration-200" />
-              <CarouselNext className="hidden md:flex -right-12 h-10 w-10 border-2 border-primary/20 bg-background/80 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/40 transition-all duration-200" />
-              
-              {/* Mobile navigation arrows */}
-              <CarouselPrevious className="md:hidden left-2 h-8 w-8 border border-primary/30 bg-background/90 backdrop-blur-sm" />
-              <CarouselNext className="md:hidden right-2 h-8 w-8 border border-primary/30 bg-background/90 backdrop-blur-sm" />
-            </Carousel>
-            
-            {/* Dots indicators */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {steps.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    Math.floor(currentSlide) === index
-                      ? 'bg-primary scale-125'
-                      : 'bg-primary/30 hover:bg-primary/50'
-                  }`}
-                  onClick={() => {
-                    // This would require carousel API to scroll to specific slide
-                  }}
-                />
+              <div className="grid grid-cols-4 gap-4">
+                {steps.slice(4).map((step, index) => (
+                  <div key={index + 4} className="relative group">
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-glow">
+                        {step.number}
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2 text-center">
+                        {step.title.split(' ').slice(0, 2).join(' ')}
+                      </h3>
+                      
+                      {/* Tooltip */}
+                      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 shadow-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 w-64 pointer-events-none">
+                        <h4 className="font-semibold text-foreground mb-2">Шаг {step.number}: {step.title}</h4>
+                        <p className="text-sm text-muted-foreground">{step.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Accordion */}
+        <div className="md:hidden max-w-md mx-auto">
+          <div ref={carouselRef} className={`transition-all duration-700 ${carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="space-y-3">
+              {steps.map((step, index) => (
+                <div key={index} className="border border-border rounded-xl overflow-hidden bg-background shadow-soft">
+                  <button
+                    className="w-full p-4 text-left flex items-center justify-between hover:bg-gradient-card/50 transition-all duration-200 ease-in-out hover:scale-[1.01] active:scale-[0.99]"
+                    onClick={() => setCurrentSlide(currentSlide === index ? -1 : index)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {step.number}
+                      </div>
+                      <span className="font-semibold text-foreground">Шаг {step.number}: {step.title}</span>
+                    </div>
+                    <span className={`text-primary text-lg transition-transform duration-300 ease-in-out ${currentSlide === index ? 'rotate-90' : ''}`}>
+                      ▶
+                    </span>
+                  </button>
+                  
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    currentSlide === index ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
+                  }`}>
+                    <div className="p-4 pt-0">
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>

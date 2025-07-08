@@ -24,6 +24,7 @@ const Hero = () => {
   return (
     <section id="hero" className="relative min-h-screen bg-gradient-hero flex items-center justify-center py-20">
       <div className="absolute inset-0 bg-pattern opacity-30"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 via-transparent to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -104,7 +105,7 @@ const Hero = () => {
             <Button 
               variant="default" 
               size="xl"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
               onClick={() => {
                 const element = document.querySelector("#cta");
                 if (element) {

@@ -142,4 +142,8 @@
     opacity: 1;
     transform: translateY(0);
   }
+  
+  .hover-scale-103:hover {
+    transform: scale(1.03);
+  }
 }

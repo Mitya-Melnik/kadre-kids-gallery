@@ -5,6 +5,7 @@ import Gallery from "@/components/Gallery";
 import Advantages from "@/components/Advantages";
 import Process from "@/components/Process";
 import Pricing from "@/components/Pricing";
+import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
@@ -17,6 +18,7 @@ const Index = () => {
       <Hero />
       <Advantages />
       <Gallery />
+      <Testimonials />
       <Process />
       <Pricing />
       <CTA />

@@ -2,47 +2,23 @@ import { Phone, MapPin, Clock } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-background py-16">
+    <footer className="bg-[#E9E9E9] text-foreground py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* О компании */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">Дети в кадре</h3>
-            <p className="text-background/80 text-sm leading-relaxed mb-4">
-              Выездная фотостудия в детских садах Санкт-Петербурга. 
-              15 лет опыта, 2100+ фотосессий, 168000+ купленных фотографий.
-            </p>
-            <p className="text-sm font-medium">
-              Руководитель: Дмитрий
-            </p>
-          </div>
-
-          {/* Быстрые ссылки */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Быстрые ссылки</h3>
-            <nav className="space-y-2">
-              <a href="#values" className="block text-background/80 hover:text-background transition-colors text-sm">О нас</a>
-              <a href="#gallery" className="block text-background/80 hover:text-background transition-colors text-sm">Галерея</a>
-              <a href="#process" className="block text-background/80 hover:text-background transition-colors text-sm">Как проходит съемка</a>
-              <a href="#pricing" className="block text-background/80 hover:text-background transition-colors text-sm">Стоимость</a>
-              <a href="#faq" className="block text-background/80 hover:text-background transition-colors text-sm">Вопросы и ответы</a>
-            </nav>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Контакты */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Контакты</h3>
+            <h3 className="text-xl font-bold mb-4 text-foreground">Контакты</h3>
             <div className="space-y-3">
               <a 
                 href="tel:+79956002111" 
-                className="flex items-center gap-3 text-background/80 hover:text-background transition-colors"
+                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 +7 995 600 2111
               </a>
               <a 
                 href="mailto:info@detivkadre.ru" 
-                className="flex items-center gap-3 text-background/80 hover:text-background transition-colors"
+                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
@@ -50,24 +26,42 @@ const Footer = () => {
                 </svg>
                 info@detivkadre.ru
               </a>
-              <div className="flex items-center gap-3 text-background/80">
+              <div className="flex items-center gap-3 text-muted-foreground">
                 <MapPin className="w-4 h-4" />
                 Санкт-Петербург и область
               </div>
-              <div className="flex items-center gap-3 text-background/80">
+              <div className="flex items-center gap-3 text-muted-foreground">
                 <Clock className="w-4 h-4" />
                 Ежедневно с 9:00 до 18:00
               </div>
             </div>
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold mb-2 text-foreground">Руководитель: Дмитрий</h4>
+              <p className="text-sm text-muted-foreground">
+                15 лет опыта, 2100+ фотосессий, 168000+ купленных фотографий
+              </p>
+            </div>
+          </div>
+
+          {/* Быстрые ссылки */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Меню</h3>
+            <nav className="space-y-2">
+              <a href="#advantages" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Преимущества</a>
+              <a href="#gallery" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Галерея</a>
+              <a href="#process" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Как проходит съемка</a>
+              <a href="#pricing" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Стоимость</a>
+              <a href="#faq" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Вопросы и ответы</a>
+            </nav>
           </div>
 
           {/* Социальные сети */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Мы в соцсетях</h3>
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Мы в соцсетях</h3>
             <div className="flex gap-4 mb-6">
               <a 
                 href="#" 
-                className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:text-primary hover:bg-background/20 transition-colors"
+                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
                 aria-label="Telegram"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -77,7 +71,7 @@ const Footer = () => {
               
               <a 
                 href="#" 
-                className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:text-primary hover:bg-background/20 transition-colors"
+                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
                 aria-label="WhatsApp"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -87,7 +81,7 @@ const Footer = () => {
               
               <a 
                 href="#" 
-                className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:text-primary hover:bg-background/20 transition-colors"
+                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
                 aria-label="VKontakte"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -98,8 +92,8 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-background/20 text-center">
-          <p className="text-background/80">
+        <div className="mt-12 pt-8 border-t border-border text-center">
+          <p className="text-muted-foreground">
             Фотостудия "Дети в кадре" © 2025. Все права защищены.
           </p>
         </div>

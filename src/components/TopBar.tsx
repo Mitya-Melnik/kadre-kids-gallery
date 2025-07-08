@@ -77,7 +77,7 @@ const TopBar = () => {
             {/* Кнопка */}
             <Button 
               variant="default" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:inline-flex"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:inline-flex px-6 py-3 shadow-soft hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
               onClick={() => scrollToSection("#cta")}
             >
               Пригласить в сад
