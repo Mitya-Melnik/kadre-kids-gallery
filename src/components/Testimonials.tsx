@@ -1,9 +1,26 @@
-import { Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useState, useEffect } from "react";
+import { type CarouselApi } from "@/components/ui/carousel";
 
 const Testimonials = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
-  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation(0.1);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
   const testimonials = [
     {
@@ -26,6 +43,62 @@ const Testimonials = () => {
       role: "Мама Максима, 4 года",
       text: "Отличное качество фото и удобная система покупки через Telegram-бот. Рекомендую всем родителям!",
       avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 4,
+      name: "Ирина Волкова",
+      role: "Детский сад №15",
+      text: "Дети в полном восторге! Качественные снимки и профессиональный подход к каждому ребенку.",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b632?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 5,
+      name: "Сергей Николаев",
+      role: "Папа Артема, 6 лет",
+      text: "Удобная система заказа и быстрая доставка фото. Сын очень доволен своими портретами!",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 6,
+      name: "Ольга Морозова",
+      role: "Заведующая садиком",
+      text: "Сотрудничаем уже второй год. Родители всегда довольны результатом фотосессий.",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 7,
+      name: "Екатерина Лебедева",
+      role: "Мама Софии, 4 года",
+      text: "Дочка стеснялась, но фотографы нашли подход. Снимки получились естественными и красивыми.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 8,
+      name: "Александр Ковалев",
+      role: "Воспитатель группы «Радуга»",
+      text: "Прекрасная организация процесса. Дети не устали, все прошло быстро и весело.",
+      avatar: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 9,
+      name: "Наталья Григорьева",
+      role: "Мама двойняшек, 5 лет",
+      text: "Справились даже с моими непоседами! Фотографии превзошли все ожидания.",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 10,
+      name: "Дмитрий Соколов",
+      role: "Папа Маши, 6 лет",
+      text: "Отличное соотношение цены и качества. Обязательно закажем фотосессию и в следующем году.",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=face"
+    },
+    {
+      id: 11,
+      name: "Татьяна Кузнецова",
+      role: "Детский сад №7",
+      text: "Работаем с командой уже 3 года. Всегда высокое качество и индивидуальный подход к детям.",
+      avatar: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=120&h=120&fit=crop&crop=face"
     }
   ];
 
@@ -34,47 +107,68 @@ const Testimonials = () => {
       <div className="container mx-auto px-4">
         <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Отзывы родителей и педагогов
+            Отзывы
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Что говорят о нашей работе те, кто уже воспользовался нашими услугами
-          </p>
         </div>
         
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className={`bg-background rounded-xl p-6 shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-103 ${cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ 
-                transitionDelay: cardsVisible ? `${index * 150}ms` : '0ms',
-                transitionDuration: '700ms'
-              }}
-            >
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-primary text-primary" />
-                ))}
-              </div>
-              
-              <p className="text-muted-foreground mb-6 italic leading-relaxed">
-                "{testimonial.text}"
-              </p>
-              
-              <div className="flex items-center gap-3">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                  loading="lazy"
-                />
-                <div>
-                  <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="max-w-6xl mx-auto">
+          <Carousel
+            setApi={setApi}
+            opts={{
+              align: "start",
+              loop: true,
+              skipSnaps: false,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {testimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                  <div className="bg-white rounded-lg p-6 shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-[1.02] border border-border h-full">
+                    <div className="flex flex-col h-full">
+                      {/* Avatar and Name */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <img
+                          src={testimonial.avatar}
+                          alt={testimonial.name}
+                          className="w-12 h-12 rounded-full object-cover"
+                          loading="lazy"
+                        />
+                        <div>
+                          <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
+                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Review Text */}
+                      <p className="text-muted-foreground italic leading-relaxed flex-grow">
+                        "{testimonial.text}"
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Navigation Arrows */}
+            <CarouselPrevious className="hidden md:flex -left-12 w-10 h-10 hover:scale-110 hover:opacity-80 transition-all duration-200" />
+            <CarouselNext className="hidden md:flex -right-12 w-10 h-10 hover:scale-110 hover:opacity-80 transition-all duration-200" />
+          </Carousel>
+          
+          {/* Pagination Dots */}
+          <div className="flex justify-center mt-8 gap-2">
+            {Array.from({ length: count }).map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  index + 1 === current 
+                    ? 'bg-primary scale-110' 
+                    : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                }`}
+                onClick={() => api?.scrollTo(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
