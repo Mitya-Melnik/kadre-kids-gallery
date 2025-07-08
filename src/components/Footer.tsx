@@ -24,11 +24,11 @@ const Footer = () => {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           
           {/* Основная информация */}
           <div className="lg:col-span-2">
-            <div className="mb-6">
+            <div className="mb-4">
               <h3 className="text-2xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
                 Дети в кадре
               </h3>
@@ -40,7 +40,6 @@ const Footer = () => {
             
             {/* Контакты */}
             <div className="space-y-3">
-              <h4 className="text-lg font-semibold mb-4 text-white">Контакты</h4>
               <a 
                 href="tel:+79956002111" 
                 className="flex items-center gap-3 text-slate-300 hover:text-primary transition-colors group"
@@ -132,18 +131,17 @@ const Footer = () => {
             </div>
             
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
-              <h5 className="text-sm font-semibold mb-2 text-white">Руководитель: Дмитрий</h5>
+              <h5 className="text-sm font-semibold mb-1 text-white">Дети в кадре</h5>
               <p className="text-xs text-slate-400 leading-relaxed">
-                15 лет опыта<br/>
-                2100+ фотосессий<br/>
-                168000+ купленных фотографий
+                Выездные фотосессии<br/>
+                в Санкт-Петербурге
               </p>
             </div>
           </div>
         </div>
         
         {/* Нижняя часть футера */}
-        <div className="pt-8 border-t border-slate-700/50">
+        <div className="pt-6 border-t border-slate-700/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400 text-sm">
               <span className="font-semibold text-white">Фотостудия "Дети в кадре"</span> © 2025
