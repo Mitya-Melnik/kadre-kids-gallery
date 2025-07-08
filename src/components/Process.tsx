@@ -1,14 +1,29 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Process = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.3);
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.3);
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.1);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.1);
   const [activeStep, setActiveStep] = useState(-1);
+  const [isMobileVisible, setIsMobileVisible] = useState(false);
+
+  // Fallback for mobile visibility
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMobileVisible(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Debug info
-  console.log('Process component render:', { titleVisible, contentVisible, activeStep });
+  console.log('Process component render:', { 
+    titleVisible, 
+    contentVisible, 
+    activeStep, 
+    isMobileVisible,
+    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'unknown'
+  });
 
   const steps = [
     {
@@ -117,13 +132,16 @@ const Process = () => {
 
         {/* Mobile Accordion */}
         <div className="md:hidden max-w-md mx-auto">
-          <div className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`transition-all duration-700 ${(contentVisible || isMobileVisible) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="space-y-3">
               {steps.map((step, index) => (
                 <div key={index} className="border border-border rounded-xl overflow-hidden bg-background shadow-soft">
                   <button
-                    className="w-full p-4 text-left flex items-center justify-between hover:bg-gradient-card/50 transition-all duration-200 ease-in-out hover:scale-[1.01] active:scale-[0.99]"
-                    onClick={() => setActiveStep(activeStep === index ? -1 : index)}
+                    className="w-full p-4 text-left flex items-center justify-between hover:bg-secondary/50 transition-all duration-200 ease-in-out hover:scale-[1.01] active:scale-[0.99]"
+                    onClick={() => {
+                      console.log('Mobile accordion clicked:', index, 'current activeStep:', activeStep);
+                      setActiveStep(activeStep === index ? -1 : index);
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-sm">
