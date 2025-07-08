@@ -81,75 +81,51 @@ const Process = () => {
           </p>
         </div>
         
-        {/* Desktop Slider */}
-        <div className="hidden md:block max-w-5xl mx-auto">
-          <div ref={contentRef} className="opacity-100 translate-y-0">{/* Temporary: removed animation for debug */}
+        {/* Desktop Timeline */}
+        <div className="hidden md:block max-w-6xl mx-auto">
+          <div ref={contentRef} className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Horizontal Timeline */}
             <div className="relative">
-              {/* Slider container */}
-              <div className="overflow-hidden">
-                <div 
-                  className="flex transition-transform duration-300 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * (100 / slidesToShow)}%)` }}
-                >
-                  {steps.map((step, index) => (
-                    <div 
-                      key={index}
-                      className="flex-none w-1/2 px-4"
-                    >
-                      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 transition-all duration-300 ease hover:scale-[1.02] hover:shadow-lg cursor-pointer">{/* Simplified classes for debug */}
-                        <div className="flex flex-col items-center text-center">
-                          {/* Step icon */}
-                          <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-soft">
-                            {step.number}
-                          </div>
-                          
-                          {/* Step title */}
-                          <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {step.title}
-                          </h3>
-                          
-                          {/* Step description */}
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Navigation arrows */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-background border border-border rounded-full flex items-center justify-center shadow-soft hover:shadow-glow transition-all duration-200 hover:scale-110"
-                disabled={currentSlide === 0}
-              >
-                <ChevronLeft className="w-5 h-5 text-primary" />
-              </button>
+              {/* Timeline line */}
+              <div className="absolute top-8 left-0 right-0 h-0.5 bg-primary/30 hidden lg:block"></div>
               
-              <button
-                onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-background border border-border rounded-full flex items-center justify-center shadow-soft hover:shadow-glow transition-all duration-200 hover:scale-110"
-                disabled={currentSlide >= steps.length - slidesToShow}
-              >
-                <ChevronRight className="w-5 h-5 text-primary" />
-              </button>
-            </div>
-
-            {/* Pagination dots */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {Array.from({ length: totalSlides }).map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    Math.floor(currentSlide / slidesToShow) === index
-                      ? 'bg-primary shadow-glow'
-                      : 'bg-border hover:bg-primary/50'
-                  }`}
-                />
-              ))}
+              {/* Steps grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 lg:gap-4">
+                {steps.map((step, index) => (
+                  <div 
+                    key={index}
+                    className={`relative group transition-all duration-700 delay-${index * 100} ${
+                      contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                    }`}
+                    style={{ 
+                      transitionDelay: contentVisible ? `${index * 100}ms` : '0ms'
+                    }}
+                  >
+                    {/* Timeline connector (after each step except last) */}
+                    {index < steps.length - 1 && (
+                      <div className="hidden lg:block absolute top-8 -right-2 w-4 h-0.5 bg-primary/30 z-0"></div>
+                    )}
+                    
+                    {/* Step content */}
+                    <div className="relative z-10 text-center hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer group-hover:drop-shadow-lg">
+                      {/* Step icon */}
+                      <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 mx-auto shadow-soft group-hover:shadow-xl transition-all duration-200">
+                        {step.number}
+                      </div>
+                      
+                      {/* Step title */}
+                      <h3 className="text-base lg:text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
+                        {step.title}
+                      </h3>
+                      
+                      {/* Step description */}
+                      <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed line-clamp-3 group-hover:text-foreground/80 transition-colors duration-200">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
