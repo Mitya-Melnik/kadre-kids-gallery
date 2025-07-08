@@ -3,8 +3,8 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Process = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.1);
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.1);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.05);
   const [activeStep, setActiveStep] = useState(-1);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slidesToShow = 2;
@@ -93,10 +93,10 @@ const Process = () => {
                       key={index}
                       className="flex-none w-1/2 px-4"
                     >
-                      <div className="bg-background rounded-xl p-6 shadow-soft border border-border transition-all duration-300 ease hover:scale-102 hover:shadow-glow cursor-pointer">
+                      <div className="bg-background rounded-xl p-6 shadow-soft border border-border transition-all duration-300 ease hover:scale-[1.02] hover:shadow-glow cursor-pointer">
                         <div className="flex flex-col items-center text-center">
                           {/* Step icon */}
-                          <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-soft">
+                          <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-soft">
                             {step.number}
                           </div>
                           
@@ -162,7 +162,7 @@ const Process = () => {
                     onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-sm">
                         {step.number}
                       </div>
                       <span className="font-semibold text-foreground">Шаг {step.number}: {step.title}</span>
