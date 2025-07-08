@@ -73,54 +73,37 @@ const Process = () => {
         <div className="hidden md:block max-w-7xl mx-auto">
           <div ref={timelineRef} className={`transition-all duration-700 ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute top-8 left-8 right-8 h-0.5 bg-gradient-primary z-0"></div>
+              {/* Timeline connecting line */}
+              <div className="absolute top-12 left-0 right-0 h-0.5 bg-gradient-primary"></div>
               
               {/* Timeline steps */}
-              <div className="grid grid-cols-4 gap-6 mb-12">
-                {steps.slice(0, 4).map((step, index) => (
-                  <div key={index} className="relative group">
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 group-hover:scale-110 transition-all duration-300 shadow-glow relative z-10 cursor-pointer">
+              <div className="grid grid-cols-8 gap-4">
+                {steps.map((step, index) => (
+                  <div 
+                    key={index} 
+                    className="relative group cursor-pointer transform transition-all duration-200 ease-in-out hover:scale-105"
+                    style={{
+                      animationDelay: `${index * 100}ms`
+                    }}
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      {/* Step icon */}
+                      <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-lg mb-3 relative z-10 shadow-soft group-hover:shadow-glow transition-all duration-200 ease-in-out">
                         {step.number}
                       </div>
-                      <h3 className="text-lg font-semibold text-foreground mb-2 text-center cursor-pointer">
+                      
+                      {/* Short title */}
+                      <h3 className="text-sm font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
                         {step.shortTitle}
                       </h3>
                       
-                      {/* Tooltip */}
-                      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 shadow-glow opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 w-72 pointer-events-none">
-                        <h4 className="font-semibold text-foreground mb-2">Шаг {step.number}: {step.title}</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                      </div>
+                      {/* Mini description */}
+                      <p className="text-xs text-muted-foreground leading-relaxed px-1 group-hover:text-foreground transition-colors duration-200">
+                        {step.description}
+                      </p>
                     </div>
                   </div>
                 ))}
-              </div>
-              
-              {/* Second row */}
-              <div className="relative">
-                <div className="absolute top-8 left-8 right-8 h-0.5 bg-gradient-primary z-0"></div>
-                <div className="grid grid-cols-4 gap-6">
-                  {steps.slice(4).map((step, index) => (
-                    <div key={index + 4} className="relative group">
-                      <div className="flex flex-col items-center">
-                        <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 group-hover:scale-110 transition-all duration-300 shadow-glow relative z-10 cursor-pointer">
-                          {step.number}
-                        </div>
-                        <h3 className="text-lg font-semibold text-foreground mb-2 text-center cursor-pointer">
-                          {step.shortTitle}
-                        </h3>
-                        
-                        {/* Tooltip */}
-                        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 shadow-glow opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 w-72 pointer-events-none">
-                          <h4 className="font-semibold text-foreground mb-2">Шаг {step.number}: {step.title}</h4>
-                          <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
