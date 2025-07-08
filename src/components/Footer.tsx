@@ -1,67 +1,108 @@
-import { Phone, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, ExternalLink } from "lucide-react";
 
 const Footer = () => {
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const quickLinks = [
+    { name: "Преимущества", href: "#advantages" },
+    { name: "Галерея", href: "#gallery" },
+    { name: "Как проходит съемка", href: "#process" },
+    { name: "Стоимость", href: "#pricing" },
+    { name: "Вопросы и ответы", href: "#faq" },
+    { name: "Заказать презентацию", href: "#cta" },
+  ];
+
   return (
-    <footer className="bg-[#E9E9E9] text-foreground py-16">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Контакты */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-foreground">Контакты</h3>
+    <footer className="bg-slate-900 text-white py-16 relative overflow-hidden">
+      {/* Декоративный фон */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 opacity-50"></div>
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          
+          {/* Основная информация */}
+          <div className="lg:col-span-2">
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+                Дети в кадре
+              </h3>
+              <p className="text-slate-300 text-sm leading-relaxed max-w-md">
+                Профессиональные выездные фотосессии в детских садах Санкт-Петербурга. 
+                Создаем яркие воспоминания через игру и творчество.
+              </p>
+            </div>
+            
+            {/* Контакты */}
             <div className="space-y-3">
+              <h4 className="text-lg font-semibold mb-4 text-white">Контакты</h4>
               <a 
                 href="tel:+79956002111" 
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-3 text-slate-300 hover:text-primary transition-colors group"
               >
-                <Phone className="w-4 h-4" />
-                +7 995 600 2111
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <span>+7 995 600 2111</span>
               </a>
+              
               <a 
                 href="mailto:info@detivkadre.ru" 
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-3 text-slate-300 hover:text-primary transition-colors group"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-                </svg>
-                info@detivkadre.ru
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <span>info@detivkadre.ru</span>
               </a>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                Санкт-Петербург и область
+              
+              <div className="flex items-center gap-3 text-slate-300">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <span>Санкт-Петербург и область</span>
               </div>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                Ежедневно с 9:00 до 18:00
+              
+              <div className="flex items-center gap-3 text-slate-300">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <span>Ежедневно с 9:00 до 18:00</span>
               </div>
-            </div>
-            <div className="mt-6">
-              <h4 className="text-lg font-semibold mb-2 text-foreground">Руководитель: Дмитрий</h4>
-              <p className="text-sm text-muted-foreground">
-                15 лет опыта, 2100+ фотосессий, 168000+ купленных фотографий
-              </p>
             </div>
           </div>
 
           {/* Быстрые ссылки */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-foreground">Меню</h3>
-            <nav className="space-y-2">
-              <a href="#advantages" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Преимущества</a>
-              <a href="#gallery" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Галерея</a>
-              <a href="#process" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Как проходит съемка</a>
-              <a href="#pricing" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Стоимость</a>
-              <a href="#faq" className="block text-muted-foreground hover:text-primary transition-colors text-sm">Вопросы и ответы</a>
+            <h4 className="text-lg font-semibold mb-4 text-white">Быстрые ссылки</h4>
+            <nav className="space-y-3">
+              {quickLinks.map((link, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToSection(link.href)}
+                  className="flex items-center gap-2 text-slate-300 hover:text-primary transition-colors text-sm group w-full text-left"
+                >
+                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">
+                    {link.name}
+                  </span>
+                </button>
+              ))}
             </nav>
           </div>
 
           {/* Социальные сети */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-foreground">Мы в соцсетях</h3>
-            <div className="flex gap-4 mb-6">
+            <h4 className="text-lg font-semibold mb-4 text-white">Мы в соцсетях</h4>
+            <div className="flex gap-3 mb-6">
               <a 
                 href="#" 
-                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
+                className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="Telegram"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -71,7 +112,7 @@ const Footer = () => {
               
               <a 
                 href="#" 
-                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
+                className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="WhatsApp"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -81,7 +122,7 @@ const Footer = () => {
               
               <a 
                 href="#" 
-                className="w-10 h-10 bg-foreground/10 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/20 transition-colors"
+                className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="VKontakte"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -89,13 +130,29 @@ const Footer = () => {
                 </svg>
               </a>
             </div>
+            
+            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
+              <h5 className="text-sm font-semibold mb-2 text-white">Руководитель: Дмитрий</h5>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                15 лет опыта<br/>
+                2100+ фотосессий<br/>
+                168000+ купленных фотографий
+              </p>
+            </div>
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-border text-center">
-          <p className="text-muted-foreground">
-            Фотостудия "Дети в кадре" © 2025. Все права защищены.
-          </p>
+        {/* Нижняя часть футера */}
+        <div className="pt-8 border-t border-slate-700/50">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-slate-400 text-sm">
+              <span className="font-semibold text-white">Фотостудия "Дети в кадре"</span> © 2025
+            </p>
+            <div className="flex gap-6 text-xs text-slate-500">
+              <a href="#" className="hover:text-slate-300 transition-colors">Политика конфиденциальности</a>
+              <a href="#" className="hover:text-slate-300 transition-colors">Пользовательское соглашение</a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
