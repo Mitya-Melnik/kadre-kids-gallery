@@ -3,14 +3,12 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Process = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.1);
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.05);
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.3);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.3);
   const [activeStep, setActiveStep] = useState(-1);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const slidesToShow = 2;
 
   // Debug info
-  console.log('Process component render:', { titleVisible, contentVisible, currentSlide, activeStep });
+  console.log('Process component render:', { titleVisible, contentVisible, activeStep });
 
   const steps = [
     {
@@ -55,19 +53,6 @@ const Process = () => {
     }
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + slidesToShow >= steps.length ? 0 : prev + slidesToShow));
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - slidesToShow < 0 ? Math.max(0, steps.length - slidesToShow) : prev - slidesToShow));
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index * slidesToShow);
-  };
-
-  const totalSlides = Math.ceil(steps.length / slidesToShow);
 
   return (
     <section id="process" className="py-20 bg-secondary/30">
@@ -119,7 +104,7 @@ const Process = () => {
                       </h3>
                       
                       {/* Step description */}
-                      <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed line-clamp-3 group-hover:text-foreground/80 transition-colors duration-200">
+                      <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-200 max-h-12 overflow-hidden">
                         {step.description}
                       </p>
                     </div>
@@ -132,7 +117,7 @@ const Process = () => {
 
         {/* Mobile Accordion */}
         <div className="md:hidden max-w-md mx-auto">
-          <div ref={contentRef} className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="space-y-3">
               {steps.map((step, index) => (
                 <div key={index} className="border border-border rounded-xl overflow-hidden bg-background shadow-soft">
