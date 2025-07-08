@@ -146,4 +146,8 @@
   .hover-scale-103:hover {
     transform: scale(1.03);
   }
+  
+  .hover\:scale-102:hover {
+    transform: scale(1.02);
+  }
 }
