@@ -29,10 +29,9 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Студия "Дети в{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              кадре
-            </span>"
+              Дети в кадре
+            </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -69,32 +68,32 @@ const Hero = () => {
           
           {/* Ключевые ценности */}
           <div ref={valuesRef} className={`grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto transition-all duration-700 delay-200 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🔒</div>
               <div className="text-sm font-medium text-foreground">Доступ по паролю</div>
               <div className="text-xs text-muted-foreground">Фото только для родителей</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">💰</div>
               <div className="text-sm font-medium text-foreground">Без предоплаты</div>
               <div className="text-xs text-muted-foreground">Платите только за понравившиеся снимки</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🤖</div>
               <div className="text-sm font-medium text-foreground">Поддержка 24/7</div>
               <div className="text-xs text-muted-foreground">Через Telegram-бот</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🎭</div>
               <div className="text-sm font-medium text-foreground">Игра вместо позирования</div>
               <div className="text-xs text-muted-foreground">Ребёнок расслаблен и в кадре настоящий</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🌿</div>
               <div className="text-sm font-medium text-foreground">Атмосферные декорации</div>
               <div className="text-xs text-muted-foreground">Уют и атмосфера</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-border">
+            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">💳</div>
               <div className="text-sm font-medium text-foreground">Оплата без хлопот</div>
               <div className="text-xs text-muted-foreground">Карты, СБП, QR, чек на e-mail</div>

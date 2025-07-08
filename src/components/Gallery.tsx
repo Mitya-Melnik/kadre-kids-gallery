@@ -35,6 +35,66 @@ const Gallery = () => {
         "https://images.unsplash.com/photo-1582515073490-39981397c445?w=800&h=600&fit=crop",
         "https://images.unsplash.com/photo-1574782293711-11c4d3b4cc5c?w=800&h=600&fit=crop"
       ]
+    },
+    {
+      id: 4,
+      title: "Принцессы и феи",
+      cover: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1494790108755-2616c27de95d?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      id: 5,
+      title: "Супергерои",
+      cover: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      id: 6,
+      title: "Животные",
+      cover: "https://images.unsplash.com/photo-1415604934674-561df9abf539?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1415604934674-561df9abf539?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      id: 7,
+      title: "Весенняя сказка",
+      cover: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      id: 8,
+      title: "Новогодняя",
+      cover: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1544273677-6e0d999a1ffa?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      id: 9,
+      title: "Пираты",
+      cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+      images: [
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1566041510394-cf7c8fe21800?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=800&h=600&fit=crop"
+      ]
     }
   ];
 

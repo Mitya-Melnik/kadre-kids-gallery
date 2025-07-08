@@ -29,7 +29,7 @@ const TopBar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Левая часть - соцсети и телефон */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <a 
               href="#" 
               className="w-10 h-10 bg-foreground/5 rounded-lg flex items-center justify-center text-foreground hover:text-primary hover:bg-foreground/10 transition-colors"
@@ -82,7 +82,7 @@ const TopBar = () => {
           </div>
           
           {/* Правая часть - кнопка и меню */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Кнопка для десктопа */}
             <Button 
               variant="default" 

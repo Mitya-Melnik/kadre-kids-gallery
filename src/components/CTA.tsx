@@ -8,18 +8,17 @@ const CTA = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Закажите презентацию наших тематических пакетов
+            Закажите презентацию
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Сразу получите PDF-презентацию с примерами декораций и ценами. 
-            Посмотрите, как мы можем сделать фотосессию незабываемой для ваших детей.
+            Получите PDF-презентацию с примерами декораций и актуальным прайс-листом
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button variant="accent" size="xl" className="shadow-accent">
+            <Button variant="accent" size="xl" className="shadow-accent bg-accent text-accent-foreground hover:bg-accent/90">
               Хочу подробности
             </Button>
-            <Button variant="outline" size="xl" className="text-white border-white hover:bg-white hover:text-primary">
+            <Button variant="outline" size="xl" className="text-white border-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm">
               Связаться с нами
             </Button>
           </div>
@@ -49,10 +48,15 @@ const CTA = () => {
           </div>
           
           <div className="mt-12 text-center">
-            <p className="text-white/80 mb-2">Готовы обсудить детали?</p>
-            <p className="text-white text-xl font-semibold">
-              Дмитрий: +7 995 600 2111
-            </p>
+            <p className="text-white/80 mb-4">Готовы обсудить детали?</p>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-white border-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm"
+              onClick={() => window.open('https://t.me/your_telegram', '_blank')}
+            >
+              Написать в Телеграм
+            </Button>
           </div>
         </div>
       </div>
