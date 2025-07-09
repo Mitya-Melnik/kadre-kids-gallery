@@ -70,7 +70,7 @@ const Process = () => {
 
 
   return (
-    <section id="process" className="py-20 bg-secondary/30">
+    <section id="process" className="py-12 md:py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
