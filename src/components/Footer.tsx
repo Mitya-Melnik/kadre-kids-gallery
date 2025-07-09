@@ -30,12 +30,8 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="mb-4">
               <h3 className="text-2xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
-                Дети в кадре
+                Контакты
               </h3>
-              <p className="text-slate-300 text-sm leading-relaxed max-w-md">
-                Профессиональные выездные фотосессии в детских садах Санкт-Петербурга. 
-                Создаем яркие воспоминания через игру и творчество.
-              </p>
             </div>
             
             {/* Контакты */}
