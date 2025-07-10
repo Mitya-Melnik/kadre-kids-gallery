@@ -9,6 +9,7 @@ const Footer = () => {
   };
 
   const quickLinks = [
+    { name: "О нас", href: "#hero" },
     { name: "Преимущества", href: "#advantages" },
     { name: "Галерея", href: "#gallery" },
     { name: "Как проходит съемка", href: "#process" },

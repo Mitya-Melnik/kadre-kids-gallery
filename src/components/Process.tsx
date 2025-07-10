@@ -170,12 +170,18 @@ const Process = () => {
                 </div>
               ))}
             </div>
+            
+            <div className={`text-center mt-8 transition-all duration-700 ${(contentVisible || isMobileVisible) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <p className="text-lg text-primary font-semibold">
+                Образцы привезем для каждой группы
+              </p>
+            </div>
           </div>
         </div>
         
         <div className={`text-center mt-16 transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <p className="text-lg text-primary font-semibold">
-            Приедем в сад и привезем образцы на каждую группу
+            Образцы привезем для каждой группы
           </p>
         </div>
       </div>
