@@ -90,7 +90,7 @@ const Process = () => {
               {/* Top row track (steps 1-4) */}
               <div className="absolute top-8 left-16 right-16 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
               {/* Bottom row track (steps 5-8) - positioned at center of second row circles */}
-              <div className="absolute top-[190px] left-16 right-16 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
+              <div className="absolute top-[200px] left-16 right-16 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
               
               {/* Steps grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 lg:gap-4">
