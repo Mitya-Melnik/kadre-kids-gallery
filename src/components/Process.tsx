@@ -86,8 +86,11 @@ const Process = () => {
           <div ref={contentRef} className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             {/* Horizontal Timeline */}
             <div className="relative">
-              {/* Continuous gradient timeline track */}
-              <div className="absolute top-8 left-8 right-8 h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
+              {/* Continuous gradient timeline tracks */}
+              {/* Top row track (steps 1-4) */}
+              <div className="absolute top-8 left-8 w-[calc(75%-2rem)] h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
+              {/* Bottom row track (steps 5-8) */}
+              <div className="absolute top-[calc(100%-2rem)] left-8 w-[calc(75%-2rem)] h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
               
               {/* Steps grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 lg:gap-4">
