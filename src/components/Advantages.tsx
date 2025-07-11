@@ -61,7 +61,7 @@ const Advantages = () => {
               }}
             >
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
                   <advantage.icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
