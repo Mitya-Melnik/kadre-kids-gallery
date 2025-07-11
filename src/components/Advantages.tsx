@@ -54,13 +54,13 @@ const Advantages = () => {
           {advantages.map((advantage, index) => (
             <div
               key={index}
-              className={`group bg-gradient-card p-8 rounded-xl transition-all duration-200 hover:shadow-glow hover:-translate-y-2 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-gradient-card p-8 rounded-xl transition-all duration-300 ease-out hover:shadow-glow hover:-translate-y-1 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ 
                 transitionDelay: gridVisible ? `${index * 100}ms` : '0ms'
               }}
             >
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
+                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ease-out">
                   <advantage.icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
