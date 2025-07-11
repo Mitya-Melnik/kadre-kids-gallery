@@ -56,8 +56,7 @@ const Advantages = () => {
               key={index}
               className={`group bg-gradient-card p-8 rounded-xl transition-all duration-200 hover:shadow-glow hover:-translate-y-2 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ 
-                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
-                transitionDuration: '700ms'
+                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms'
               }}
             >
               <div className="flex items-start space-x-4">
