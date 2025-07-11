@@ -6,6 +6,13 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 const Pricing = () => {
   const packages = [
     {
+      id: "photoshoot",
+      title: "Фотосъёмка",
+      price: "Бесплатно",
+      description: "Бесплатно! Платите только за понравившиеся снимки",
+      popular: false
+    },
+    {
       id: "online",
       title: "Файлы онлайн",
       price: "399 ₽",
@@ -44,7 +51,7 @@ const Pricing = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Стоимость фотографий
+            Стоимость
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Прозрачные цены без скрытых платежей. Платите только за понравившиеся фотографии
