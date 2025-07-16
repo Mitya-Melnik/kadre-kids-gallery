@@ -30,9 +30,10 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-12">
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
-              Выездные фотосессии в детском саду
+              Выездные фотосессии<br />
+              в детском саду
             </h1>
-            <h2 className="text-lg md:text-2xl leading-relaxed" style={{ color: '#555' }}>
+            <h2 className="text-lg md:text-2xl leading-relaxed text-muted-foreground">
               детям — комфортно, родителям — удобно
             </h2>
           </div>
