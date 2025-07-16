@@ -33,7 +33,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            <span className="font-bold">Выездные фотосессии</span> в детских садах Санкт-Петербурга. 
+            Выездные фотосессии в детских садах Санкт-Петербурга<br />
             Яркие, живые кадры в тематических декорациях через игру и знакомство.
           </p>
           
@@ -74,7 +74,7 @@ const Hero = () => {
             <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">💰</div>
               <div className="text-sm font-medium text-foreground">Без предоплаты</div>
-              <div className="text-xs text-muted-foreground">Платите только за понравившиеся снимки</div>
+              <div className="text-xs text-muted-foreground">Заказывайте только понравившиеся снимки</div>
             </div>
             <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🤖</div>
@@ -89,7 +89,7 @@ const Hero = () => {
             <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">🌿</div>
               <div className="text-sm font-medium text-foreground">Атмосферные декорации</div>
-              <div className="text-xs text-muted-foreground">Уют и атмосфера</div>
+              <div className="text-xs text-muted-foreground">пространство для искренних улыбок</div>
             </div>
             <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
               <div className="text-2xl mb-2">💳</div>
@@ -126,7 +126,7 @@ const Hero = () => {
             </Button>
           </div>
           
-          <p className="text-muted-foreground mt-8 italic">
+          <p className="text-foreground mt-8 italic font-semibold">
             "Ценим моменты и создаем их для вас"
           </p>
         </div>

@@ -19,12 +19,12 @@ const Advantages = () => {
     {
       icon: Heart,
       title: "Без предоплаты",
-      description: "Приобретайте только понравившиеся фотографии"
+      description: "Заказывайте только понравившиеся снимки"
     },
     {
       icon: Users,
       title: "Уют и игра",
-      description: "Дети в знакомой обстановке с атмосферными декорациями"
+      description: "Дети в знакомой обстановке<br />с атмосферными декорациями"
     },
     {
       icon: Clock,
@@ -67,9 +67,7 @@ const Advantages = () => {
                   <h3 className="text-xl font-semibold text-foreground mb-3">
                     {advantage.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {advantage.description}
-                  </p>
+                   <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: advantage.description }}></p>
                 </div>
               </div>
             </div>
