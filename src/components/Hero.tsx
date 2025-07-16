@@ -29,10 +29,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
-            <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-2 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-2 leading-tight">
               Выездные фотосессии в детском саду
             </h1>
-            <h2 className="text-xl md:text-3xl text-muted-foreground/80 leading-relaxed">
+            <h2 className="text-xl md:text-3xl text-foreground/90 leading-relaxed">
               детям — комфортно, родителям — удобно
             </h2>
           </div>
