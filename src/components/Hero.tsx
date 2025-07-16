@@ -28,11 +28,11 @@ const Hero = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-2 leading-tight">
+          <div className="mb-12">
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
               Выездные фотосессии в детском саду
             </h1>
-            <h2 className="text-xl md:text-3xl text-foreground/90 leading-relaxed">
+            <h2 className="text-lg md:text-2xl leading-relaxed" style={{ color: '#555' }}>
               детям — комфортно, родителям — удобно
             </h2>
           </div>
@@ -62,6 +62,35 @@ const Hero = () => {
               </div>
               <div className="text-sm text-muted-foreground">учреждений оформлено</div>
             </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Button 
+              variant="default" 
+              size="xl"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
+              onClick={() => {
+                const element = document.querySelector("#cta");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              Хочу подробности
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="xl"
+              className="px-8 py-4 hover:scale-105 transition-all duration-200 ease-in-out active:scale-95"
+              onClick={() => {
+                const element = document.querySelector("#gallery");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              Наши работы
+            </Button>
           </div>
           
           {/* Ключевые ценности */}
@@ -98,33 +127,6 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              variant="default" 
-              size="xl"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
-              onClick={() => {
-                const element = document.querySelector("#cta");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-              Хочу подробности
-            </Button>
-            <Button 
-              variant="outline" 
-              size="xl"
-              onClick={() => {
-                const element = document.querySelector("#gallery");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-              Наши работы
-            </Button>
-          </div>
           
           <p className="text-foreground mt-8 italic font-semibold">
             "Ценим моменты и создаем их для вас"
