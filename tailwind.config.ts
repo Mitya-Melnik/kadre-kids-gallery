@@ -47,6 +47,10 @@ export default {
 					foreground: 'hsl(var(--accent-foreground))',
 					soft: 'hsl(var(--accent-soft))'
 				},
+				'secondary-accent': {
+					DEFAULT: 'hsl(var(--secondary-accent))',
+					foreground: 'hsl(var(--secondary-accent-foreground))'
+				},
 				success: {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'

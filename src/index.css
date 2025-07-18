@@ -29,6 +29,9 @@
     --accent: 15 25% 94%;
     --accent-foreground: 222 15% 15%;
     --accent-soft: 15 25% 90%;
+    
+    --secondary-accent: 179 40% 61%;
+    --secondary-accent-foreground: 0 0% 100%;
 
     --success: 4 78% 62%;
     --success-foreground: 0 0% 100%;

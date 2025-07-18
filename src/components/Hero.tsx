@@ -80,7 +80,7 @@ const Hero = () => {
               Заказать съемку
             </Button>
             <Button 
-              variant="secondary" 
+              variant="secondary-accent" 
               size="xl"
               className="px-8 py-4 hover:scale-105 transition-all duration-200 ease-in-out active:scale-95"
               onClick={() => {

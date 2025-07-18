@@ -43,11 +43,8 @@ const Advantages = () => {
       <div className="container mx-auto px-4">
         <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Преимущества работы с нами
+            Почему мы
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Почему детские сады выбирают именно нас для проведения фотосессий
-          </p>
         </div>
         
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
