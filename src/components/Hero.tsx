@@ -77,7 +77,7 @@ const Hero = () => {
                 }
               }}
             >
-              Хочу подробности
+              Заказать съемку
             </Button>
             <Button 
               variant="secondary" 

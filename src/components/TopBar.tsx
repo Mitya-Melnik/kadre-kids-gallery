@@ -77,9 +77,9 @@ const TopBar = () => {
             <Button 
               variant="default" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:inline-flex px-6 py-3 shadow-soft hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
-              onClick={() => scrollToSection("#cta")}
+              onClick={() => window.open("https://seenday.com/ru/login", "_blank")}
             >
-              Пригласить в сад
+              Личный кабинет
             </Button>
             
             {/* Кнопка для мобильных */}
@@ -87,9 +87,9 @@ const TopBar = () => {
               variant="default" 
               size="sm"
               className="bg-primary hover:bg-primary/90 text-primary-foreground sm:hidden px-4 py-2 shadow-soft hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
-              onClick={() => scrollToSection("#cta")}
+              onClick={() => window.open("https://seenday.com/ru/login", "_blank")}
             >
-              Пригласить
+              Кабинет
             </Button>
             
             {/* Гамбургер меню */}
@@ -118,6 +118,15 @@ const TopBar = () => {
                         {item.name}
                       </button>
                     ))}
+                    
+                    {/* Кнопка "Заказать съемку" в меню */}
+                    <Button 
+                      variant="accent" 
+                      className="mt-4 w-full"
+                      onClick={() => scrollToSection("#cta")}
+                    >
+                      Заказать съемку
+                    </Button>
                   </nav>
                   
                 </div>
