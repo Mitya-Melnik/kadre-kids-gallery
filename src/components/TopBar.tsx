@@ -121,7 +121,7 @@ const TopBar = () => {
                     
                     {/* Кнопка "Заказать съемку" в меню */}
                     <Button 
-                      variant="accent" 
+                      variant="hero" 
                       className="mt-4 w-full"
                       onClick={() => scrollToSection("#cta")}
                     >
