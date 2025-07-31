@@ -106,16 +106,19 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Наши съемки */}
+          {/* Быстрые ссылки */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-white">Наши съемки</h4>
+            <h4 className="text-lg font-semibold mb-4 text-white">Быстрые ссылки</h4>
             <nav className="space-y-2">
-              <button
-                onClick={() => scrollToSection("#gallery")}
-                className="text-slate-300 hover:text-primary transition-colors text-sm block w-full text-left"
-              >
-                Галерея
-              </button>
+              {quickLinks.map((link, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToSection(link.href)}
+                  className="text-slate-300 hover:text-primary transition-colors text-sm block w-full text-left"
+                >
+                  {link.name}
+                </button>
+              ))}
             </nav>
           </div>
 
