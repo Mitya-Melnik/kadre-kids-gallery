@@ -154,8 +154,8 @@ const TopBar = () => {
                 </Button>
               </SheetTrigger>
               
-              {/* Мобильная версия - снизу */}
-              <SheetContent side="bottom" className="sm:hidden h-auto max-h-[90vh] rounded-t-3xl overflow-y-auto">
+              {/* Мобильная версия - справа */}
+              <SheetContent side="right" className="sm:hidden w-80 overflow-y-auto">
                 <div className="flex flex-col gap-4 pt-6 pb-8">
                   {/* Логотип вместо MORNALBM */}
                   <div className="flex justify-center mb-4">
@@ -234,8 +234,8 @@ const TopBar = () => {
                 </div>
               </SheetContent>
 
-              {/* Десктопная версия - сверху */}
-              <SheetContent side="top" className="hidden sm:block h-auto bg-background/95 backdrop-blur-sm">
+              {/* Десктопная версия - справа */}
+              <SheetContent side="right" className="hidden sm:block w-96 bg-background/95 backdrop-blur-sm">
                 <div className="flex flex-col gap-6 mt-6">
                   {/* Логотип вместо MORNALBM */}
                   <div className="flex justify-center mb-4">
