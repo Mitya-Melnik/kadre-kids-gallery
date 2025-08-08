@@ -1,7 +1,9 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const FAQ = () => {
+  const [visibleCount, setVisibleCount] = useState(7);
   const faqs = [
     {
       question: "Минимальное количество детей для выезда?",
@@ -67,7 +69,7 @@ const FAQ = () => {
         
         <div className="max-w-4xl mx-auto">
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
+            {faqs.slice(0, visibleCount).map((faq, index) => (
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
@@ -86,6 +88,19 @@ const FAQ = () => {
               </AccordionItem>
             ))}
           </Accordion>
+          
+          {visibleCount < faqs.length && (
+            <div className="text-center mt-8">
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => setVisibleCount(prev => Math.min(prev + 7, faqs.length))}
+                className="bg-gradient-card hover:bg-gradient-card/80 border-primary/20 text-foreground shadow-soft hover:shadow-glow transition-all duration-300"
+              >
+                Смотреть еще
+              </Button>
+            </div>
+          )}
         </div>
         
         <div className="text-center mt-16">
