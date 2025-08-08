@@ -7,21 +7,27 @@ const TopBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
-    { name: "Главная", href: "#hero" },
-    { name: "О нас", href: "#values" },
-    { name: "Галерея", href: "#gallery" },
-    { name: "Преимущества", href: "#advantages" },
-    { name: "Как проходит съемка", href: "#process" },
-    { name: "Стоимость", href: "#pricing" },
-    { name: "Вопросы и ответы", href: "#faq" },
+    { name: "Главная", href: "/" },
+    { name: "О нас", href: "/#values" },
+    { name: "Галерея", href: "/#gallery" },
+    { name: "Проекты под ключ", href: "/projects" },
+    { name: "Преимущества", href: "/#advantages" },
+    { name: "Как проходит съемка", href: "/#process" },
+    { name: "Стоимость", href: "/#pricing" },
+    { name: "Вопросы и ответы", href: "/#faq" },
   ];
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsMenuOpen(false);
+  const handleMenuClick = (href: string) => {
+    if (href.startsWith('#') || href.startsWith('/#')) {
+      const sectionId = href.replace('/#', '#');
+      const element = document.querySelector(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      window.location.href = href;
     }
+    setIsMenuOpen(false);
   };
 
   return (
@@ -163,7 +169,7 @@ const TopBar = () => {
                       {menuItems.map((item, index) => (
                         <button
                           key={index}
-                          onClick={() => scrollToSection(item.href)}
+                          onClick={() => handleMenuClick(item.href)}
                           className="text-left p-2 rounded-lg hover:bg-accent/10 transition-colors text-foreground hover:text-primary text-lg font-medium"
                         >
                           {item.name}
@@ -174,7 +180,7 @@ const TopBar = () => {
                       <Button 
                         variant="hero" 
                         className="mt-3 w-full text-base"
-                        onClick={() => scrollToSection("#cta")}
+                        onClick={() => handleMenuClick("/#cta")}
                       >
                         Заказать съемку
                       </Button>
