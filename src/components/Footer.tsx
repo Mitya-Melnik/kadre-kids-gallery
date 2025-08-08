@@ -158,7 +158,7 @@ const Footer = () => {
                 <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                   PSD шаблоны
                 </a>
-                <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
+                <a href="/projects" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                   Проекты под ключ
                 </a>
               </nav>
