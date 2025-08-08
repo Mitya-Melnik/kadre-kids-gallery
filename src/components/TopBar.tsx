@@ -58,6 +58,7 @@ const TopBar = () => {
               <a 
                 href="https://wa.me/79956002111" 
                 className="flex flex-col items-center gap-1 transition-colors"
+                aria-label="WhatsApp"
               >
                 <div className="flex items-center gap-2">
                   <svg className="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="currentColor">

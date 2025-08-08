@@ -16,14 +16,6 @@ const Process = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Debug info
-  console.log('Process component render:', { 
-    titleVisible, 
-    contentVisible, 
-    activeStep, 
-    isMobileVisible,
-    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'unknown'
-  });
 
   const steps = [
     {
@@ -137,7 +129,6 @@ const Process = () => {
                   <button
                     className="w-full p-4 text-left flex items-center justify-between hover:bg-secondary/50 transition-all duration-200 ease-in-out hover:scale-[1.01] active:scale-[0.99]"
                     onClick={() => {
-                      console.log('Mobile accordion clicked:', index, 'current activeStep:', activeStep);
                       setActiveStep(activeStep === index ? -1 : index);
                     }}
                   >

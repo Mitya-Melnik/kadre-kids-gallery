@@ -55,6 +55,20 @@ const FAQ = () => {
     }
   ];
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  } as const;
+
+
   return (
     <section id="faq" className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
@@ -89,7 +103,7 @@ const FAQ = () => {
             ))}
           </Accordion>
           
-          {visibleCount < faqs.length && (
+          {visibleCount < faqs.length ? (
             <div className="text-center mt-8">
               <Button 
                 variant="outline" 
@@ -100,6 +114,19 @@ const FAQ = () => {
                 Смотреть еще
               </Button>
             </div>
+          ) : (
+            faqs.length > 7 && (
+              <div className="text-center mt-8">
+                <Button 
+                  variant="ghost" 
+                  size="lg"
+                  onClick={() => setVisibleCount(7)}
+                  className="border border-border text-muted-foreground hover:text-foreground hover:bg-accent/40 transition-all duration-300"
+                >
+                  Свернуть
+                </Button>
+              </div>
+            )
           )}
         </div>
         
@@ -117,6 +144,10 @@ const FAQ = () => {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
     </section>
   );
 };

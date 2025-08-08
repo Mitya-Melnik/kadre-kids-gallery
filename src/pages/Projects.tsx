@@ -194,6 +194,7 @@ const Projects = () => {
                     src={project.image} 
                     alt={project.name}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
                   />
                 </div>
                 <CardContent className="p-4">
@@ -255,6 +256,7 @@ const Projects = () => {
                     src={testimonial.image} 
                     alt={`Работа ${index + 1}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <blockquote className="text-muted-foreground italic mb-2">
@@ -334,6 +336,7 @@ const Projects = () => {
                       src={selectedProject.gallery[currentImageIndex]} 
                       alt={selectedProject.name}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                     {selectedProject.gallery.length > 1 && (
                       <>
@@ -371,6 +374,7 @@ const Projects = () => {
                             src={image} 
                             alt={`${selectedProject.name} ${index + 1}`}
                             className="w-full h-full object-cover"
+                            loading="lazy"
                           />
                         </button>
                       ))}

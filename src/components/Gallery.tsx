@@ -120,6 +120,7 @@ const Gallery = () => {
                       src={gallery.cover}
                       alt={gallery.title}
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
@@ -144,6 +145,7 @@ const Gallery = () => {
                         src={image}
                         alt={`${gallery.title} ${index + 1}`}
                         className="w-full h-64 object-cover rounded-lg shadow-soft"
+                        loading="lazy"
                       />
                     ))}
                   </div>
