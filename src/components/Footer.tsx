@@ -16,6 +16,7 @@ const Footer = () => {
     { name: "Стоимость", href: "#pricing" },
     { name: "Вопросы и ответы", href: "#faq" },
     { name: "Заказать презентацию", href: "#cta" },
+    { name: "Реферальная система", href: "#" },
   ];
 
   return (
@@ -146,13 +147,10 @@ const Footer = () => {
             {/* Детская среда */}
             <div className="mb-6">
               <h4 className="text-lg font-semibold mb-4 text-white">Детская среда</h4>
-              <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm">
-                Подробнее
-              </a>
             </div>
 
             {/* Фотографам */}
-            <div className="mb-6">
+            <div>
               <h4 className="text-lg font-semibold mb-4 text-white">Фотографам</h4>
               <nav className="space-y-2">
                 <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
@@ -162,14 +160,6 @@ const Footer = () => {
                   Проекты под ключ
                 </a>
               </nav>
-            </div>
-
-            {/* Реферальная система */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-white">Реферальная система</h4>
-              <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm">
-                Калькулятор
-              </a>
             </div>
           </div>
         </div>
