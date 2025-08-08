@@ -39,9 +39,9 @@ const TopBar = () => {
   return (
     <div className={`sticky top-0 z-50 border-b border-border py-3 shadow-soft transition-all duration-300 ${isScrolled ? 'bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60' : 'bg-background'}`}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-4 items-center justify-items-center sm:flex sm:items-center sm:justify-between">
           {/* Левая часть - логотип и дескриптор */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center sm:justify-start gap-4">
             {/* Логотип */}
             <a href="/" className="block">
               <img 
@@ -101,7 +101,7 @@ const TopBar = () => {
           </div>
 
           {/* Социальные сети для мобильных */}
-          <div className="flex items-center gap-2.5 sm:hidden">
+          <div className="flex items-center justify-center gap-2.5 sm:hidden">
             {/* WhatsApp */}
             <a 
               href="https://wa.me/79956002111" 
@@ -137,7 +137,7 @@ const TopBar = () => {
           </div>
           
           {/* Правая часть - кнопка и меню */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-4">
             {/* Кнопка для десктопа */}
             <Button 
               variant="default" 
@@ -163,7 +163,7 @@ const TopBar = () => {
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="rounded-lg"
+                  className="rounded-lg hidden sm:inline-flex"
                 >
                   <Menu className="w-5 h-5" />
                 </Button>
@@ -253,6 +253,17 @@ const TopBar = () => {
               </SheetContent>
             </Sheet>
           </div>
+
+          {/* Гамбургер меню - отдельная кнопка для мобильных (равные отступы) */}
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="rounded-lg sm:hidden"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Открыть меню"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </div>
