@@ -36,11 +36,13 @@ const TopBar = () => {
           {/* Левая часть - логотип и дескриптор */}
           <div className="flex items-center gap-4">
             {/* Логотип */}
-            <img 
-              src="/lovable-uploads/b6c9cc69-0a84-4a55-bb3d-bd6a40f3e305.png" 
-              alt="ЛЕМП ВКАДР" 
-              className="h-8 sm:h-10"
-            />
+            <a href="/" className="block">
+              <img 
+                src="/lovable-uploads/b6c9cc69-0a84-4a55-bb3d-bd6a40f3e305.png" 
+                alt="ЛЕМП ВКАДР" 
+                className="h-8 sm:h-10 hover:opacity-90 transition-opacity"
+              />
+            </a>
             
             {/* Дескриптор - только для десктопа */}
             <div className="hidden sm:block text-sm text-foreground/70 leading-tight">
