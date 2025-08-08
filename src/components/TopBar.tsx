@@ -1,10 +1,17 @@
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TopBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const menuItems = [
     { name: "Главная", href: "/" },
@@ -30,7 +37,7 @@ const TopBar = () => {
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-white border-b border-border py-3 shadow-soft">
+    <div className={`sticky top-0 z-50 border-b border-border py-3 shadow-soft transition-all duration-300 ${isScrolled ? 'bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60' : 'bg-background'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Левая часть - логотип и дескриптор */}
