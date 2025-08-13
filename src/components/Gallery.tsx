@@ -97,12 +97,12 @@ const Gallery = () => {
                   </article>
                 </DialogTrigger>
 
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <DialogContent className="max-w-5xl md:max-w-6xl max-h-[80vh] overflow-y-auto">
                   <div className="p-6">
                     <h3 className="text-2xl font-bold text-foreground mb-6">
                       {album.title}
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="columns-1 sm:columns-2 lg:columns-3">
                       {Array.from({ length: MAX_IMAGES_PER_ALBUM }, (_, i) => i + 1).map((n) => {
                         const base = `/galleries/${album.slug}/${n}`;
                         const candidates = [
@@ -116,7 +116,7 @@ const Gallery = () => {
                             key={`${album.slug}-${n}`}
                             srcs={candidates}
                             alt={`${album.title} — фото ${n}`}
-                            className="w-full h-64 object-cover rounded-lg shadow-soft"
+                            className="mb-4 w-full h-auto rounded-lg shadow-soft break-inside-avoid"
                             loading="lazy"
                           />
                         );
