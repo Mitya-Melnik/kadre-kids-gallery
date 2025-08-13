@@ -1,6 +1,8 @@
 import { Phone, Mail, MapPin, Clock, ExternalLink } from "lucide-react";
 
-const Footer = () => {
+interface FooterProps { hideQuickLinks?: boolean }
+
+const Footer = ({ hideQuickLinks = false }: FooterProps) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -108,20 +110,22 @@ const Footer = () => {
           </div>
 
           {/* Быстрые ссылки */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-white">Быстрые ссылки</h4>
-            <nav className="space-y-2">
-              {quickLinks.map((link, index) => (
-                <button
-                  key={index}
-                  onClick={() => scrollToSection(link.href)}
-                  className="text-slate-300 hover:text-primary transition-colors text-sm block w-full text-left"
-                >
-                  {link.name}
-                </button>
-              ))}
-            </nav>
-          </div>
+          {!hideQuickLinks && (
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Быстрые ссылки</h4>
+              <nav className="space-y-2">
+                {quickLinks.map((link, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollToSection(link.href)}
+                    className="text-slate-300 hover:text-primary transition-colors text-sm block w-full text-left"
+                  >
+                    {link.name}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          )}
 
           {/* Выпускные альбомы */}
           <div>
@@ -157,7 +161,7 @@ const Footer = () => {
                   PSD шаблоны
                 </a>
                 <a href="/projects" className="text-slate-300 hover:text-primary transition-colors text-sm block">
-                  Проекты под ключ
+                  Каталог декораций
                 </a>
               </nav>
             </div>

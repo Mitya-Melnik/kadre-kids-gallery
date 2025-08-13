@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TopBar from "@/components/TopBar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,6 +38,27 @@ const Projects = () => {
     comment: ''
   });
   const { toast } = useToast();
+
+  // SEO: title, description, canonical
+  useEffect(() => {
+    document.title = "Каталог декораций — Дети в кадре";
+    const desc =
+      document.querySelector('meta[name="description"]') ||
+      document.createElement('meta');
+    desc.setAttribute('name', 'description');
+    desc.setAttribute(
+      'content',
+      'Каталог декораций для фотосъемки в детском саду: стандартный и премиум пакеты. Оставьте заявку и мы свяжемся с вами.'
+    );
+    if (!desc.parentNode) document.head.appendChild(desc);
+
+    const canonical =
+      document.querySelector('link[rel="canonical"]') ||
+      document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    canonical.setAttribute('href', window.location.origin + '/projects');
+    if (!canonical.parentNode) document.head.appendChild(canonical);
+  }, []);
 
   // Моковые данные проектов
   const projects: Project[] = [
@@ -169,11 +190,10 @@ const Projects = () => {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Проекты под ключ
+              Каталог декораций
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
-              Готовые декорации для детской фотосъёмки. Выберите подходящий пакет: 
-              стандартный с материалами или премиум под ключ с реквизитом
+              Готовые и продуманные декорации для фотосъемки в детском саду. Выберите подходящий пакет, оставьте заявку и мы свяжемся с вами.
             </p>
           </div>
         </div>
@@ -271,51 +291,8 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* Футер каталога */}
-      <section className="py-12 bg-secondary">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-foreground">
-                Быстрые ссылки
-              </h3>
-              <div className="space-y-2">
-                <a href="/" className="block text-muted-foreground hover:text-primary transition-colors">
-                  Главная
-                </a>
-                <a href="#gallery" className="block text-muted-foreground hover:text-primary transition-colors">
-                  Галерея
-                </a>
-                <a href="#pricing" className="block text-muted-foreground hover:text-primary transition-colors">
-                  Цены
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-xl font-semibold mb-4 text-foreground">
-                Контакты менеджера
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center text-muted-foreground">
-                  <Phone className="w-4 h-4 mr-2" />
-                  <span>+7 (999) 123-45-67</span>
-                </div>
-                <div className="flex items-center text-muted-foreground">
-                  <Mail className="w-4 h-4 mr-2" />
-                  <span>manager@detivkadre.ru</span>
-                </div>
-                <div className="flex items-center text-muted-foreground">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  <span>Telegram: @detivkadre_manager</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <Footer />
+      <Footer hideQuickLinks />
 
       {/* Модальное окно */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
