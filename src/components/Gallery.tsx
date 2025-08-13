@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { analyzeGalleryLayout, type GalleryAnalysis } from "@/lib/imageUtils";
 
 // Small helper that tries multiple sources and hides itself if none load
 function LazySmartImage({
@@ -53,6 +54,37 @@ const albums = [
 ];
 
 const Gallery = () => {
+  const [galleryAnalyses, setGalleryAnalyses] = useState<Record<string, GalleryAnalysis>>({});
+
+  // Analyze galleries on component mount
+  useEffect(() => {
+    const analyzeAllGalleries = async () => {
+      const analyses: Record<string, GalleryAnalysis> = {};
+      
+      // Analyze each album
+      for (const album of albums) {
+        try {
+          const analysis = await analyzeGalleryLayout(album.slug, MAX_IMAGES_PER_ALBUM);
+          analyses[album.slug] = analysis;
+        } catch (error) {
+          console.warn(`Failed to analyze ${album.title}:`, error);
+          // Use masonry as fallback
+          analyses[album.slug] = {
+            layoutType: 'masonry',
+            verticalCount: 0,
+            horizontalCount: 0,
+            totalCount: 0,
+            verticalPercentage: 0,
+          };
+        }
+      }
+      
+      setGalleryAnalyses(analyses);
+    };
+
+    analyzeAllGalleries();
+  }, []);
+
   return (
     <section id="gallery" className="py-20 bg-secondary/50">
       <div className="container mx-auto px-4">
@@ -99,10 +131,26 @@ const Gallery = () => {
 
                 <DialogContent className="max-w-5xl md:max-w-6xl max-h-[80vh] overflow-y-auto">
                   <div className="p-6">
-                    <h3 className="text-2xl font-bold text-foreground mb-6">
-                      {album.title}
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-2xl font-bold text-foreground">
+                        {album.title}
+                      </h3>
+                      {galleryAnalyses[album.slug] && (
+                        <div className="text-sm text-muted-foreground">
+                          {galleryAnalyses[album.slug].layoutType === 'grid' 
+                            ? '📐 Сохранен порядок' 
+                            : '🎨 Красивое распределение'
+                          }
+                        </div>
+                      )}
+                    </div>
+                    <div 
+                      className={
+                        galleryAnalyses[album.slug]?.layoutType === 'grid'
+                          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                          : "columns-1 sm:columns-2 lg:columns-3 xl:columns-4"
+                      }
+                    >
                       {Array.from({ length: MAX_IMAGES_PER_ALBUM }, (_, i) => i + 1).map((n) => {
                         const base = `/galleries/${album.slug}/${n}`;
                         const candidates = [
