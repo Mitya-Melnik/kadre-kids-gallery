@@ -65,7 +65,7 @@ const Gallery = () => {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {albums.map((album) => {
             const coverBase = `/galleries/${album.slug}/cover`;
             const coverCandidates = [
@@ -102,7 +102,7 @@ const Gallery = () => {
                     <h3 className="text-2xl font-bold text-foreground mb-6">
                       {album.title}
                     </h3>
-                    <div className="columns-1 sm:columns-2 lg:columns-3">
+                    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4">
                       {Array.from({ length: MAX_IMAGES_PER_ALBUM }, (_, i) => i + 1).map((n) => {
                         const base = `/galleries/${album.slug}/${n}`;
                         const candidates = [
