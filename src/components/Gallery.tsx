@@ -2,34 +2,61 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { analyzeGalleryLayout, type GalleryAnalysis } from "@/lib/imageUtils";
 
-// Small helper that tries multiple sources and hides itself if none load
-function LazySmartImage({
-  srcs,
+// Helper that creates responsive images with mobile/desktop versions
+function ResponsiveImage({
+  basePath,
   alt,
   className,
   loading = "lazy",
 }: {
-  srcs: string[];
+  basePath: string;
   alt: string;
   className?: string;
   loading?: "lazy" | "eager";
 }) {
-  const [idx, setIdx] = useState(0);
   const [hidden, setHidden] = useState(false);
 
-  if (hidden || srcs.length === 0) return null;
+  if (hidden) return null;
+
+  // Create candidates for both mobile and desktop versions
+  const mobileWebp = `${basePath}-mobile.webp`;
+  const desktopWebp = `${basePath}.webp`;
+  
+  // Fallback sources if webp versions don't exist
+  const fallbackSources = [
+    `${basePath}.jpg`,
+    `${basePath}.jpeg`, 
+    `${basePath}.png`
+  ];
 
   return (
     <img
-      src={srcs[idx]}
+      srcSet={`${mobileWebp} 800w, ${desktopWebp} 1600w`}
+      sizes="(max-width: 768px) 800px, 1600px"
+      src={desktopWebp}
       alt={alt}
       className={className}
       loading={loading}
-      onError={() => {
-        if (idx < srcs.length - 1) {
-          setIdx((i) => i + 1);
+      onError={(e) => {
+        // Try fallback sources in sequence
+        const currentSrc = e.currentTarget.src;
+        const currentSrcSet = e.currentTarget.srcset;
+        
+        if (currentSrcSet && currentSrcSet.includes('-mobile.webp')) {
+          // If srcset failed, try just the desktop webp
+          e.currentTarget.srcset = '';
+          e.currentTarget.src = desktopWebp;
+        } else if (currentSrc.endsWith('.webp')) {
+          // If webp failed, try other formats
+          e.currentTarget.src = fallbackSources[0] || '/placeholder.svg';
         } else {
-          setHidden(true);
+          // Try next fallback or hide
+          const currentIndex = fallbackSources.indexOf(currentSrc);
+          if (currentIndex < fallbackSources.length - 1) {
+            e.currentTarget.src = fallbackSources[currentIndex + 1];
+          } else {
+            setHidden(true);
+          }
         }
       }}
     />
@@ -100,21 +127,14 @@ const Gallery = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {albums.map((album) => {
             const coverBase = `/galleries/${album.slug}/cover`;
-            const coverCandidates = [
-              `${coverBase}.webp`,
-              `${coverBase}.jpg`,
-              `${coverBase}.jpeg`,
-              `${coverBase}.png`,
-              `/placeholder.svg`, // final fallback
-            ];
 
             return (
               <Dialog key={album.slug}>
                 <DialogTrigger asChild>
                   <article className="group cursor-pointer">
                     <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
-                      <LazySmartImage
-                        srcs={coverCandidates}
+                      <ResponsiveImage
+                        basePath={coverBase}
                         alt={`${album.title} — обложка фотосессии`}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"
@@ -153,16 +173,10 @@ const Gallery = () => {
                     >
                       {Array.from({ length: MAX_IMAGES_PER_ALBUM }, (_, i) => i + 1).map((n) => {
                         const base = `/galleries/${album.slug}/${n}`;
-                        const candidates = [
-                          `${base}.webp`,
-                          `${base}.jpg`,
-                          `${base}.jpeg`,
-                          `${base}.png`,
-                        ];
                         return (
-                          <LazySmartImage
+                          <ResponsiveImage
                             key={`${album.slug}-${n}`}
-                            srcs={candidates}
+                            basePath={base}
                             alt={`${album.title} — фото ${n}`}
                             className="mb-4 w-full h-auto rounded-lg shadow-soft break-inside-avoid"
                             loading="lazy"
