@@ -8,11 +8,13 @@ function ResponsiveImage({
   alt,
   className,
   loading = "lazy",
+  type = "gallery",
 }: {
   basePath: string;
   alt: string;
   className?: string;
   loading?: "lazy" | "eager";
+  type?: "cover" | "gallery";
 }) {
   const [hidden, setHidden] = useState(false);
 
@@ -29,10 +31,17 @@ function ResponsiveImage({
     `${basePath}.png`
   ];
 
+  // Different responsive sizes for covers vs gallery photos
+  const isCover = type === "cover";
+  const mobileWidth = isCover ? "600w" : "800w";
+  const desktopWidth = isCover ? "1200w" : "1600w";
+  const mobileSizes = isCover ? "600px" : "800px";
+  const desktopSizes = isCover ? "1200px" : "1600px";
+
   return (
     <img
-      srcSet={`${mobileWebp} 800w, ${desktopWebp} 1600w`}
-      sizes="(max-width: 768px) 800px, 1600px"
+      srcSet={`${mobileWebp} ${mobileWidth}, ${desktopWebp} ${desktopWidth}`}
+      sizes={`(max-width: 768px) ${mobileSizes}, ${desktopSizes}`}
       src={desktopWebp}
       alt={alt}
       className={className}
@@ -135,6 +144,7 @@ const Gallery = () => {
                     <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
                       <ResponsiveImage
                         basePath={coverBase}
+                        type="cover"
                         alt={`${album.title} — обложка фотосессии`}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"
@@ -177,6 +187,7 @@ const Gallery = () => {
                           <ResponsiveImage
                             key={`${album.slug}-${n}`}
                             basePath={base}
+                            type="gallery"
                             alt={`${album.title} — фото ${n}`}
                             className="mb-4 w-full h-auto rounded-lg shadow-soft break-inside-avoid"
                             loading="lazy"
