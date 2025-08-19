@@ -1,62 +1,95 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Download, FileText } from "lucide-react";
 
 const CTA = () => {
+  const handleParentsClick = () => {
+    // Трекинг клика родителей
+    console.log('Клик: Родители - Чек-лист');
+    window.open('https://t.me/your_bot?start=checklist', '_blank');
+  };
+
+  const handleAdminClick = () => {
+    // Трекинг клика администрации
+    console.log('Клик: Администрация - Презентация');
+    window.open('https://t.me/your_bot?start=presentation', '_blank');
+  };
+
+  const handleChannelClick = () => {
+    console.log('Клик: Подписка на канал');
+    window.open('https://t.me/deti_v_kadre', '_blank');
+  };
+
   return (
     <section id="cta" className="py-20 bg-gradient-primary relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern opacity-20"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Закажите презентацию
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-16">
+            🎯 Выберите, что для вас важно
           </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Получите PDF-презентацию с примерами декораций и актуальным прайс-листом
-          </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button variant="accent" size="xl" className="shadow-accent bg-accent text-accent-foreground hover:bg-accent/90">
-              Заказать съемку
-            </Button>
-            <Button variant="outline" size="xl" className="text-white border-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm">
-              Связаться с нами
-            </Button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Карточка для родителей */}
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Download className="w-8 h-8 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-white mb-2">
+                  Как подготовить ребёнка к фотосессии
+                </CardTitle>
+                <p className="text-white/80 text-lg">
+                  Получите бесплатный чек-лист в Telegram
+                </p>
+              </CardHeader>
+              <CardContent className="text-center">
+                <Button 
+                  variant="accent" 
+                  size="xl" 
+                  className="w-full shadow-accent mb-4"
+                  onClick={handleParentsClick}
+                >
+                  Скачать чек-лист
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Карточка для администрации */}
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-white mb-2">
+                  Чем мы можем быть полезны детскому саду?
+                </CardTitle>
+                <p className="text-white/80 text-lg">
+                  Презентация: фотосъёмка сотрудников, баннеры, оформление стендов и многое другое
+                </p>
+              </CardHeader>
+              <CardContent className="text-center">
+                <Button 
+                  variant="accent" 
+                  size="xl" 
+                  className="w-full shadow-accent mb-4"
+                  onClick={handleAdminClick}
+                >
+                  Получить презентацию
+                </Button>
+              </CardContent>
+            </Card>
           </div>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold text-white mb-6">
-              Почему стоит заказать презентацию?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-white/90">Примеры всех тематических декораций</p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-white/90">Подробные цены на все услуги</p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-white/90">Процесс организации съемки</p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-white/90">Примеры готовых фотографий</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-center">
-            <p className="text-white/80 mb-4">Готовы обсудить детали?</p>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="text-white border-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm"
-              onClick={() => window.open('https://t.me/your_telegram', '_blank')}
+
+          {/* Ссылка на канал */}
+          <div className="text-center">
+            <button 
+              onClick={handleChannelClick}
+              className="text-white/70 hover:text-white transition-colors duration-200 text-sm underline underline-offset-4"
             >
-              Написать в Телеграм
-            </Button>
+              Подпишись на канал «Дети в кадре»
+            </button>
           </div>
         </div>
       </div>
