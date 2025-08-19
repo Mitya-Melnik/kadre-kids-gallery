@@ -41,7 +41,7 @@ const Testimonials = () => {
       id: 3,
       name: "Анна Смирнова", 
       role: "Мама Максима, 4 года",
-      text: "Отличное качество фото и удобная система покупки через Telegram-бот. Рекомендую всем родителям!",
+      text: "Отличное качество фото и удобная система покупки через сайт. Рекомендую всем родителям!",
       avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop&crop=face"
     },
     {
@@ -49,19 +49,19 @@ const Testimonials = () => {
       name: "Ирина Волкова",
       role: "Детский сад №15",
       text: "Дети в полном восторге! Качественные снимки и профессиональный подход к каждому ребенку.",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b632?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1569913486515-b74bf7751574?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 5,
       name: "Сергей Николаев",
       role: "Папа Артема, 6 лет",
       text: "Удобная система заказа и быстрая доставка фото. Сын очень доволен своими портретами!",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 6,
       name: "Ольга Морозова",
-      role: "Заведующая садиком",
+      role: "Администрация детского сада",
       text: "Сотрудничаем уже второй год. Родители всегда довольны результатом фотосессий.",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop&crop=face"
     },
@@ -70,14 +70,14 @@ const Testimonials = () => {
       name: "Екатерина Лебедева",
       role: "Мама Софии, 4 года",
       text: "Дочка стеснялась, но фотографы нашли подход. Снимки получились естественными и красивыми.",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1619895862022-09114b41f16f?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 8,
-      name: "Александр Ковалев",
-      role: "Воспитатель группы «Радуга»",
+      name: "Александра Ковалева",
+      role: "Мама Ани, 4 года",
       text: "Прекрасная организация процесса. Дети не устали, все прошло быстро и весело.",
-      avatar: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 9,
@@ -88,17 +88,17 @@ const Testimonials = () => {
     },
     {
       id: 10,
-      name: "Дмитрий Соколов",
-      role: "Папа Маши, 6 лет",
+      name: "Марина Соколова",
+      role: "Мама",
       text: "Отличное соотношение цены и качества. Обязательно закажем фотосессию и в следующем году.",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1559893088-c0787ebfc084?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 11,
       name: "Татьяна Кузнецова",
       role: "Детский сад №7",
       text: "Работаем с командой уже 3 года. Всегда высокое качество и индивидуальный подход к детям.",
-      avatar: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=120&h=120&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=120&h=120&fit=crop&crop=face&auto=format"
     }
   ];
 
