@@ -67,7 +67,7 @@ const CTA = () => {
                   Подарки для детского сада
                 </CardTitle>
                 <p className="text-muted-foreground text-lg">
-                  Посмотреть, чем мы можем быть полезны
+                  Презентация с услугами: фотосъёмка, баннеры, оформление стендов
                 </p>
               </CardHeader>
               <CardContent className="text-center flex-grow flex flex-col justify-end">
