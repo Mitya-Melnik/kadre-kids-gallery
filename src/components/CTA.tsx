@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, FileText } from "lucide-react";
+import { ClipboardList, School } from "lucide-react";
 
 const CTA = () => {
   const handleParentsClick = () => {
@@ -27,7 +27,7 @@ const CTA = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-16">
-            🎯 Выберите, что для вас важно
+            Бесплатные материалы для родителей и детских садов
           </h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -35,24 +35,27 @@ const CTA = () => {
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
               <CardHeader className="text-center pb-4">
                 <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Download className="w-8 h-8 text-accent" />
+                  <ClipboardList className="w-8 h-8 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-white mb-2">
-                  Как подготовить ребёнка к фотосессии
+                  Чек-лист для родителей: как подготовить ребёнка к фотосессии
                 </CardTitle>
                 <p className="text-white/80 text-lg">
-                  Получите бесплатный чек-лист в Telegram
+                  Практичный чек-лист с советами психолога и фотографа
                 </p>
               </CardHeader>
               <CardContent className="text-center">
                 <Button 
                   variant="accent" 
                   size="xl" 
-                  className="w-full shadow-accent mb-4"
+                  className="w-full shadow-accent shadow-lg mb-2"
                   onClick={handleParentsClick}
                 >
-                  Скачать чек-лист
+                  Скачать чек-лист бесплатно
                 </Button>
+                <p className="text-white/50 text-sm">
+                  👉 В один клик в Telegram
+                </p>
               </CardContent>
             </Card>
 
@@ -60,24 +63,27 @@ const CTA = () => {
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
               <CardHeader className="text-center pb-4">
                 <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-8 h-8 text-accent" />
+                  <School className="w-8 h-8 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-white mb-2">
-                  Чем мы можем быть полезны детскому саду?
+                  Подарки для детского сада
                 </CardTitle>
                 <p className="text-white/80 text-lg">
-                  Презентация: фотосъёмка сотрудников, баннеры, оформление стендов и многое другое
+                  Посмотреть, чем мы можем быть полезны
                 </p>
               </CardHeader>
               <CardContent className="text-center">
                 <Button 
                   variant="accent" 
                   size="xl" 
-                  className="w-full shadow-accent mb-4"
+                  className="w-full shadow-accent shadow-lg mb-2"
                   onClick={handleAdminClick}
                 >
-                  Получить презентацию
+                  Скачать презентацию
                 </Button>
+                <p className="text-white/50 text-sm">
+                  👉 В один клик в Telegram
+                </p>
               </CardContent>
             </Card>
           </div>
