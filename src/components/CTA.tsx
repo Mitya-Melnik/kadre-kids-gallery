@@ -21,67 +21,65 @@ const CTA = () => {
   };
 
   return (
-    <section id="cta" className="py-20 bg-gradient-primary relative overflow-hidden">
-      <div className="absolute inset-0 bg-pattern opacity-20"></div>
-      
-      <div className="container mx-auto px-4 relative z-10">
+    <section id="cta" className="py-20 bg-accent-soft">
+      <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
             Бесплатные материалы для родителей и детских садов
           </h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Карточка для родителей */}
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
+            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift">
               <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ClipboardList className="w-8 h-8 text-accent" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ClipboardList className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-white mb-2">
+                <CardTitle className="text-2xl font-bold text-foreground mb-2">
                   Чек-лист для родителей: как подготовить ребёнка к фотосессии
                 </CardTitle>
-                <p className="text-white/80 text-lg">
+                <p className="text-muted-foreground text-lg">
                   Практичный чек-лист с советами психолога и фотографа
                 </p>
               </CardHeader>
               <CardContent className="text-center">
                 <Button 
-                  variant="accent" 
+                  variant="default" 
                   size="xl" 
-                  className="w-full shadow-accent shadow-lg mb-2"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
                   onClick={handleParentsClick}
                 >
                   Скачать чек-лист бесплатно
                 </Button>
-                <p className="text-white/50 text-sm">
+                <p className="text-muted-foreground/70 text-sm">
                   👉 В один клик в Telegram
                 </p>
               </CardContent>
             </Card>
 
             {/* Карточка для администрации */}
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 hover-lift">
+            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift">
               <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <School className="w-8 h-8 text-accent" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <School className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-white mb-2">
+                <CardTitle className="text-2xl font-bold text-foreground mb-2">
                   Подарки для детского сада
                 </CardTitle>
-                <p className="text-white/80 text-lg">
+                <p className="text-muted-foreground text-lg">
                   Посмотреть, чем мы можем быть полезны
                 </p>
               </CardHeader>
               <CardContent className="text-center">
                 <Button 
-                  variant="accent" 
+                  variant="default" 
                   size="xl" 
-                  className="w-full shadow-accent shadow-lg mb-2"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
                   onClick={handleAdminClick}
                 >
                   Скачать презентацию
                 </Button>
-                <p className="text-white/50 text-sm">
+                <p className="text-muted-foreground/70 text-sm">
                   👉 В один клик в Telegram
                 </p>
               </CardContent>
@@ -92,7 +90,7 @@ const CTA = () => {
           <div className="text-center">
             <button 
               onClick={handleChannelClick}
-              className="text-white/70 hover:text-white transition-colors duration-200 text-sm underline underline-offset-4"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm underline underline-offset-4"
             >
               Подпишись на канал «Дети в кадре»
             </button>
