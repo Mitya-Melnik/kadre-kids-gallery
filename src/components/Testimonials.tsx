@@ -56,7 +56,7 @@ const Testimonials = () => {
       name: "Сергей Николаев",
       role: "Папа Артема, 6 лет",
       text: "Удобная система заказа и быстрая доставка фото. Сын очень доволен своими портретами!",
-      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=120&h=120&fit=crop&crop=face&auto=format"
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 6,
