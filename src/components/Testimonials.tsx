@@ -56,7 +56,7 @@ const Testimonials = () => {
       name: "Сергей Николаев",
       role: "Папа Артема, 6 лет",
       text: "Удобная система заказа и быстрая доставка фото. Сын очень доволен своими портретами!",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face&auto=format"
+      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 6,
@@ -89,9 +89,9 @@ const Testimonials = () => {
     {
       id: 10,
       name: "Марина Соколова",
-      role: "Мама",
+      role: "Мама Ани, 4 года",
       text: "Отличное соотношение цены и качества. Обязательно закажем фотосессию и в следующем году.",
-      avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop&crop=face&auto=format"
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 11,
