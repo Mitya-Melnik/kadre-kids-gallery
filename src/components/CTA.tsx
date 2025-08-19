@@ -28,10 +28,10 @@ const CTA = () => {
             Бесплатные материалы для родителей и детских садов
           </h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-stretch">
             {/* Карточка для родителей */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift">
-              <CardHeader className="text-center pb-4">
+            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
+              <CardHeader className="text-center pb-4 flex-shrink-0">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ClipboardList className="w-8 h-8 text-primary" />
                 </div>
@@ -42,7 +42,7 @@ const CTA = () => {
                   Практичный чек-лист с советами психолога и фотографа
                 </p>
               </CardHeader>
-              <CardContent className="text-center">
+              <CardContent className="text-center flex-grow flex flex-col justify-end">
                 <Button 
                   variant="default" 
                   size="xl" 
@@ -58,8 +58,8 @@ const CTA = () => {
             </Card>
 
             {/* Карточка для администрации */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift">
-              <CardHeader className="text-center pb-4">
+            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
+              <CardHeader className="text-center pb-4 flex-shrink-0">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <School className="w-8 h-8 text-primary" />
                 </div>
@@ -70,7 +70,7 @@ const CTA = () => {
                   Посмотреть, чем мы можем быть полезны
                 </p>
               </CardHeader>
-              <CardContent className="text-center">
+              <CardContent className="text-center flex-grow flex flex-col justify-end">
                 <Button 
                   variant="default" 
                   size="xl" 
