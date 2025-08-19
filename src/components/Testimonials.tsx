@@ -91,14 +91,14 @@ const Testimonials = () => {
       name: "Марина Соколова",
       role: "Мама",
       text: "Отличное соотношение цены и качества. Обязательно закажем фотосессию и в следующем году.",
-      avatar: "https://images.unsplash.com/photo-1559893088-c0787ebfc084?w=120&h=120&fit=crop&crop=face&auto=format"
+      avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&h=120&fit=crop&crop=face&auto=format"
     },
     {
       id: 11,
       name: "Татьяна Кузнецова",
       role: "Детский сад №7",
       text: "Работаем с командой уже 3 года. Всегда высокое качество и индивидуальный подход к детям.",
-      avatar: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=120&h=120&fit=crop&crop=face&auto=format"
+      avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop&crop=face&auto=format"
     }
   ];
 
