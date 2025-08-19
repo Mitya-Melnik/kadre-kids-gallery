@@ -17,7 +17,7 @@ const Pricing = () => {
       title: "Файлы онлайн",
       price: "399 ₽",
       description: "Цифровые фотографии в высоком качестве",
-      note: "При заказе от 1890₽ — в подарок!",
+      note: "При заказе печатных фото от 1890₽ — в подарок!",
       popular: true
     },
     {
@@ -26,10 +26,10 @@ const Pricing = () => {
       price: "От 410 ₽",
       description: "Классическая печать разных форматов",
       items: [
-        { size: "10×15", price: "410 ₽", note: "Классический размер для альбома" },
-        { size: "15×21", price: "479 ₽", note: "Увеличенный формат" },
-        { size: "21×30", price: "600 ₽", note: "Для рамки на стол" },
-        { size: "30×45", price: "900 ₽", note: "Большой формат для стены" }
+        { size: "10×15", price: "410 ₽", note: "Классический размер, четверть А4" },
+        { size: "15×21", price: "479 ₽", note: "Увеличенный формат, половина А4" },
+        { size: "21×30", price: "600 ₽", note: "Для рамки на стол, А4" },
+        { size: "30×45", price: "900 ₽", note: "Большой формат для стены, А3" }
       ]
     },
     {
@@ -40,8 +40,8 @@ const Pricing = () => {
       items: [
         { size: "Магнит 7×10", price: "500 ₽", note: "На холодильник" },
         { size: "Магнит 10×15", price: "550 ₽", note: "Увеличенный магнит" },
-        { size: "Холст 20×30", price: "2900 ₽", note: "Художественная печать" },
-        { size: "Холст 30×45", price: "4500 ₽", note: "Большой художественный холст" }
+        { size: "Картина на холсте 20×30, А4", price: "2900 ₽", note: "Художественная печать" },
+        { size: "Картина на холсте 30×45, А3", price: "4500 ₽", note: "Большой художественный холст" }
       ]
     }
   ];
@@ -78,7 +78,7 @@ const Pricing = () => {
                           {pkg.title}
                         </h3>
                         {pkg.popular && (
-                          <span className="bg-gradient-accent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
                             Популярное
                           </span>
                         )}
@@ -144,7 +144,7 @@ const Pricing = () => {
                           {pkg.title}
                         </h3>
                         {pkg.popular && (
-                          <span className="bg-gradient-accent text-white px-2 py-1 rounded-full text-xs font-semibold">
+                          <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-semibold">
                             Популярное
                           </span>
                         )}
