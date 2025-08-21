@@ -12,7 +12,7 @@ const CTA = () => {
   const handleAdminClick = () => {
     // Трекинг клика администрации
     console.log('Клик: Администрация - Презентация');
-    window.open('https://t.me/your_bot?start=presentation', '_blank');
+    window.open('https://goo.su/Wx7mJz', '_blank');
   };
 
   const handleChannelClick = () => {
