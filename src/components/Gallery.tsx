@@ -75,7 +75,7 @@ function ResponsiveImage({
 const MAX_IMAGES_PER_ALBUM = 20; // You can change this if needed
 
 const albums = [
-  { slug: "suhocvety", title: "Сухоцветы" },
+  { slug: "suhocvety", title: "Мгновенья Весны" },
   { slug: "tykvennoe", title: "Тыквенное настроение" },
   { slug: "osenkach", title: "Осенние качели" },
   { slug: "osenskazka", title: "Осенняя сказка" },
