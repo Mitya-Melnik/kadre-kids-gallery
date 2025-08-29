@@ -75,6 +75,7 @@ function ResponsiveImage({
 const MAX_IMAGES_PER_ALBUM = 20; // You can change this if needed
 
 const albums = [
+  { slug: "zimaskazka2", title: "Сладкие истории" },
   { slug: "suhocvety", title: "Мгновенья Весны" },
   { slug: "tykvennoe", title: "Тыквенное настроение" },
   { slug: "osenkach", title: "Осенние качели" },
@@ -82,7 +83,6 @@ const albums = [
   { slug: "zimaskazka", title: "Зимняя сказка" },
   { slug: "paravoz", title: "В объятиях зимы" },
   { slug: "zimniy-vecher", title: "Зимний вечер" },
-  { slug: "zimaskazka2", title: "Зимняя сказка 2" },
   { slug: "podarki-na-rozhdestvo", title: "Подарки на рождество" },
   { slug: "olen", title: "Легенда севера" },
   { slug: "okno", title: "У окна" },
