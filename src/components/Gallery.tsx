@@ -176,7 +176,9 @@ const Gallery = () => {
                           : "columns-1 sm:columns-2 lg:columns-3 xl:columns-4"
                       }
                     >
-                      {Array.from({ length: MAX_IMAGES_PER_ALBUM }, (_, i) => i + 1).map((n) => {
+                      {Array.from({ 
+                        length: galleryAnalyses[album.slug]?.totalCount || MAX_IMAGES_PER_ALBUM 
+                      }, (_, i) => i + 1).map((n) => {
                         const base = `/galleries/${album.slug}/${n}`;
                         return (
                           <ResponsiveImage
