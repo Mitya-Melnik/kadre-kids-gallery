@@ -10,7 +10,12 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+console.log("App.tsx: Routes configured with Kindergarten import:", typeof Kindergarten);
+
+const App = () => {
+  console.log("Route /kindergarten registered with component:", Kindergarten);
+  
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -27,5 +32,6 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+};
 
 export default App;

@@ -11,6 +11,7 @@ import BackToTop from "@/components/BackToTop";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Kindergarten = () => {
+  console.log("Kindergarten component is rendering");
   const [selectedSize, setSelectedSize] = useState("Small");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState("Все");
