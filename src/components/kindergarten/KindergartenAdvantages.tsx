@@ -1,3 +1,4 @@
+import { Star, Clock, Gamepad2, MessageCircle, Palette, Camera, CheckCircle } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const KindergartenAdvantages = () => {
@@ -6,37 +7,37 @@ const KindergartenAdvantages = () => {
 
   const advantages = [
     {
-      emoji: "🌟",
+      icon: Star,
       title: "Высокое качество",
       description: "Печать происходит на цифровом оборудовании HP Indigo и Ricoh Pro. Твердая фотообложка, развороты на 180 градусов, ламинированная поверхность, плотные листы. Технология сборки — через склеивание цельных разворотов между собой."
     },
     {
-      emoji: "⏱️", 
+      icon: Clock,
       title: "100% заказов вовремя",
       description: "Сроки соблюдаем и не срываем дедлайны."
     },
     {
-      emoji: "🎮",
+      icon: Gamepad2,
       title: "Игра вместо позирования", 
       description: "Ребёнок расслаблен и в кадре настоящий."
     },
     {
-      emoji: "💬",
+      icon: MessageCircle,
       title: "Быстрая коммуникация",
       description: "Отвечаем быстро в мессенджерах и всегда на связи с родителями."
     },
     {
-      emoji: "🎨",
+      icon: Palette,
       title: "Живая ретушь + AI",
       description: "Совмещаем алгоритмы и ручную ретушь — кадры остаются живыми и натуральными."
     },
     {
-      emoji: "📸",
+      icon: Camera,
       title: "Техника",
       description: "Привозим собственное оборудование и создаём настоящую фотостудию прямо в детском саду."
     },
     {
-      emoji: "✅", 
+      icon: CheckCircle, 
       title: "Все документы и разрешения",
       description: "У нас есть полный комплект документов и все разрешения на съёмку в соответствии с требованиями детских садов."
     }
@@ -59,27 +60,26 @@ const KindergartenAdvantages = () => {
         
         <div 
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
           {advantages.map((advantage, index) => (
             <div
               key={index}
-              className={`group bg-gradient-card p-8 rounded-xl transition-all duration-300 ease-out hover:shadow-glow hover:-translate-y-2 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`bg-gradient-card p-8 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 text-center group ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ 
-                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms'
+                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
+                transitionDuration: '700ms'
               }}
             >
-              <div className="text-center space-y-4">
-                <div className="text-5xl group-hover:scale-110 transition-transform duration-300 ease-out">
-                  {advantage.emoji}
-                </div>
-                <h3 className="text-xl font-semibold text-foreground">
-                  {advantage.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {advantage.description}
-                </p>
+              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <advantage.icon className="w-8 h-8 text-white" />
               </div>
+              <h3 className="text-xl font-semibold text-foreground mb-4">
+                {advantage.title}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {advantage.description}
+              </p>
             </div>
           ))}
         </div>
