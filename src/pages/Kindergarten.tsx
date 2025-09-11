@@ -355,7 +355,7 @@ const Kindergarten = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
-              <Card key={index} className={`bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift transition-all duration-700 ${advantagesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+              <Card key={index} className={`bg-background border border-border hover:shadow-glow hover-lift transition-all duration-700 ${advantagesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
                 <CardContent className="p-6 text-center">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <benefit.icon className="w-8 h-8 text-primary" />
