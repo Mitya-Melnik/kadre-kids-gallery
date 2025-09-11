@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface FooterProps { hideQuickLinks?: boolean }
 
@@ -131,9 +132,9 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
           <div>
             <h4 className="text-lg font-semibold mb-4 text-white">Выпускные альбомы</h4>
             <nav className="space-y-2">
-              <a href="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">
+              <Link to="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                 Детский сад
-              </a>
+              </Link>
               <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                 Начальная школа
               </a>
@@ -160,9 +161,9 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
                 <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                   PSD шаблоны
                 </a>
-                <a href="/projects" className="text-slate-300 hover:text-primary transition-colors text-sm block">
+                <Link to="/projects" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                   Каталог декораций
-                </a>
+                </Link>
               </nav>
             </div>
           </div>
