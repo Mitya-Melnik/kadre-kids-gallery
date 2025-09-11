@@ -9,7 +9,7 @@ const KindergartenAdvantages = () => {
     {
       icon: Star,
       title: "Высокое качество",
-      description: "Печать происходит на цифровом оборудовании HP Indigo и Ricoh Pro. Твердая фотообложка, развороты на 180 градусов, ламинированная поверхность, плотные листы. Технология сборки — через склеивание цельных разворотов между собой."
+      description: "Печать на цифровом оборудовании HP Indigo и Ricoh Pro. Твердая фотообложка, развороты на 180 градусов, ламинированная поверхность, плотные листы."
     },
     {
       icon: Clock,
@@ -65,18 +65,20 @@ const KindergartenAdvantages = () => {
           {advantages.map((advantage, index) => (
             <div
               key={index}
-              className={`bg-gradient-card p-8 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 text-center group ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 group ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ 
                 transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
                 transitionDuration: '700ms'
               }}
             >
-              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <advantage.icon className="w-8 h-8 text-white" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <advantage.icon className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">
+                  {advantage.title}
+                </h3>
               </div>
-              <h3 className="text-xl font-semibold text-foreground mb-4">
-                {advantage.title}
-              </h3>
               <p className="text-muted-foreground leading-relaxed">
                 {advantage.description}
               </p>
