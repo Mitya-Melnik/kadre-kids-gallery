@@ -37,8 +37,8 @@ const Kindergarten = () => {
         <KindergartenHero />
         <KindergartenBanner />
         <KindergartenGallery />
-        <KindergartenLayouts />
         <AlbumCatalog />
+        <KindergartenLayouts />
         <KindergartenAdvantages />
         <Testimonials />
         <KindergartenFAQ />
