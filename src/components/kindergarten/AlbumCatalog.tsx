@@ -12,45 +12,81 @@ const AlbumCatalog = () => {
 
   const albumSizes = {
     "Small": {
-      price: "1890 ₽",
-      originalPrice: "2200 ₽",
+      price: "2700 ₽",
+      subtitle: "Альбом папка",
       image: "/placeholder.svg",
-      popular: false
+      popular: false,
+      features: [
+        "1 съемочный день",
+        "Разворот с владельцем альбома, воспитателями и одногруппниками",
+        "12 дизайнов на выбор (выбрать 1 на группу)"
+      ]
     },
     "Small+": {
-      price: "2290 ₽", 
-      originalPrice: "2600 ₽",
+      price: "2950 ₽", 
+      subtitle: "Альбом трио",
       image: "/placeholder.svg",
-      popular: false
+      popular: false,
+      features: [
+        "1 съемочный день",
+        "Индивидуальный портрет ребенка",
+        "Трио с владельцем альбома, воспитателями и одногруппниками",
+        "Общая фотография всей группы",
+        "12 дизайнов на выбор (выбрать 1 на группу)"
+      ]
     },
     "Mini": {
-      price: "2690 ₽",
-      originalPrice: "3100 ₽", 
+      price: "3300 ₽",
+      subtitle: "Альбом на 6 страниц",
       image: "/placeholder.svg",
-      popular: true
+      popular: true,
+      features: [
+        "1 съемочный день",
+        "Фотография на обложке (по желанию группы)",
+        "Разворот с владельцем альбома, воспитателями и одногруппниками",
+        "Общая фотография всей группы",
+        { text: "Разворот с групповыми фотографиями", bold: true },
+        "12 дизайнов на выбор (выбрать 1 на группу)"
+      ],
+      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
     },
     "Extra": {
-      price: "3290 ₽",
-      originalPrice: "3800 ₽",
+      price: "3900 ₽",
+      subtitle: "Альбом на 5 страниц",
       image: "/placeholder.svg",
-      popular: false
+      popular: false,
+      features: [
+        "1 съемочный день",
+        "Фотография на обложке (по желанию группы)",
+        "Разворот с воспитателями и одногруппниками",
+        "Общая фотография всей группы",
+        { text: "Индивидуальный разворот ребенка", bold: true },
+        { text: "3 индивидуальных портрета ребенка", bold: true },
+        { text: "3 разворота групповых фотографий", bold: true },
+        "12 дизайнов на выбор (выбрать 1 на группу)"
+      ],
+      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
     },
     "Max": {
-      price: "4290 ₽",
-      originalPrice: "4900 ₽",
+      price: "6500 ₽",
+      subtitle: "Альбом на 5 страниц",
       image: "/placeholder.svg",
-      popular: false
+      popular: false,
+      features: [
+        "До 3 съемочных дня",
+        "Фотография на обложке (по желанию группы)",
+        "Разворот с воспитателями и одногруппниками",
+        "Общая фотография всей группы",
+        { text: "Индивидуальный разворот ребенка", bold: true },
+        { text: "3 индивидуальных портрета ребенка", bold: true },
+        { text: "5 разворотов групповых фотографий", bold: true },
+        { text: "Фотосъемка выпускного", bold: true },
+        { text: "Уникальные грамоты/медали на выпускной", bold: true },
+        "12 дизайнов на выбор (выбрать 1 на группу)"
+      ],
+      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
     }
-  };
-
-  const includedFeatures = [
-    "Один съемочный день",
-    "Индивидуальный разворот владельца",
-    "Общая фотография всей группы", 
-    "3 разворота групповых фотографий",
-    "Разворот с фотографиями одногрупников",
-    "5 дизайнов на выбор (выбрать 1 на группу)"
-  ];
+  } as const;
 
   const handleVideoClick = () => {
     // Handle video modal or redirect
@@ -136,15 +172,12 @@ const AlbumCatalog = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
+                  <div className="mb-4">
+                    <p className="text-lg text-muted-foreground">{currentAlbum.subtitle}</p>
+                  </div>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-2xl lg:text-3xl font-bold text-primary">
                       {currentAlbum.price}
-                    </span>
-                    <span className="text-lg lg:text-xl text-muted-foreground line-through">
-                      {currentAlbum.originalPrice}
-                    </span>
-                    <span className="bg-success text-success-foreground px-2 py-1 rounded-full text-xs font-semibold">
-                      Скидка 15%
                     </span>
                   </div>
                 </CardContent>
@@ -159,27 +192,34 @@ const AlbumCatalog = () => {
                 </CardHeader>
                 <CardContent className="pt-0">
                   <ul className="space-y-2 lg:space-y-3">
-                    {includedFeatures.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 lg:gap-3">
-                        <span className="text-primary font-bold text-base lg:text-lg">✓</span>
-                        <span className="text-foreground text-sm lg:text-base">{feature}</span>
-                      </li>
-                    ))}
+                    {currentAlbum.features.map((feature, index) => {
+                      const isFeatureObject = typeof feature === 'object';
+                      const featureText = isFeatureObject ? feature.text : feature;
+                      const isBold = isFeatureObject && feature.bold;
+                      
+                      return (
+                        <li key={index} className="flex items-start gap-2 lg:gap-3">
+                          <span className="text-primary font-bold text-base lg:text-lg">✓</span>
+                          <span className={`text-foreground text-sm lg:text-base ${isBold ? 'font-bold' : ''}`}>
+                            {featureText}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                   
-                  <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-accent-soft rounded-lg">
-                    <div className="flex items-start gap-2 lg:gap-3">
-                      <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
-                      <div>
-                        <p className="font-semibold text-foreground text-sm lg:text-base">
-                          Можно добавить индивидуальные развороты
-                        </p>
-                        <p className="text-muted-foreground text-xs lg:text-sm">
-                          +350 ₽ за разворот
-                        </p>
+                  {('additionalInfo' in currentAlbum) && (
+                    <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-accent-soft rounded-lg">
+                      <div className="flex items-start gap-2 lg:gap-3">
+                        <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <p className="font-semibold text-foreground text-sm lg:text-base">
+                            {(currentAlbum as any).additionalInfo}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
