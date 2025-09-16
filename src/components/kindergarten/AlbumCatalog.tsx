@@ -99,31 +99,10 @@ const AlbumCatalog = () => {
           </div>
 
           {/* Selected Album Display */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Album preview */}
-            <div className="relative">
-              <div className="bg-gradient-card p-8 rounded-xl shadow-glow">
-                <img
-                  src={currentAlbum.image}
-                  alt={`Разворот альбома ${selectedSize}`}
-                  className="w-full h-80 object-cover rounded-lg shadow-soft"
-                />
-                <div className="mt-6 text-center">
-                  <Button
-                    variant="secondary"
-                    onClick={handleVideoClick}
-                    className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 px-6 py-3"
-                  >
-                    <Play className="w-5 h-5 mr-2" />
-                    Смотреть видео
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Details */}
-            <div className="space-y-8">
-              <Card className="bg-gradient-card border-primary/20 shadow-glow">
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:items-center">
+            {/* Price Card - First on mobile, right side on desktop */}
+            <div className="order-1 lg:order-2">
+              <Card className="bg-gradient-card border-primary/20 shadow-glow mb-8 lg:mb-0">
                 <CardHeader>
                   <CardTitle className="text-2xl text-foreground flex items-center justify-between">
                     {selectedSize}
@@ -148,8 +127,31 @@ const AlbumCatalog = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
 
-              {/* Included features */}
+            {/* Album preview - Second on mobile, left side on desktop */}
+            <div className="order-2 lg:order-1 relative">
+              <div className="bg-gradient-card p-8 rounded-xl shadow-glow">
+                <img
+                  src={currentAlbum.image}
+                  alt={`Разворот альбома ${selectedSize}`}
+                  className="w-full h-80 object-cover rounded-lg shadow-soft"
+                />
+                <div className="mt-6 text-center">
+                  <Button
+                    variant="secondary"
+                    onClick={handleVideoClick}
+                    className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 px-6 py-3"
+                  >
+                    <Play className="w-5 h-5 mr-2" />
+                    Смотреть видео
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Included features - Third on mobile, continues right column on desktop */}
+            <div className="order-3 lg:order-2 lg:col-start-2">
               <Card className="bg-gradient-card shadow-soft">
                 <CardHeader>
                   <CardTitle className="text-xl text-foreground">
