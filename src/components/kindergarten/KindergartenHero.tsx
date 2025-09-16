@@ -25,19 +25,19 @@ const KindergartenHero = () => {
   const advantages = [
     {
       emoji: "📸",
-      text: "<strong>Отдаем все</strong> фотографии со съемки"
+      text: "<strong>Отдаем все</strong><br/>фотографии со съемки"
     },
     {
       emoji: "🆓",
-      text: "<strong>Бесплатно доснимем</strong> если заболели или не смогли прийти" 
+      text: "<strong>Бесплатно доснимем</strong><br/>если заболели или не смогли прийти" 
     },
     {
       emoji: "⏰",
-      text: "<strong>100% заказов</strong> отдали вовремя"
+      text: "<strong>100% заказов</strong><br/>отдали вовремя"
     },
     {
       emoji: "✨",
-      text: "<strong>Высокое качество</strong> съемки в любых условиях и локациях"
+      text: "<strong>Высокое качество съемки</strong><br/>в любых условиях и локациях"
     }
   ];
 
