@@ -4,6 +4,7 @@ import TopBar from "@/components/TopBar";
 import KindergartenHero from "@/components/kindergarten/KindergartenHero";
 import KindergartenBanner from "@/components/kindergarten/KindergartenBanner";
 import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
+import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
 import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Testimonials from "@/components/Testimonials";
@@ -36,6 +37,7 @@ const Kindergarten = () => {
         <KindergartenHero />
         <KindergartenBanner />
         <KindergartenGallery />
+        <KindergartenLayouts />
         <AlbumCatalog />
         <KindergartenAdvantages />
         <Testimonials />
