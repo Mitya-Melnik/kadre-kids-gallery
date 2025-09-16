@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const KindergartenHero = () => {
@@ -66,25 +65,27 @@ const KindergartenHero = () => {
           </div>
 
           {/* Photo slider - Second on mobile, right column on desktop */}
-          <div className="order-2 lg:order-2 lg:row-span-2 relative">
-            <div className="relative overflow-hidden rounded-xl shadow-glow">
-              <div 
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {heroImages.map((image, index) => (
-                  <div key={index} className="min-w-full">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-[500px] object-cover"
-                    />
-                  </div>
-                ))}
+          <div className="order-2 lg:order-2 lg:row-span-2 relative w-full">
+            <div className="relative w-full overflow-hidden rounded-xl shadow-glow">
+              <div className="relative w-full h-[400px] md:h-[500px]">
+                <div 
+                  className="flex w-full h-full transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {heroImages.map((image, index) => (
+                    <div key={index} className="min-w-full h-full flex-shrink-0">
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
               
               {/* Slide indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
                 {heroImages.map((_, index) => (
                   <button
                     key={index}
