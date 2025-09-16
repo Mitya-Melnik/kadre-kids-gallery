@@ -25,19 +25,19 @@ const KindergartenHero = () => {
   const advantages = [
     {
       emoji: "📸",
-      text: "Отдаем все фотографии со съемки"
+      text: "<strong>Отдаем все</strong> фотографии со съемки"
     },
     {
       emoji: "🆓",
-      text: "Бесплатно доснимем если заболели или не смогли прийти" 
+      text: "<strong>Бесплатно доснимем</strong> если заболели или не смогли прийти" 
     },
     {
       emoji: "⏰",
-      text: "100% заказов отдали вовремя"
+      text: "<strong>100% заказов</strong> отдали вовремя"
     },
     {
       emoji: "✨",
-      text: "Высокое качество съемки в любых условиях и локациях"
+      text: "<strong>Высокое качество</strong> съемки в любых условиях и локациях"
     }
   ];
 
@@ -59,7 +59,7 @@ const KindergartenHero = () => {
             ref={titleRef}
             className={`order-1 lg:order-1 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
               Каждая страница — кусочек детства, который не вернуть
             </h1>
           </div>
@@ -116,9 +116,10 @@ const KindergartenHero = () => {
               >
                 <div className="flex items-start gap-4">
                   <span className="text-3xl flex-shrink-0">{advantage.emoji}</span>
-                  <p className="text-foreground font-medium leading-relaxed">
-                    {advantage.text}
-                  </p>
+                  <p 
+                    className="text-foreground font-medium leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: advantage.text }}
+                  />
                 </div>
               </div>
             ))}
