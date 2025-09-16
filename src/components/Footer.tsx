@@ -132,13 +132,14 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
           <div>
             <h4 className="text-lg font-semibold mb-4 text-white">Выпускные альбомы</h4>
             <nav className="space-y-2">
-              <Link 
-                to="/kindergarten" 
+              <a 
+                href="/kindergarten" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-primary hover:text-primary-glow transition-colors text-sm block font-semibold"
-                onClick={() => window.scrollTo(0, 0)}
               >
                 Детский сад
-              </Link>
+              </a>
               <a href="#" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                 Начальная школа
               </a>
