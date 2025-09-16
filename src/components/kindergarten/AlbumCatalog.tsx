@@ -129,8 +129,8 @@ const AlbumCatalog = () => {
               </Card>
             </div>
 
-            {/* Album preview - Second on mobile, left side on desktop */}
-            <div className="order-2 lg:order-1 relative">
+            {/* Album preview - Third on mobile, left side on desktop */}
+            <div className="order-3 lg:order-1 relative">
               <div className="bg-gradient-card p-8 rounded-xl shadow-glow">
                 <img
                   src={currentAlbum.image}
@@ -150,8 +150,8 @@ const AlbumCatalog = () => {
               </div>
             </div>
 
-            {/* Included features - Third on mobile, continues right column on desktop */}
-            <div className="order-3 lg:order-2 lg:col-start-2">
+            {/* Included features - Second on mobile, continues right column on desktop */}
+            <div className="order-2 lg:order-2 lg:col-start-2">
               <Card className="bg-gradient-card shadow-soft">
                 <CardHeader>
                   <CardTitle className="text-xl text-foreground">
