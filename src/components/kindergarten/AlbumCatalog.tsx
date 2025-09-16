@@ -14,7 +14,6 @@ const AlbumCatalog = () => {
     "Small": {
       price: "1890 ₽",
       originalPrice: "2200 ₽",
-      description: "Компактный альбом 15×15 см",
       pages: "20 страниц",
       image: "/placeholder.svg",
       popular: false
@@ -22,7 +21,6 @@ const AlbumCatalog = () => {
     "Small+": {
       price: "2290 ₽", 
       originalPrice: "2600 ₽",
-      description: "Увеличенный альбом 18×18 см",
       pages: "24 страницы",
       image: "/placeholder.svg",
       popular: false
@@ -30,7 +28,6 @@ const AlbumCatalog = () => {
     "Mini": {
       price: "2690 ₽",
       originalPrice: "3100 ₽", 
-      description: "Стандартный альбом 20×20 см",
       pages: "28 страниц",
       image: "/placeholder.svg",
       popular: true
@@ -38,7 +35,6 @@ const AlbumCatalog = () => {
     "Extra": {
       price: "3290 ₽",
       originalPrice: "3800 ₽",
-      description: "Большой альбом 25×25 см", 
       pages: "32 страницы",
       image: "/placeholder.svg",
       popular: false
@@ -46,7 +42,6 @@ const AlbumCatalog = () => {
     "Max": {
       price: "4290 ₽",
       originalPrice: "4900 ₽",
-      description: "Максимальный альбом 30×30 см",
       pages: "40 страниц", 
       image: "/placeholder.svg",
       popular: false
@@ -77,11 +72,8 @@ const AlbumCatalog = () => {
           className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Каталог пакетов альбомов
+            Каталог
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Выберите подходящий размер выпускного альбома для вашей группы
-          </p>
         </div>
 
         <div 
@@ -146,7 +138,7 @@ const AlbumCatalog = () => {
                       </span>
                     )}
                   </CardTitle>
-                  <p className="text-muted-foreground">{currentAlbum.description}</p>
+                  
                   <p className="text-muted-foreground font-medium">{currentAlbum.pages}</p>
                 </CardHeader>
                 <CardContent>
