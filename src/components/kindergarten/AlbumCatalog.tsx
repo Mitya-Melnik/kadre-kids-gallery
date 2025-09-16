@@ -14,35 +14,30 @@ const AlbumCatalog = () => {
     "Small": {
       price: "1890 ₽",
       originalPrice: "2200 ₽",
-      pages: "20 страниц",
       image: "/placeholder.svg",
       popular: false
     },
     "Small+": {
       price: "2290 ₽", 
       originalPrice: "2600 ₽",
-      pages: "24 страницы",
       image: "/placeholder.svg",
       popular: false
     },
     "Mini": {
       price: "2690 ₽",
       originalPrice: "3100 ₽", 
-      pages: "28 страниц",
       image: "/placeholder.svg",
       popular: true
     },
     "Extra": {
       price: "3290 ₽",
       originalPrice: "3800 ₽",
-      pages: "32 страницы",
       image: "/placeholder.svg",
       popular: false
     },
     "Max": {
       price: "4290 ₽",
       originalPrice: "4900 ₽",
-      pages: "40 страниц", 
       image: "/placeholder.svg",
       popular: false
     }
@@ -138,8 +133,6 @@ const AlbumCatalog = () => {
                       </span>
                     )}
                   </CardTitle>
-                  
-                  <p className="text-muted-foreground font-medium">{currentAlbum.pages}</p>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
