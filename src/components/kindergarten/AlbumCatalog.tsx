@@ -99,45 +99,16 @@ const AlbumCatalog = () => {
           </div>
 
           {/* Selected Album Display */}
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:items-center">
-            {/* Price Card - First on mobile, right side on desktop */}
-            <div className="order-1 lg:order-2">
-              <Card className="bg-gradient-card border-primary/20 shadow-glow mb-8 lg:mb-0">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-foreground flex items-center justify-between">
-                    {selectedSize}
-                    {currentAlbum.popular && (
-                      <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                        Популярный
-                      </span>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="text-3xl font-bold text-primary">
-                      {currentAlbum.price}
-                    </span>
-                    <span className="text-xl text-muted-foreground line-through">
-                      {currentAlbum.originalPrice}
-                    </span>
-                    <span className="bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                      Скидка 15%
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
+          <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
             {/* Album preview - Third on mobile, left side on desktop */}
-            <div className="order-3 lg:order-1 relative">
-              <div className="bg-gradient-card p-8 rounded-xl shadow-glow">
+            <div className="order-3 lg:order-1 flex-1 lg:max-w-[55%]">
+              <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
                 <img
                   src={currentAlbum.image}
                   alt={`Разворот альбома ${selectedSize}`}
-                  className="w-full h-80 object-cover rounded-lg shadow-soft"
+                  className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-soft"
                 />
-                <div className="mt-6 text-center">
+                <div className="mt-4 lg:mt-6 text-center">
                   <Button
                     variant="secondary"
                     onClick={handleVideoClick}
@@ -150,32 +121,60 @@ const AlbumCatalog = () => {
               </div>
             </div>
 
-            {/* Included features - Second on mobile, continues right column on desktop */}
-            <div className="order-2 lg:order-2 lg:col-start-2">
+            {/* Right column with price and features */}
+            <div className="order-1 lg:order-2 flex-1 lg:max-w-[45%] space-y-6">
+              {/* Price Card - First on mobile, top of right column on desktop */}
+              <Card className="bg-gradient-card border-primary/20 shadow-glow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-2xl text-foreground flex items-center justify-between">
+                    {selectedSize}
+                    {currentAlbum.popular && (
+                      <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                        Популярный
+                      </span>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-2xl lg:text-3xl font-bold text-primary">
+                      {currentAlbum.price}
+                    </span>
+                    <span className="text-lg lg:text-xl text-muted-foreground line-through">
+                      {currentAlbum.originalPrice}
+                    </span>
+                    <span className="bg-success text-success-foreground px-2 py-1 rounded-full text-xs font-semibold">
+                      Скидка 15%
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Included features - Second on mobile, bottom of right column on desktop */}
               <Card className="bg-gradient-card shadow-soft">
-                <CardHeader>
-                  <CardTitle className="text-xl text-foreground">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg lg:text-xl text-foreground">
                     Что включено:
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
+                <CardContent className="pt-0">
+                  <ul className="space-y-2 lg:space-y-3">
                     {includedFeatures.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <span className="text-primary font-bold text-lg">✓</span>
-                        <span className="text-foreground">{feature}</span>
+                      <li key={index} className="flex items-start gap-2 lg:gap-3">
+                        <span className="text-primary font-bold text-base lg:text-lg">✓</span>
+                        <span className="text-foreground text-sm lg:text-base">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   
-                  <div className="mt-6 p-4 bg-accent-soft rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <Plus className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                  <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-accent-soft rounded-lg">
+                    <div className="flex items-start gap-2 lg:gap-3">
+                      <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
                       <div>
-                        <p className="font-semibold text-foreground">
+                        <p className="font-semibold text-foreground text-sm lg:text-base">
                           Можно добавить индивидуальные развороты
                         </p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs lg:text-sm">
                           +350 ₽ за разворот
                         </p>
                       </div>
