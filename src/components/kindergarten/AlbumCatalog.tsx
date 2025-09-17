@@ -41,7 +41,7 @@ const AlbumCatalog = () => {
       price: "3300 ₽",
       subtitle: "Альбом на 6 страниц",
       image: "/placeholder.svg",
-      popular: true,
+      popular: false,
       features: [
         "1 съемочный день",
         "Индивидуальный портрет ребенка",
@@ -57,7 +57,7 @@ const AlbumCatalog = () => {
       price: "3900 ₽",
       subtitle: "Альбом на 10 страниц",
       image: "/placeholder.svg",
-      popular: false,
+      popular: true,
       features: [
         "1 съемочный день",
         "Индивидуальный разворот ребенка",
