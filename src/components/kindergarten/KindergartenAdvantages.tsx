@@ -60,30 +60,46 @@ const KindergartenAdvantages = () => {
         
         <div 
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-7xl mx-auto"
         >
-          {advantages.map((advantage, index) => (
-            <div
-              key={index}
-              className={`bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 group ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ 
-                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
-                transitionDuration: '700ms'
-              }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <advantage.icon className="w-5 h-5 text-white" />
+          {advantages.map((advantage, index) => {
+            // Определяем размер карточки на основе длины текста
+            let cardSize = 'col-span-1 md:col-span-2 lg:col-span-2'; // стандартный размер
+            
+            if (index === 0 || index === 6) {
+              // Длинные карточки: "Высокое качество" и "Все документы"
+              cardSize = 'col-span-1 md:col-span-4 lg:col-span-3';
+            } else if (index === 1 || index === 3) {
+              // Короткие карточки: "100% заказов" и "Быстрая коммуникация"
+              cardSize = 'col-span-1 md:col-span-2 lg:col-span-2';
+            } else {
+              // Средние карточки: остальные
+              cardSize = 'col-span-1 md:col-span-2 lg:col-span-2';
+            }
+            
+            return (
+              <div
+                key={index}
+                className={`${cardSize} bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-2 group ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ 
+                  transitionDelay: gridVisible ? `${index * 100}ms` : '0ms',
+                  transitionDuration: '700ms'
+                }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <advantage.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {advantage.title}
+                  </h3>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {advantage.title}
-                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {advantage.description}
+                </p>
               </div>
-              <p className="text-muted-foreground leading-relaxed">
-                {advantage.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
