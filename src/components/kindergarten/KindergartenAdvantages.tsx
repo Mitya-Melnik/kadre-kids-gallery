@@ -60,21 +60,30 @@ const KindergartenAdvantages = () => {
         
         <div 
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-6 max-w-7xl mx-auto"
         >
           {advantages.map((advantage, index) => {
-            // Определяем размер карточки на основе длины текста
+            // Определяем размер карточки на основе длины текста и визуального баланса
             let cardSize = 'col-span-1 md:col-span-2 lg:col-span-2'; // стандартный размер
             
-            if (index === 0 || index === 6) {
-              // Длинные карточки: "Высокое качество" и "Все документы"
-              cardSize = 'col-span-1 md:col-span-4 lg:col-span-3';
+            if (index === 0) {
+              // "Высокое качество" - очень длинный текст
+              cardSize = 'col-span-1 md:col-span-4 lg:col-span-4';
             } else if (index === 1 || index === 3) {
-              // Короткие карточки: "100% заказов" и "Быстрая коммуникация"
+              // "100% заказов" и "Быстрая коммуникация" - короткие
               cardSize = 'col-span-1 md:col-span-2 lg:col-span-2';
-            } else {
-              // Средние карточки: остальные
+            } else if (index === 2) {
+              // "Игра вместо позирования" - средний
               cardSize = 'col-span-1 md:col-span-2 lg:col-span-2';
+            } else if (index === 4) {
+              // "Живая ретушь + AI" - средне-длинный
+              cardSize = 'col-span-1 md:col-span-2 lg:col-span-3';
+            } else if (index === 5) {
+              // "Техника" - средний
+              cardSize = 'col-span-1 md:col-span-2 lg:col-span-3';
+            } else if (index === 6) {
+              // "Все документы и разрешения" - длинный
+              cardSize = 'col-span-1 md:col-span-4 lg:col-span-4';
             }
             
             return (
