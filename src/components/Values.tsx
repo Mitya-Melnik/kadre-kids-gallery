@@ -1,4 +1,4 @@
-import { Star, Shield, Heart, Smartphone, Camera, Users } from "lucide-react";
+import { CreditCard, Shield, Clock, MessageCircle, CheckCircle, Heart } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Values = () => {
@@ -6,34 +6,34 @@ const Values = () => {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
   const values = [
     {
+      icon: CreditCard,
+      title: "0 ₽ предоплаты",
+      description: "Заказываете только понравившиеся фотографии — никаких лишних расходов."
+    },
+    {
+      icon: Shield,
+      title: "100% безопасность и прозрачность", 
+      description: "Доступ только по паролю, онлайн-оплата, все фотографы с медкнижками."
+    },
+    {
+      icon: Clock,
+      title: "7 дней — готовые фото",
+      description: "Обработанные снимки в личном кабинете уже через неделю."
+    },
+    {
+      icon: MessageCircle,
+      title: "Поддержка 24/7",
+      description: "Удобный Telegram-бот: статус заказа всегда доступен в Telegram-боте."
+    },
+    {
+      icon: CheckCircle,
+      title: "Удобство организации",
+      description: "Мы берём на себя съёмку, работу с детьми, оплату, доставку и взаимодействие с родителями."
+    },
+    {
       icon: Heart,
-      title: "Естественные эмоции",
-      description: "Игровой подход для живых и искренних снимков"
-    },
-    {
-      icon: Shield,
-      title: "Забота о клиенте", 
-      description: "Полная поддержка через Telegram-бот на любом этапе"
-    },
-    {
-      icon: Shield,
-      title: "Безопасность",
-      description: "Доступ к фото по уникальному паролю — только ваши кадры"
-    },
-    {
-      icon: Smartphone,
-      title: "Удобство",
-      description: "Простой личный кабинет, мгновенная загрузка и гибкая оплата"
-    },
-    {
-      icon: Camera,
-      title: "Атмосфера",
-      description: "Тематический декор и проф-свет делают съёмку праздником"
-    },
-    {
-      icon: Users,
-      title: "Профессионализм",
-      description: "Опытная команда с медицинскими книжками и 15-летним стажем работы с детьми"
+      title: "Уют и игра",
+      description: "Дети в знакомой обстановке с декорациями, которые увлекают."
     }
   ];
 
@@ -42,7 +42,7 @@ const Values = () => {
       <div className="container mx-auto px-4">
         <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Наши ценности
+            Почему мы
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Мы создаем ценные воспоминания, которые будут радовать семьи долгие годы, 
