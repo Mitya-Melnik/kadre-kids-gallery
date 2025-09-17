@@ -1,4 +1,4 @@
-import { CheckCircle, Shield, Clock, Heart, Users, Zap } from "lucide-react";
+import { CreditCard, Shield, Clock, MessageCircle, CheckCircle, Heart } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Advantages = () => {
@@ -7,34 +7,34 @@ const Advantages = () => {
   const { ref: extraRef, isVisible: extraVisible } = useScrollAnimation(0.2);
   const advantages = [
     {
-      icon: CheckCircle,
-      title: "Удобство организации",
-      description: "Мы берём на себя съёмку, работу с детьми, продажи, оплату, доставку"
+      icon: CreditCard,
+      title: "0 ₽ предоплаты",
+      description: "Заказываете только понравившиеся фотографии — никаких лишних расходов."
     },
     {
       icon: Shield,
-      title: "Безопасно и прозрачно",
-      description: "Доступ по паролю, оплата на сайте, медкнижки у всех сотрудников"
-    },
-    {
-      icon: Heart,
-      title: "Без предоплаты",
-      description: "Заказывайте только понравившиеся снимки"
-    },
-    {
-      icon: Users,
-      title: "Уют и игра",
-      description: "Дети в знакомой обстановке<br />с атмосферными декорациями"
+      title: "100% безопасность и прозрачность", 
+      description: "Доступ только по паролю, онлайн-оплата, все фотографы с медкнижками."
     },
     {
       icon: Clock,
-      title: "Оперативность",
-      description: "Готовые фотографии за 7 дней"
+      title: "7 дней — готовые фото",
+      description: "Обработанные снимки в личном кабинете уже через неделю."
     },
     {
-      icon: Zap,
+      icon: MessageCircle,
       title: "Поддержка 24/7",
-      description: "Через Telegram-бот с удобной оплатой и мобильной версией"
+      description: "Удобный Telegram-бот: статус заказа всегда доступен в Telegram-боте."
+    },
+    {
+      icon: CheckCircle,
+      title: "Удобство организации",
+      description: "Мы берём на себя съёмку, работу с детьми, оплату, доставку и взаимодействие с родителями."
+    },
+    {
+      icon: Heart,
+      title: "Уют и игра",
+      description: "Дети в знакомой обстановке с декорациями, которые увлекают."
     }
   ];
 
