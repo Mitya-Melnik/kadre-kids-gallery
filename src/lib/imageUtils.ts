@@ -15,6 +15,68 @@ export interface GalleryAnalysis {
 // Cache for image analysis results
 const analysisCache = new Map<string, GalleryAnalysis>();
 
+// Cache for layout image counts
+const layoutCountCache = new Map<string, number>();
+
+/**
+ * Counts existing images in a layout folder
+ */
+export const countLayoutImages = async (layoutSlug: string): Promise<number> => {
+  // Check cache first
+  if (layoutCountCache.has(layoutSlug)) {
+    return layoutCountCache.get(layoutSlug)!;
+  }
+
+  let count = 0;
+  const maxCheck = 50; // Check up to 50 images (reasonable limit)
+  
+  for (let i = 1; i <= maxCheck; i++) {
+    const candidates = [
+      `/layouts/${layoutSlug}/${i}.webp`,
+      `/layouts/${layoutSlug}/${i}.jpg`,
+      `/layouts/${layoutSlug}/${i}.jpeg`,
+      `/layouts/${layoutSlug}/${i}.png`,
+    ];
+    
+    try {
+      // Try to load the first available format
+      let imageExists = false;
+      for (const src of candidates) {
+        try {
+          await loadImageAsync(src);
+          imageExists = true;
+          break;
+        } catch {
+          continue;
+        }
+      }
+      
+      if (imageExists) {
+        count = i; // Update count to current number (handles gaps in numbering)
+      }
+    } catch {
+      // Continue checking next number
+      continue;
+    }
+  }
+  
+  // Cache the result
+  layoutCountCache.set(layoutSlug, count);
+  return count;
+};
+
+/**
+ * Helper function to load an image and check if it exists
+ */
+const loadImageAsync = (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+};
+
 /**
  * Analyzes image orientation by loading it
  */
@@ -125,4 +187,5 @@ export const analyzeGalleryLayout = async (
  */
 export const clearAnalysisCache = () => {
   analysisCache.clear();
+  layoutCountCache.clear();
 };

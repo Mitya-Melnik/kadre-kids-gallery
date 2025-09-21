@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { countLayoutImages } from "@/lib/imageUtils";
 
-// Helper that creates responsive images with mobile/desktop versions
+// Helper that creates responsive images with mobile/desktop versions optimized for square layouts
 function ResponsiveImage({
   basePath,
   alt,
@@ -20,7 +21,7 @@ function ResponsiveImage({
 
   if (hidden) return null;
 
-  // Create candidates for both mobile and desktop versions
+  // Create candidates for both mobile and desktop versions (square format)
   const mobileWebp = `${basePath}-mobile.webp`;
   const desktopWebp = `${basePath}.webp`;
   
@@ -31,12 +32,12 @@ function ResponsiveImage({
     `${basePath}.png`
   ];
 
-  // Different responsive sizes for covers vs gallery photos
+  // Optimized sizes for square images: covers vs gallery photos
   const isCover = type === "cover";
-  const mobileWidth = isCover ? "600w" : "800w";
-  const desktopWidth = isCover ? "1200w" : "1600w";
-  const mobileSizes = isCover ? "600px" : "800px";
-  const desktopSizes = isCover ? "1200px" : "1600px";
+  const mobileWidth = isCover ? "600w" : "600w";
+  const desktopWidth = isCover ? "1000w" : "1000w";
+  const mobileSizes = isCover ? "600px" : "600px";
+  const desktopSizes = isCover ? "1000px" : "1000px";
 
   return (
     <img
@@ -72,8 +73,6 @@ function ResponsiveImage({
   );
 }
 
-const MAX_LAYOUTS_PER_DESIGN = 24; // Up to 24 photos per layout design
-
 const layoutDesigns = [
   { slug: "classic", title: "Классический дизайн" },
   { slug: "modern", title: "Современный стиль" },
@@ -92,6 +91,30 @@ const layoutDesigns = [
 const KindergartenLayouts = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
+  
+  // State to store image counts for each layout
+  const [layoutCounts, setLayoutCounts] = useState<Record<string, number>>({});
+
+  // Load image counts for all layouts on mount
+  useEffect(() => {
+    const loadLayoutCounts = async () => {
+      const counts: Record<string, number> = {};
+      
+      for (const design of layoutDesigns) {
+        try {
+          const count = await countLayoutImages(design.slug);
+          counts[design.slug] = count;
+        } catch (error) {
+          console.warn(`Failed to count images for ${design.slug}:`, error);
+          counts[design.slug] = 0;
+        }
+      }
+      
+      setLayoutCounts(counts);
+    };
+    
+    loadLayoutCounts();
+  }, []);
 
   return (
     <section id="layouts" className="py-20 bg-background">
@@ -150,7 +173,7 @@ const KindergartenLayouts = () => {
                       </h3>
                     </div>
                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {Array.from({ length: MAX_LAYOUTS_PER_DESIGN }, (_, i) => i + 1).map((n) => {
+                      {Array.from({ length: layoutCounts[design.slug] || 0 }, (_, i) => i + 1).map((n) => {
                         const base = `/layouts/${design.slug}/${n}`;
                         return (
                           <ResponsiveImage
