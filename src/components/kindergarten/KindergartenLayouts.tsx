@@ -74,17 +74,17 @@ function ResponsiveImage({
 }
 
 const layoutDesigns = [
-  { slug: "domiki", title: "Домики" },
   { slug: "tsvetnye-karandashi", title: "Цветные Карандаши" },
-  { slug: "belochki", title: "Белочки" },
-  { slug: "dinozavriki", title: "Динозаврики" },
+  { slug: "ushastiki", title: "Ушастики" },
   { slug: "gorodok", title: "Городок" },
+  { slug: "belochki", title: "Белочки" },
+  { slug: "domiki", title: "Домики" },
   { slug: "drakoshi", title: "Дракоши" },
+  { slug: "monstriki", title: "Монстрики" },
+  { slug: "dinozavriki", title: "Динозаврики" },
   { slug: "lisichki", title: "Лисички" },
   { slug: "sovushki", title: "Совушки" },
-  { slug: "monstriki", title: "Монстрики" },
   { slug: "loshadki", title: "Лошадки" },
-  { slug: "ushastiki", title: "Ушастики" },
   { slug: "morskie-medvedi", title: "Морские Медведи" },
 ];
 
