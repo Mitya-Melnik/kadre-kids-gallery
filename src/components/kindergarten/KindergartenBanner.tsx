@@ -34,7 +34,7 @@ const KindergartenBanner = () => {
               <div className="flex items-center justify-center md:justify-end gap-3">
                 <span className="text-2xl">🎉</span>
                 <div>
-                  <p className="text-xl font-bold">Скидка 15% до 1 октября</p>
+                  <p className="text-xl font-bold">Скидка 10% до 1 октября</p>
                   <p className="text-sm opacity-90">На все пакеты услуг для детских садов</p>
                 </div>
               </div>
