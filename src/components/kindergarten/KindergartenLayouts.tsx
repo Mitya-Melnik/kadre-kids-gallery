@@ -74,18 +74,18 @@ function ResponsiveImage({
 }
 
 const layoutDesigns = [
-  { slug: "classic", title: "Классический дизайн" },
-  { slug: "modern", title: "Современный стиль" },
-  { slug: "vintage", title: "Винтажный дизайн" },
-  { slug: "minimalist", title: "Минималистичный" },
-  { slug: "colorful", title: "Яркий и красочный" },
-  { slug: "elegant", title: "Элегантный дизайн" },
-  { slug: "playful", title: "Игривый стиль" },
-  { slug: "nature", title: "Природный дизайн" },
-  { slug: "fairy-tale", title: "Сказочный мир" },
-  { slug: "seasons", title: "Времена года" },
-  { slug: "animals", title: "Мир животных" },
-  { slug: "space", title: "Космические приключения" },
+  { slug: "domiki", title: "Домики" },
+  { slug: "tsvetnye-karandashi", title: "Цветные Карандаши" },
+  { slug: "belochki", title: "Белочки" },
+  { slug: "dinozavriki", title: "Динозаврики" },
+  { slug: "gorodok", title: "Городок" },
+  { slug: "drakoshi", title: "Дракоши" },
+  { slug: "lisichki", title: "Лисички" },
+  { slug: "sovushki", title: "Совушки" },
+  { slug: "monstriki", title: "Монстрики" },
+  { slug: "loshadki", title: "Лошадки" },
+  { slug: "ushastiki", title: "Ушастики" },
+  { slug: "morskie-medvedi", title: "Морские Медведи" },
 ];
 
 const KindergartenLayouts = () => {
