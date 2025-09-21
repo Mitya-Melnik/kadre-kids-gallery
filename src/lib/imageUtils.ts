@@ -22,8 +22,11 @@ const layoutCountCache = new Map<string, number>();
  * Counts existing images in a layout folder
  */
 export const countLayoutImages = async (layoutSlug: string): Promise<number> => {
+  console.log(`🔍 Checking images for layout: ${layoutSlug}`);
+  
   // Check cache first
   if (layoutCountCache.has(layoutSlug)) {
+    console.log(`📁 Using cached count for ${layoutSlug}: ${layoutCountCache.get(layoutSlug)}`);
     return layoutCountCache.get(layoutSlug)!;
   }
 
@@ -38,15 +41,19 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
       `/layouts/${layoutSlug}/${i}.png`,
     ];
     
+    console.log(`🔍 Checking image ${i} for ${layoutSlug}:`, candidates);
+    
     try {
       // Try to load the first available format
       let imageExists = false;
       for (const src of candidates) {
         try {
           await loadImageAsync(src);
+          console.log(`✅ Found image: ${src}`);
           imageExists = true;
           break;
-        } catch {
+        } catch (error) {
+          console.log(`❌ Failed to load: ${src}`);
           continue;
         }
       }
@@ -62,6 +69,7 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
   
   // Cache the result
   layoutCountCache.set(layoutSlug, count);
+  console.log(`📊 Final count for ${layoutSlug}: ${count}`);
   return count;
 };
 

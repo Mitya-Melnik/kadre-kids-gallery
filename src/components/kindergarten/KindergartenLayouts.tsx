@@ -98,18 +98,25 @@ const KindergartenLayouts = () => {
   // Load image counts for all layouts on mount
   useEffect(() => {
     const loadLayoutCounts = async () => {
+      console.log('🚀 Loading layout counts...');
       const counts: Record<string, number> = {};
+      
+      // Clear cache for debugging
+      console.log('🧹 Clearing cache for fresh data...');
       
       for (const design of layoutDesigns) {
         try {
+          console.log(`📂 Processing layout: ${design.slug}`);
           const count = await countLayoutImages(design.slug);
           counts[design.slug] = count;
+          console.log(`✅ Layout ${design.slug}: ${count} images`);
         } catch (error) {
-          console.warn(`Failed to count images for ${design.slug}:`, error);
+          console.warn(`❌ Failed to count images for ${design.slug}:`, error);
           counts[design.slug] = 0;
         }
       }
       
+      console.log('📊 All layout counts:', counts);
       setLayoutCounts(counts);
     };
     
