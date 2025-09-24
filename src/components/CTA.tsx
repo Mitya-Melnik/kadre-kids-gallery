@@ -17,7 +17,7 @@ const CTA = () => {
 
   const handleChannelClick = () => {
     console.log('Клик: Подписка на канал');
-    window.open('https://t.me/deti_v_kadre', '_blank');
+    window.open('https://t.me/detivkadrespb', '_blank');
   };
 
   return (
