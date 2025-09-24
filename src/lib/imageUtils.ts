@@ -201,6 +201,131 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
 };
 
 /**
+ * Helper function to check if an image exists without loading it fully
+ */
+const checkImageExists = async (src: string): Promise<boolean> => {
+  try {
+    await loadImageAsync(src);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Finds existing images in kindergarten gallery folder and returns their numbers
+ */
+export const getKindergartenGalleryNumbers = async (): Promise<number[]> => {
+  const cacheKey = 'kindergarten-gallery';
+  
+  if (layoutNumbersCache.has(cacheKey)) {
+    return layoutNumbersCache.get(cacheKey)!;
+  }
+
+  const numbers: number[] = [];
+  
+  // Check for images numbered 1-50 (reasonable limit)
+  for (let i = 1; i <= 50; i++) {
+    // Check for WebP first, then JPG
+    const webpExists = await checkImageExists(`/kindergarten-gallery/${i}.webp`);
+    const jpgExists = await checkImageExists(`/kindergarten-gallery/${i}.jpg`);
+    
+    if (webpExists || jpgExists) {
+      numbers.push(i);
+    }
+  }
+  
+  layoutNumbersCache.set(cacheKey, numbers);
+  return numbers;
+};
+
+/**
+ * Analyzes kindergarten gallery images and determines optimal layout
+ */
+export const analyzeKindergartenGallery = async (maxImages: number = 20): Promise<GalleryAnalysis> => {
+  const cacheKey = 'kindergarten-gallery-analysis';
+  
+  if (analysisCache.has(cacheKey)) {
+    return analysisCache.get(cacheKey)!;
+  }
+
+  try {
+    const imageNumbers = await getKindergartenGalleryNumbers();
+    const imagesToAnalyze = imageNumbers.slice(0, maxImages);
+    
+    if (imagesToAnalyze.length === 0) {
+      const fallbackAnalysis: GalleryAnalysis = {
+        layoutType: 'grid',
+        verticalCount: 0,
+        horizontalCount: 0,
+        totalCount: 0,
+        verticalPercentage: 0
+      };
+      analysisCache.set(cacheKey, fallbackAnalysis);
+      return fallbackAnalysis;
+    }
+
+    const analysisPromises = imagesToAnalyze.map(num => {
+      // Try WebP first, fallback to JPG
+      const webpSrc = `/kindergarten-gallery/${num}.webp`;
+      const jpgSrc = `/kindergarten-gallery/${num}.jpg`;
+      
+      return analyzeImageOrientation(webpSrc).catch(() => 
+        analyzeImageOrientation(jpgSrc)
+      );
+    });
+
+    const results = await Promise.allSettled(analysisPromises);
+    
+    let verticalCount = 0;
+    let horizontalCount = 0;
+    let successfulAnalyses = 0;
+
+    results.forEach(result => {
+      if (result.status === 'fulfilled') {
+        successfulAnalyses++;
+        if (result.value.orientation === 'vertical') {
+          verticalCount++;
+        } else {
+          horizontalCount++;
+        }
+      }
+    });
+
+    const totalCount = imagesToAnalyze.length;
+    const verticalPercentage = successfulAnalyses > 0 ? (verticalCount / successfulAnalyses) * 100 : 0;
+    
+    // Use masonry for mixed orientations, grid for uniform orientations
+    const layoutType = verticalPercentage > 20 && verticalPercentage < 80 ? 'masonry' : 'grid';
+
+    const analysis: GalleryAnalysis = {
+      layoutType,
+      verticalCount,
+      horizontalCount,
+      totalCount,
+      verticalPercentage
+    };
+
+    analysisCache.set(cacheKey, analysis);
+    return analysis;
+  } catch (error) {
+    console.error('Error analyzing kindergarten gallery:', error);
+    
+    // Fallback analysis
+    const fallbackAnalysis: GalleryAnalysis = {
+      layoutType: 'grid',
+      verticalCount: 0,
+      horizontalCount: 16, // Assume horizontal for fallback
+      totalCount: 16,
+      verticalPercentage: 0
+    };
+    
+    analysisCache.set(cacheKey, fallbackAnalysis);
+    return fallbackAnalysis;
+  }
+};
+
+/**
  * Clear analysis cache (useful for development or when gallery content changes)
  */
 export const clearAnalysisCache = () => {
