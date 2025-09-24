@@ -182,7 +182,7 @@ const AlbumCatalog = () => {
                 <img
                   src={currentAlbum.image}
                   alt={`Разворот альбома ${selectedSize}`}
-                  className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-soft"
+                  className="w-full aspect-square object-cover rounded-lg shadow-soft"
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder.svg';
