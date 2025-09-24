@@ -9,7 +9,7 @@ import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Testimonials from "@/components/Testimonials";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
-import CTA from "@/components/CTA";
+
 import Footer from "@/components/Footer";
 
 const Kindergarten = () => {
@@ -42,7 +42,6 @@ const Kindergarten = () => {
         <KindergartenAdvantages />
         <Testimonials />
         <KindergartenFAQ />
-        <CTA />
       </main>
       
       <Footer />
