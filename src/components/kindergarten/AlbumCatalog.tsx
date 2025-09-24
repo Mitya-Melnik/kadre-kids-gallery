@@ -105,9 +105,6 @@ const AlbumCatalog = () => {
   };
 
   const currentAlbum = albumSizes[selectedSize as keyof typeof albumSizes];
-  
-  // Determine if current package needs balanced layout (longer packages)
-  const isLongPackage = ['Mini', 'Extra', 'Max'].includes(selectedSize);
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -150,34 +147,8 @@ const AlbumCatalog = () => {
 
           {/* Selected Album Display */}
           <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
-            {/* Left column - Album preview and conditionally price card for long packages */}
-            <div className="order-3 lg:order-1 flex-1 lg:max-w-[55%] space-y-6">
-              {/* Price Card - Only for long packages (Mini, Extra, Max) on desktop */}
-              {isLongPackage && (
-                <Card className="bg-gradient-card border-primary/20 shadow-glow lg:block hidden">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-2xl text-foreground flex items-center justify-between">
-                      {selectedSize}
-                      {currentAlbum.popular && (
-                        <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                          Популярный
-                        </span>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="mb-4">
-                      <p className="text-lg text-muted-foreground">{currentAlbum.subtitle}</p>
-                    </div>
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className="text-2xl lg:text-3xl font-bold text-primary">
-                        {currentAlbum.price}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
+            {/* Left column - Album preview */}
+            <div className="order-2 lg:order-1 flex-1 lg:max-w-[55%]">
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
                 <ResponsiveImage
@@ -200,10 +171,10 @@ const AlbumCatalog = () => {
               </div>
             </div>
 
-            {/* Right column - Features and conditionally price card for short packages */}
+            {/* Right column - Price card and features */}
             <div className="order-1 lg:order-2 flex-1 lg:max-w-[45%] space-y-6">
-              {/* Price Card - Always on mobile, only for short packages on desktop */}
-              <Card className={`bg-gradient-card border-primary/20 shadow-glow ${isLongPackage ? 'lg:hidden' : ''}`}>
+              {/* Price Card */}
+              <Card className="bg-gradient-card border-primary/20 shadow-glow">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-2xl text-foreground flex items-center justify-between">
                     {selectedSize}
