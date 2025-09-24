@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 
 const AlbumCatalog = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -179,14 +180,12 @@ const AlbumCatalog = () => {
 
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
-                <img
-                  src={currentAlbum.image}
+                <ResponsiveImage
+                  basePath={currentAlbum.image.replace(/\.(webp|jpg|jpeg|png)$/, '')}
                   alt={`Разворот альбома ${selectedSize}`}
                   className="w-full aspect-square object-cover rounded-lg shadow-soft"
                   loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = '/placeholder.svg';
-                  }}
+                  type="cover"
                 />
                 <div className="mt-4 lg:mt-6 text-center">
                   <Button
