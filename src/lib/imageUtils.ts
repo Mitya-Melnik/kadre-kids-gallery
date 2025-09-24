@@ -204,12 +204,12 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
  * Helper function to check if an image exists without loading it fully
  */
 const checkImageExists = async (src: string): Promise<boolean> => {
-  try {
-    await loadImageAsync(src);
-    return true;
-  } catch {
-    return false;
-  }
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = src;
+  });
 };
 
 /**
@@ -222,21 +222,33 @@ export const getKindergartenGalleryNumbers = async (): Promise<number[]> => {
     return layoutNumbersCache.get(cacheKey)!;
   }
 
+  console.log('🔍 Searching for kindergarten gallery images...');
   const numbers: number[] = [];
   
-  // Check for images numbered 1-50 (reasonable limit)
-  for (let i = 1; i <= 50; i++) {
-    // Check for WebP first, then JPG
-    const webpExists = await checkImageExists(`/kindergarten-gallery/${i}.webp`);
-    const jpgExists = await checkImageExists(`/kindergarten-gallery/${i}.jpg`);
+  // Check for images numbered 1-30 (reasonable limit)
+  const checkPromises = [];
+  
+  for (let i = 1; i <= 30; i++) {
+    const promise = (async (num: number) => {
+      const webpExists = await checkImageExists(`/kindergarten-gallery/${num}.webp`);
+      const jpgExists = await checkImageExists(`/kindergarten-gallery/${num}.jpg`);
+      
+      if (webpExists || jpgExists) {
+        console.log(`✅ Found kindergarten image: ${num}`);
+        return num;
+      }
+      return null;
+    })(i);
     
-    if (webpExists || jpgExists) {
-      numbers.push(i);
-    }
+    checkPromises.push(promise);
   }
   
-  layoutNumbersCache.set(cacheKey, numbers);
-  return numbers;
+  const results = await Promise.all(checkPromises);
+  const foundNumbers = results.filter((num): num is number => num !== null).sort((a, b) => a - b);
+  
+  console.log('📊 Found kindergarten gallery numbers:', foundNumbers);
+  layoutNumbersCache.set(cacheKey, foundNumbers);
+  return foundNumbers;
 };
 
 /**
