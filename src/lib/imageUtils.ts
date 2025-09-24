@@ -15,23 +15,24 @@ export interface GalleryAnalysis {
 // Cache for image analysis results
 const analysisCache = new Map<string, GalleryAnalysis>();
 
-// Cache for layout image counts
-const layoutCountCache = new Map<string, number>();
+// Cache for layout image numbers (stores actual found image numbers)
+const layoutNumbersCache = new Map<string, number[]>();
 
 /**
- * Counts existing images in a layout folder
+ * Finds existing images in a layout folder and returns their numbers
  */
-export const countLayoutImages = async (layoutSlug: string): Promise<number> => {
-  console.log(`🔍 Checking images for layout: ${layoutSlug}`);
+export const getLayoutImageNumbers = async (layoutSlug: string): Promise<number[]> => {
+  console.log(`🔍 Finding image numbers for layout: ${layoutSlug}`);
   
   // Check cache first
-  if (layoutCountCache.has(layoutSlug)) {
-    console.log(`📁 Using cached count for ${layoutSlug}: ${layoutCountCache.get(layoutSlug)}`);
-    return layoutCountCache.get(layoutSlug)!;
+  if (layoutNumbersCache.has(layoutSlug)) {
+    const cached = layoutNumbersCache.get(layoutSlug)!;
+    console.log(`📁 Using cached numbers for ${layoutSlug}:`, cached);
+    return cached;
   }
 
-  let count = 0;
-  const maxCheck = 50; // Check up to 50 images (reasonable limit)
+  const foundNumbers: number[] = [];
+  const maxCheck = 30; // Check up to 30 images (reasonable limit)
   
   for (let i = 1; i <= maxCheck; i++) {
     const candidates = [
@@ -59,7 +60,8 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
       }
       
       if (imageExists) {
-        count = i; // Update count to current number (handles gaps in numbering)
+        foundNumbers.push(i);
+        console.log(`✅ Added image number ${i} to list`);
       }
     } catch {
       // Continue checking next number
@@ -68,9 +70,9 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
   }
   
   // Cache the result
-  layoutCountCache.set(layoutSlug, count);
-  console.log(`📊 Final count for ${layoutSlug}: ${count}`);
-  return count;
+  layoutNumbersCache.set(layoutSlug, foundNumbers);
+  console.log(`📊 Found image numbers for ${layoutSlug}:`, foundNumbers);
+  return foundNumbers;
 };
 
 /**
@@ -191,9 +193,17 @@ export const analyzeGalleryLayout = async (
 };
 
 /**
+ * Legacy function for backward compatibility - returns count of layout images
+ */
+export const countLayoutImages = async (layoutSlug: string): Promise<number> => {
+  const numbers = await getLayoutImageNumbers(layoutSlug);
+  return numbers.length;
+};
+
+/**
  * Clear analysis cache (useful for development or when gallery content changes)
  */
 export const clearAnalysisCache = () => {
   analysisCache.clear();
-  layoutCountCache.clear();
+  layoutNumbersCache.clear();
 };

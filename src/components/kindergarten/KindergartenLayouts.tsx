@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { countLayoutImages } from "@/lib/imageUtils";
+import { getLayoutImageNumbers } from "@/lib/imageUtils";
 
 // Helper that creates responsive images with mobile/desktop versions optimized for square layouts
 function ResponsiveImage({
@@ -92,35 +92,32 @@ const KindergartenLayouts = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
   
-  // State to store image counts for each layout
-  const [layoutCounts, setLayoutCounts] = useState<Record<string, number>>({});
+  // State to store image numbers for each layout
+  const [layoutImageNumbers, setLayoutImageNumbers] = useState<Record<string, number[]>>({});
 
-  // Load image counts for all layouts on mount
+  // Load image numbers for all layouts on mount
   useEffect(() => {
-    const loadLayoutCounts = async () => {
-      console.log('🚀 Loading layout counts...');
-      const counts: Record<string, number> = {};
-      
-      // Clear cache for debugging
-      console.log('🧹 Clearing cache for fresh data...');
+    const loadLayoutImageNumbers = async () => {
+      console.log('🚀 Loading layout image numbers...');
+      const imageNumbers: Record<string, number[]> = {};
       
       for (const design of layoutDesigns) {
         try {
           console.log(`📂 Processing layout: ${design.slug}`);
-          const count = await countLayoutImages(design.slug);
-          counts[design.slug] = count;
-          console.log(`✅ Layout ${design.slug}: ${count} images`);
+          const numbers = await getLayoutImageNumbers(design.slug);
+          imageNumbers[design.slug] = numbers;
+          console.log(`✅ Layout ${design.slug}: found images ${numbers.join(', ')}`);
         } catch (error) {
-          console.warn(`❌ Failed to count images for ${design.slug}:`, error);
-          counts[design.slug] = 0;
+          console.warn(`❌ Failed to get image numbers for ${design.slug}:`, error);
+          imageNumbers[design.slug] = [];
         }
       }
       
-      console.log('📊 All layout counts:', counts);
-      setLayoutCounts(counts);
+      console.log('📊 All layout image numbers:', imageNumbers);
+      setLayoutImageNumbers(imageNumbers);
     };
     
-    loadLayoutCounts();
+    loadLayoutImageNumbers();
   }, []);
 
   return (
@@ -180,7 +177,7 @@ const KindergartenLayouts = () => {
                       </h3>
                     </div>
                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {Array.from({ length: layoutCounts[design.slug] || 0 }, (_, i) => i + 1).map((n) => {
+                      {(layoutImageNumbers[design.slug] || []).map((n) => {
                         const base = `/layouts/${design.slug}/${n}`;
                         return (
                           <ResponsiveImage
