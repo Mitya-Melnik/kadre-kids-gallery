@@ -3,18 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import VideoModal from "./VideoModal";
 
 const AlbumCatalog = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
   
   const [selectedSize, setSelectedSize] = useState("Mini");
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const albumSizes = {
     "Small": {
       price: "2700 ₽",
       subtitle: "Альбом папка",
-      image: "/placeholder.svg",
+      image: "/albums/images/small.jpg",
+      video: "/albums/videos/small.mp4",
       popular: false,
       features: [
         "1 съемочный день",
@@ -26,7 +29,8 @@ const AlbumCatalog = () => {
     "Small+": {
       price: "2950 ₽", 
       subtitle: "Альбом трио",
-      image: "/placeholder.svg",
+      image: "/albums/images/small-plus.jpg",
+      video: "/albums/videos/small-plus.mp4",
       popular: false,
       features: [
         "1 съемочный день",
@@ -40,7 +44,8 @@ const AlbumCatalog = () => {
     "Mini": {
       price: "3300 ₽",
       subtitle: "Альбом на 6 страниц",
-      image: "/placeholder.svg",
+      image: "/albums/images/mini.jpg",
+      video: "/albums/videos/mini.mp4",
       popular: false,
       features: [
         "1 съемочный день",
@@ -56,7 +61,8 @@ const AlbumCatalog = () => {
     "Extra": {
       price: "3900 ₽",
       subtitle: "Альбом на 10 страниц",
-      image: "/placeholder.svg",
+      image: "/albums/images/extra.jpg",
+      video: "/albums/videos/extra.mp4",
       popular: true,
       features: [
         "1 съемочный день",
@@ -74,7 +80,8 @@ const AlbumCatalog = () => {
     "Max": {
       price: "6500 ₽",
       subtitle: "Альбом на 7 страниц",
-      image: "/placeholder.svg",
+      image: "/albums/images/max.jpg",
+      video: "/albums/videos/max.mp4",
       popular: false,
       features: [
         { text: "До 3 съемочных дня", bold: true },
@@ -93,8 +100,7 @@ const AlbumCatalog = () => {
   } as const;
 
   const handleVideoClick = () => {
-    // Handle video modal or redirect
-    console.log("Opening video for size:", selectedSize);
+    setIsVideoModalOpen(true);
   };
 
   const currentAlbum = albumSizes[selectedSize as keyof typeof albumSizes];
@@ -177,6 +183,10 @@ const AlbumCatalog = () => {
                   src={currentAlbum.image}
                   alt={`Разворот альбома ${selectedSize}`}
                   className="w-full h-64 lg:h-80 object-cover rounded-lg shadow-soft"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder.svg';
+                  }}
                 />
                 <div className="mt-4 lg:mt-6 text-center">
                   <Button
@@ -260,6 +270,14 @@ const AlbumCatalog = () => {
           </div>
         </div>
       </div>
+      
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        videoSrc={currentAlbum.video}
+        title={`Видео альбома ${selectedSize}`}
+      />
     </section>
   );
 };
