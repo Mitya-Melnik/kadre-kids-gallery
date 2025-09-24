@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 
 const KindergartenHero = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -9,15 +10,15 @@ const KindergartenHero = () => {
   
   const heroImages = [
     {
-      src: "/placeholder.svg",
+      basePath: "/kindergarten/hero/slide-1",
       alt: "Групповая фотосессия детей в детском саду"
     },
     {
-      src: "/placeholder.svg", 
+      basePath: "/kindergarten/hero/slide-2", 
       alt: "Выпускники детского сада"
     },
     {
-      src: "/placeholder.svg",
+      basePath: "/kindergarten/hero/slide-3",
       alt: "Праздничная фотосессия в детском саду"
     }
   ];
@@ -74,10 +75,12 @@ const KindergartenHero = () => {
                 >
                   {heroImages.map((image, index) => (
                     <div key={index} className="min-w-full h-full flex-shrink-0">
-                      <img
-                        src={image.src}
+                      <ResponsiveImage
+                        basePath={image.basePath}
                         alt={image.alt}
                         className="w-full h-full object-cover"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        type="gallery"
                       />
                     </div>
                   ))}
