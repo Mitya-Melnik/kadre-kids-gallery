@@ -22,7 +22,11 @@ const layoutNumbersCache = new Map<string, number[]>();
  * Finds existing images in a layout folder and returns their numbers
  */
 export const getLayoutImageNumbers = async (layoutSlug: string): Promise<number[]> => {
-  console.log(`🔍 Finding image numbers for layout: ${layoutSlug}`);
+  console.log(`🔍 === LAYOUT IMAGE SEARCH DEBUG ===`);
+  console.log(`   Layout slug: ${layoutSlug}`);
+  console.log(`   Current URL: ${window.location.href}`);
+  console.log(`   Current pathname: ${window.location.pathname}`);
+  console.log(`   Current origin: ${window.location.origin}`);
   
   // Check cache first
   if (layoutNumbersCache.has(layoutSlug)) {
@@ -71,8 +75,33 @@ export const getLayoutImageNumbers = async (layoutSlug: string): Promise<number[
   
   // Cache the result
   layoutNumbersCache.set(layoutSlug, foundNumbers);
-  console.log(`📊 Found image numbers for ${layoutSlug}:`, foundNumbers);
+  console.log(`📊 Final result for ${layoutSlug}:`, foundNumbers);
+  console.log(`🔍 === END LAYOUT IMAGE SEARCH ===`);
   return foundNumbers;
+};
+
+/**
+ * Helper function to ensure absolute URL from relative path
+ */
+const ensureAbsoluteUrl = (src: string): string => {
+  // If already absolute, return as is
+  if (src.startsWith('http') || src.startsWith('//')) {
+    return src;
+  }
+  
+  // If starts with /, it's already a root-relative path
+  if (src.startsWith('/')) {
+    // Create absolute URL from root-relative path
+    const absoluteUrl = new URL(src, window.location.origin).href;
+    console.log(`🔗 Converting root-relative path "${src}" to absolute: "${absoluteUrl}"`);
+    return absoluteUrl;
+  }
+  
+  // If relative, make it root-relative first
+  const rootRelative = `/${src}`;
+  const absoluteUrl = new URL(rootRelative, window.location.origin).href;
+  console.log(`🔗 Converting relative path "${src}" to absolute: "${absoluteUrl}"`);
+  return absoluteUrl;
 };
 
 /**
@@ -80,10 +109,23 @@ export const getLayoutImageNumbers = async (layoutSlug: string): Promise<number[
  */
 const loadImageAsync = (src: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
+    const absoluteSrc = ensureAbsoluteUrl(src);
+    
+    console.log(`🖼️ Loading image...`);
+    console.log(`   Original src: ${src}`);
+    console.log(`   Absolute URL: ${absoluteSrc}`);
+    console.log(`   Current page: ${window.location.pathname}`);
+    
     const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
-    img.src = src;
+    img.onload = () => {
+      console.log(`✅ Successfully loaded: ${absoluteSrc}`);
+      resolve(img);
+    };
+    img.onerror = () => {
+      console.log(`❌ Failed to load: ${absoluteSrc}`);
+      reject(new Error(`Failed to load image: ${absoluteSrc}`));
+    };
+    img.src = absoluteSrc;
   });
 };
 
@@ -92,6 +134,10 @@ const loadImageAsync = (src: string): Promise<HTMLImageElement> => {
  */
 export const analyzeImageOrientation = (src: string): Promise<ImageInfo> => {
   return new Promise((resolve, reject) => {
+    const absoluteSrc = ensureAbsoluteUrl(src);
+    
+    console.log(`📐 Analyzing image orientation for: ${absoluteSrc}`);
+    
     const img = new Image();
     img.onload = () => {
       const { width, height } = img;
@@ -105,10 +151,14 @@ export const analyzeImageOrientation = (src: string): Promise<ImageInfo> => {
         orientation = 'square';
       }
       
+      console.log(`📐 Image ${absoluteSrc} is ${width}x${height} (${orientation})`);
       resolve({ width, height, orientation });
     };
-    img.onerror = reject;
-    img.src = src;
+    img.onerror = () => {
+      console.log(`❌ Failed to analyze orientation for: ${absoluteSrc}`);
+      reject(new Error(`Failed to load image for orientation analysis: ${absoluteSrc}`));
+    };
+    img.src = absoluteSrc;
   });
 };
 
@@ -205,10 +255,20 @@ export const countLayoutImages = async (layoutSlug: string): Promise<number> => 
  */
 const checkImageExists = async (src: string): Promise<boolean> => {
   return new Promise((resolve) => {
+    const absoluteSrc = ensureAbsoluteUrl(src);
+    
+    console.log(`🔍 Checking if image exists: ${absoluteSrc}`);
+    
     const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = src;
+    img.onload = () => {
+      console.log(`✅ Image exists: ${absoluteSrc}`);
+      resolve(true);
+    };
+    img.onerror = () => {
+      console.log(`❌ Image not found: ${absoluteSrc}`);
+      resolve(false);
+    };
+    img.src = absoluteSrc;
   });
 };
 
