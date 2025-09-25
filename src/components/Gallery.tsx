@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { analyzeGalleryLayout, type GalleryAnalysis } from "@/lib/imageUtils";
 
 // Helper that creates responsive images with mobile/desktop versions
@@ -163,12 +163,15 @@ const Gallery = () => {
                 </DialogTrigger>
 
                 <DialogContent className="max-w-5xl md:max-w-6xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">
+                      {album.title}
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      Галерея фотосессии {album.title}
+                    </DialogDescription>
+                  </DialogHeader>
                   <div className="p-6">
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-foreground">
-                        {album.title}
-                      </h3>
-                    </div>
                     <div 
                       className={
                         galleryAnalyses[album.slug]?.layoutType === 'grid'

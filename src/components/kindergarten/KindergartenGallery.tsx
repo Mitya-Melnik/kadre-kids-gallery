@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getKindergartenGalleryNumbers, analyzeKindergartenGallery, type GalleryAnalysis } from "@/lib/imageUtils";
 import { KindergartenResponsiveImage } from "./KindergartenResponsiveImage";
@@ -107,6 +107,14 @@ const KindergartenGallery = () => {
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-4xl max-h-[90vh] p-2">
+                      <DialogHeader>
+                        <DialogTitle className="sr-only">
+                          Фотография детского сада {imageNumber}
+                        </DialogTitle>
+                        <DialogDescription className="sr-only">
+                          Полный размер фотографии из галереи детского сада
+                        </DialogDescription>
+                      </DialogHeader>
                       <div className="relative">
                         <KindergartenResponsiveImage
                           imageNumber={imageNumber}

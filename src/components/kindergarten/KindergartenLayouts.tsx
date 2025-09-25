@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getLayoutImageNumbers } from "@/lib/imageUtils";
 
@@ -170,12 +170,15 @@ const KindergartenLayouts = () => {
                 </DialogTrigger>
 
                 <DialogContent className="max-w-5xl md:max-w-6xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">
+                      {design.title}
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      Галерея макетов {design.title}
+                    </DialogDescription>
+                  </DialogHeader>
                   <div className="p-6">
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-foreground">
-                        {design.title}
-                      </h3>
-                    </div>
                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                       {(layoutImageNumbers[design.slug] || []).map((n) => {
                         const base = `/layouts/${design.slug}/${n}`;
