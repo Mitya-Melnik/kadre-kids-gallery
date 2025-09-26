@@ -36,46 +36,64 @@ export const getLayoutImageNumbers = async (layoutSlug: string): Promise<number[
   }
 
   const foundNumbers: number[] = [];
-  const maxCheck = 30; // Check up to 30 images (reasonable limit)
+  const maxCheck = 15; // Reduced from 30 to 15 for faster loading
+  const timeout = 3000; // 3 second timeout per image
   
-  for (let i = 1; i <= maxCheck; i++) {
-    const candidates = [
-      `/layouts/${layoutSlug}/${i}.webp`,
-      `/layouts/${layoutSlug}/${i}.jpg`,
-      `/layouts/${layoutSlug}/${i}.jpeg`,
-      `/layouts/${layoutSlug}/${i}.png`,
-    ];
+  console.log(`🔍 Parallel checking up to ${maxCheck} images for ${layoutSlug}...`);
+  
+  // Create parallel promises for all image checks
+  const checkPromises = Array.from({ length: maxCheck }, (_, index) => {
+    const imageNumber = index + 1;
     
-    console.log(`🔍 Checking image ${i} for ${layoutSlug}:`, candidates);
-    
-    try {
-      // Try to load the first available format
-      let imageExists = false;
-      for (const src of candidates) {
-        try {
-          await loadImageAsync(src);
-          console.log(`✅ Found image: ${src}`);
-          imageExists = true;
-          break;
-        } catch (error) {
-          console.log(`❌ Failed to load: ${src}`);
-          continue;
-        }
-      }
+    return (async (): Promise<number | null> => {
+      const candidates = [
+        `/layouts/${layoutSlug}/${imageNumber}.webp`,
+        `/layouts/${layoutSlug}/${imageNumber}.jpg`,
+        `/layouts/${layoutSlug}/${imageNumber}.jpeg`,
+        `/layouts/${layoutSlug}/${imageNumber}.png`,
+      ];
       
-      if (imageExists) {
-        foundNumbers.push(i);
-        console.log(`✅ Added image number ${i} to list`);
+      try {
+        // Check each format with timeout
+        for (const src of candidates) {
+          try {
+            await Promise.race([
+              loadImageAsync(src),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Timeout')), timeout)
+              )
+            ]);
+            console.log(`✅ Found image: ${src}`);
+            return imageNumber;
+          } catch (error) {
+            console.log(`❌ Failed to load: ${src}`);
+            continue;
+          }
+        }
+        return null;
+      } catch (error) {
+        console.warn(`⚠️ Error checking image ${imageNumber}:`, error);
+        return null;
       }
-    } catch {
-      // Continue checking next number
-      continue;
+    })();
+  });
+
+  // Wait for all promises to settle
+  const results = await Promise.allSettled(checkPromises);
+  
+  // Collect successful results
+  results.forEach((result) => {
+    if (result.status === 'fulfilled' && result.value !== null) {
+      foundNumbers.push(result.value);
     }
-  }
+  });
+  
+  // Sort numbers to ensure proper order
+  foundNumbers.sort((a, b) => a - b);
   
   // Cache the result
   layoutNumbersCache.set(layoutSlug, foundNumbers);
-  console.log(`📊 Final result for ${layoutSlug}:`, foundNumbers);
+  console.log(`📊 Final result for ${layoutSlug}:`, foundNumbers, `(${foundNumbers.length} images)`);
   console.log(`🔍 === END LAYOUT IMAGE SEARCH ===`);
   return foundNumbers;
 };
