@@ -66,9 +66,9 @@ const KindergartenHero = () => {
           </div>
 
           {/* Photo slider - Second on mobile, right column on desktop */}
-          <div className="order-2 lg:order-2 lg:row-span-2 relative w-full">
+          <div className="order-2 lg:order-2 lg:row-span-2 relative w-full max-w-md mx-auto lg:max-w-none">
             <div className="relative w-full overflow-hidden rounded-xl shadow-glow">
-              <div className="relative w-full h-[400px] md:h-[400px] lg:h-[500px]">
+              <div className="relative w-full aspect-square">
                 <div 
                   className="flex w-full h-full transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -78,7 +78,7 @@ const KindergartenHero = () => {
                       <ResponsiveImage
                         basePath={image.basePath}
                         alt={image.alt}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-cover"
                         loading={index === 0 ? "eager" : "lazy"}
                         type="cover"
                       />
