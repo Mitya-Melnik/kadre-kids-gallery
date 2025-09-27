@@ -137,7 +137,7 @@ const AlbumCatalog = () => {
               >
                 {size}
                 {albumSizes[size as keyof typeof albumSizes].popular && (
-                  <span className="absolute -top-2 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
+                  <span className="absolute -top-4 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
                     Популярный
                   </span>
                 )}

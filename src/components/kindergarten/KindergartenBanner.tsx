@@ -2,11 +2,8 @@ import { Button } from "@/components/ui/button";
 
 const KindergartenBanner = () => {
   const handleConsultationClick = () => {
-    // Scroll to CTA section or handle consultation request
-    const ctaSection = document.querySelector('#cta');
-    if (ctaSection) {
-      ctaSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Open WhatsApp with predefined message
+    window.open('https://wa.me/79956002111', '_blank');
   };
 
   return (
@@ -34,7 +31,7 @@ const KindergartenBanner = () => {
               <div className="flex items-center justify-center md:justify-end gap-3">
                 <span className="text-2xl">🎉</span>
                 <div>
-                  <p className="text-xl font-bold">Скидка 10% до 1 октября</p>
+                  <p className="text-xl font-bold">Скидка 10% до 5 октября</p>
                   <p className="text-sm opacity-90">на все виды альбомов</p>
                 </div>
               </div>
