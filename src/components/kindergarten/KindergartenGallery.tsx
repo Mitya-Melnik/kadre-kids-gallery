@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getKindergartenGalleryNumbers, analyzeKindergartenGallery, type GalleryAnalysis } from "@/lib/imageUtils";
 import { KindergartenResponsiveImage } from "./KindergartenResponsiveImage";
@@ -12,7 +13,8 @@ const KindergartenGallery = () => {
   const [imageNumbers, setImageNumbers] = useState<number[]>([]);
   const [galleryAnalysis, setGalleryAnalysis] = useState<GalleryAnalysis | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,6 +43,11 @@ const KindergartenGallery = () => {
   
   const showMore = () => {
     setVisibleCount(prev => Math.min(prev + 12, imageNumbers.length));
+  };
+
+  const openImageDialog = (imageIndex: number) => {
+    setSelectedImageIndex(imageIndex);
+    setIsDialogOpen(true);
   };
 
   const getGridClasses = () => {
@@ -83,50 +90,68 @@ const KindergartenGallery = () => {
             <>
               <div className={`${getGridClasses()} mb-8`}>
                 {visibleImages.map((imageNumber, index) => (
-                  <Dialog key={imageNumber}>
-                    <DialogTrigger asChild>
-                      <div
-                        className={`group cursor-pointer transition-all duration-300 hover:-translate-y-2 ${
-                          galleryAnalysis?.layoutType === 'masonry' ? 'break-inside-avoid mb-4' : ''
-                        } ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ 
-                          transitionDelay: gridVisible ? `${index * 50}ms` : '0ms'
-                        }}
-                      >
-                        <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
-                          <KindergartenResponsiveImage
-                            imageNumber={imageNumber}
-                            alt={`Фотография детского сада ${imageNumber}`}
-                            className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${
-                              galleryAnalysis?.layoutType === 'masonry' ? 'h-auto' : 'h-48 md:h-64'
-                            }`}
-                            loading={index < 8 ? "eager" : "lazy"}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
-                      </div>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[90vh] p-2">
-                      <DialogHeader>
-                        <DialogTitle className="sr-only">
-                          Фотография детского сада {imageNumber}
-                        </DialogTitle>
-                        <DialogDescription className="sr-only">
-                          Полный размер фотографии из галереи детского сада
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="relative">
-                        <KindergartenResponsiveImage
-                          imageNumber={imageNumber}
-                          alt={`Фотография детского сада ${imageNumber}`}
-                          className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-                          loading="eager"
-                        />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <div
+                    key={imageNumber}
+                    onClick={() => openImageDialog(index)}
+                    className={`group cursor-pointer transition-all duration-300 hover:-translate-y-2 ${
+                      galleryAnalysis?.layoutType === 'masonry' ? 'break-inside-avoid mb-4' : ''
+                    } ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                    style={{ 
+                      transitionDelay: gridVisible ? `${index * 50}ms` : '0ms'
+                    }}
+                  >
+                    <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
+                      <KindergartenResponsiveImage
+                        imageNumber={imageNumber}
+                        alt={`Фотография детского сада ${imageNumber}`}
+                        className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${
+                          galleryAnalysis?.layoutType === 'masonry' ? 'h-auto' : 'h-48 md:h-64'
+                        }`}
+                        loading={index < 8 ? "eager" : "lazy"}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  </div>
                 ))}
               </div>
+
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="max-w-6xl max-h-[95vh] p-2 sm:p-4">
+                  <DialogHeader>
+                    <DialogTitle className="sr-only">
+                      Галерея детского сада
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      Слайдер с фотографиями из галереи детского сада
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="relative">
+                    <Carousel className="w-full" opts={{ startIndex: selectedImageIndex, loop: true }}>
+                      <CarouselContent>
+                        {visibleImages.map((imageNumber, index) => (
+                          <CarouselItem key={imageNumber}>
+                            <div className="flex items-center justify-center p-2">
+                              <KindergartenResponsiveImage
+                                imageNumber={imageNumber}
+                                alt={`Фотография детского сада ${imageNumber}`}
+                                className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
+                                loading="eager"
+                              />
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="left-2 sm:left-4 h-10 w-10 sm:h-12 sm:w-12" />
+                      <CarouselNext className="right-2 sm:right-4 h-10 w-10 sm:h-12 sm:w-12" />
+                    </Carousel>
+                    
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                      {selectedImageIndex + 1} из {visibleImages.length}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               
               {hasMore && (
                 <div className="text-center">
