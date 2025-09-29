@@ -36,7 +36,7 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
             {/* Социальные сети */}
             <div className="flex gap-3 mb-6">
               <a 
-                href="#" 
+                href="https://t.me/detivkadre_spb" 
                 className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="Telegram"
               >
@@ -46,7 +46,7 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
               </a>
               
               <a 
-                href="#" 
+                href="https://wa.me/79956002111" 
                 className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="WhatsApp"
               >
@@ -56,7 +56,7 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
               </a>
               
               <a 
-                href="#" 
+                href="https://wa.me/79956002111" 
                 className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-primary/20 transition-all duration-200 hover:scale-110"
                 aria-label="VKontakte"
               >

@@ -78,7 +78,7 @@ const TopBar = () => {
 
               {/* Telegram */}
               <a 
-                href="https://t.me/your_telegram" 
+                href="https://t.me/detivkadre_spb" 
                 className="flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors"
                 aria-label="Telegram"
               >
@@ -89,7 +89,7 @@ const TopBar = () => {
 
               {/* VKontakte */}
               <a 
-                href="https://vk.com/your_vk" 
+                href="https://wa.me/79956002111" 
                 className="flex items-center justify-center text-blue-800 hover:text-blue-900 transition-colors"
                 aria-label="VKontakte"
               >
@@ -115,7 +115,7 @@ const TopBar = () => {
 
             {/* Telegram */}
             <a 
-              href="https://t.me/your_telegram" 
+              href="https://t.me/detivkadre_spb" 
               className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-colors"
               aria-label="Telegram"
             >
@@ -126,7 +126,7 @@ const TopBar = () => {
 
             {/* VKontakte */}
             <a 
-              href="https://vk.com/your_vk" 
+              href="https://wa.me/79956002111" 
               className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-colors"
               aria-label="VKontakte"
             >
@@ -227,7 +227,7 @@ const TopBar = () => {
 
                       {/* Telegram */}
                       <a 
-                        href="https://t.me/your_telegram" 
+                        href="https://t.me/detivkadre_spb" 
                         className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-colors"
                         aria-label="Telegram"
                       >
@@ -238,7 +238,7 @@ const TopBar = () => {
 
                       {/* VKontakte */}
                       <a 
-                        href="https://vk.com/your_vk" 
+                        href="https://wa.me/79956002111" 
                         className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-colors"
                         aria-label="ВКонтакте"
                       >
