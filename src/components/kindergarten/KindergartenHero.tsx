@@ -1,12 +1,20 @@
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const KindergartenHero = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: advantagesRef, isVisible: advantagesVisible } = useScrollAnimation(0.1);
   
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
   
   const heroImages = [
     {
@@ -42,14 +50,15 @@ const KindergartenHero = () => {
     }
   ];
 
-  // Auto-slide functionality
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, []);
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   return (
     <section className="py-20 bg-gradient-hero min-h-[80vh] flex items-center">
@@ -67,14 +76,24 @@ const KindergartenHero = () => {
 
           {/* Photo slider - Second on mobile, right column on desktop */}
           <div className="order-2 lg:order-2 lg:row-span-2 relative w-full max-w-md mx-auto lg:max-w-none">
-            <div className="relative w-full overflow-hidden rounded-xl shadow-glow">
-              <div className="relative w-full aspect-square">
-                <div 
-                  className="flex w-full h-full transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                >
-                  {heroImages.map((image, index) => (
-                    <div key={index} className="min-w-full h-full flex-shrink-0">
+            <Carousel
+              setApi={setApi}
+              opts={{
+                loop: true,
+                align: "start",
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 4000,
+                  stopOnInteraction: true,
+                }),
+              ]}
+              className="w-full"
+            >
+              <CarouselContent className="ml-0">
+                {heroImages.map((image, index) => (
+                  <CarouselItem key={index} className="pl-0">
+                    <div className="relative w-full aspect-square overflow-hidden rounded-xl shadow-glow">
                       <ResponsiveImage
                         basePath={image.basePath}
                         alt={image.alt}
@@ -83,25 +102,26 @@ const KindergartenHero = () => {
                         type="cover"
                       />
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
               
               {/* Slide indicators */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
                 {heroImages.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentSlide(index)}
+                    onClick={() => api?.scrollTo(index)}
                     className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      currentSlide === index 
+                      current === index 
                         ? 'bg-white' 
                         : 'bg-white/50 hover:bg-white/75'
                     }`}
+                    aria-label={`Перейти к слайду ${index + 1}`}
                   />
                 ))}
               </div>
-            </div>
+            </Carousel>
           </div>
           
           {/* Advantages - Third on mobile, continues left column on desktop */}
