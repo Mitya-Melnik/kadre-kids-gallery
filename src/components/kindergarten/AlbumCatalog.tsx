@@ -80,7 +80,7 @@ const AlbumCatalog = () => {
     },
     "Max": {
       price: "6500 ₽",
-      subtitle: "Альбом на 7 страниц",
+      subtitle: "Альбом на 14 страниц",
       image: "/albums/images/max.jpg",
       video: "/albums/videos/max.mp4",
       popular: false,
