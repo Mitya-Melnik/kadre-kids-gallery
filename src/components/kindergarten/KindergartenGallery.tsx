@@ -116,7 +116,7 @@ const KindergartenGallery = () => {
               </div>
 
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-6xl max-h-[95vh] p-2 sm:p-4">
+                <DialogContent className="max-w-6xl h-fit p-2 sm:p-4">
                   <DialogHeader>
                     <DialogTitle className="sr-only">
                       Галерея детского сада
@@ -126,8 +126,8 @@ const KindergartenGallery = () => {
                     </DialogDescription>
                   </DialogHeader>
                   
-                  <div className="relative">
-                    <Carousel className="w-full" opts={{ startIndex: selectedImageIndex, loop: true }}>
+                  <div className="relative max-h-[90vh]">
+                    <Carousel className="w-full h-fit" opts={{ startIndex: selectedImageIndex, loop: true }}>
                       <CarouselContent>
                         {visibleImages.map((imageNumber, index) => (
                           <CarouselItem key={imageNumber}>
