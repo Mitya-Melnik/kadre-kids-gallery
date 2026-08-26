@@ -19,7 +19,9 @@ const FabContact = () => {
           </div>
         </a>
         <a
-          href="https://t.me/your_telegram"
+          href="https://t.me/detivkadre_spb"
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="Написать в Telegram"
           className="px-3 py-2 rounded-lg bg-white shadow-soft border border-border text-foreground hover:shadow-glow hover:bg-accent/40 transition-all"
         >
