@@ -6,18 +6,18 @@ const CTA = () => {
   const handleParentsClick = () => {
     // Трекинг клика родителей
     console.log('Клик: Родители - Чек-лист');
-    window.open('https://t.me/your_bot?start=checklist', '_blank');
+    window.open('https://t.me/DetiVkadre_bot?start=checklist', '_blank', 'noopener,noreferrer');
   };
 
   const handleAdminClick = () => {
     // Трекинг клика администрации
     console.log('Клик: Администрация - Презентация');
-    window.open('https://goo.su/Wx7mJz', '_blank');
+    window.open('https://goo.su/Wx7mJz', '_blank', 'noopener,noreferrer');
   };
 
   const handleChannelClick = () => {
     console.log('Клик: Подписка на канал');
-    window.open('https://t.me/detivkadrespb', '_blank');
+    window.open('https://t.me/detivkadre_spb', '_blank', 'noopener,noreferrer');
   };
 
   return (
