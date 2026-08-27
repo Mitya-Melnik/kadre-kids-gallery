@@ -16,7 +16,7 @@ const audiences = [
   {
     label: "Родителю",
     title: "Понятно и безопасно",
-    description: "Все условия известны заранее, а фотографии доступны только своей семье.",
+    description: "Все условия известны заранее, а доступ к фотографиям ограничен вашим учреждением и родителями конкретной группы или класса.",
     icon: ShieldCheck,
     accent: "bg-secondary-accent/15 text-secondary-accent",
     points: [
