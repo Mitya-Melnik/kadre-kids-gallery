@@ -1,90 +1,82 @@
-import { CreditCard, Shield, Clock, MessageCircle, CheckCircle, Heart } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Building2, Check, Heart, ShieldCheck } from "lucide-react";
+
+const audiences = [
+  {
+    label: "Ребёнку",
+    title: "Комфортно быть собой",
+    description: "Съёмка проходит в знакомой обстановке, без давления и сложного позирования.",
+    icon: Heart,
+    accent: "bg-primary/10 text-primary",
+    points: [
+      "Игра и общение вместо команд",
+      "Бережный подход к характеру ребёнка",
+      "Живые эмоции и естественные кадры",
+    ],
+  },
+  {
+    label: "Родителю",
+    title: "Понятно и безопасно",
+    description: "Все условия известны заранее, а фотографии доступны только своей семье.",
+    icon: ShieldCheck,
+    accent: "bg-secondary-accent/15 text-secondary-accent",
+    points: [
+      "Закрытый доступ к фотографиям",
+      "Удобный просмотр и онлайн-оплата",
+      "На фотоднях — покупка только понравившихся кадров",
+    ],
+  },
+  {
+    label: "Учреждению",
+    title: "Минимум организационной работы",
+    description: "Берём процесс на себя — от подготовки родителей до передачи готового результата.",
+    icon: Building2,
+    accent: "bg-foreground/10 text-foreground",
+    points: [
+      "Готовые сообщения и материалы для групп",
+      "Не нужно собирать оплату за фотодни",
+      "Понятный график, документы и ответственная команда",
+    ],
+  },
+] as const;
 
 const Advantages = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
-  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
-  const { ref: extraRef, isVisible: extraVisible } = useScrollAnimation(0.2);
-  const advantages = [
-    {
-      icon: CreditCard,
-      title: "0 ₽ предоплаты",
-      description: "Заказываете только понравившиеся фотографии — никаких лишних расходов."
-    },
-    {
-      icon: Shield,
-      title: "Безопасно и прозрачно", 
-      description: "Доступ только по паролю, онлайн-оплата, все фотографы с медкнижками."
-    },
-    {
-      icon: Clock,
-      title: "7 дней — готовые фото",
-      description: "Обработанные снимки в личном кабинете уже через неделю."
-    },
-    {
-      icon: MessageCircle,
-      title: "Поддержка 24/7",
-      description: "Удобный Telegram-бот: статус заказа всегда доступен в Telegram-боте."
-    },
-    {
-      icon: CheckCircle,
-      title: "Удобство организации",
-      description: "Мы берём на себя съёмку, работу с детьми, оплату, доставку и взаимодействие с родителями."
-    },
-    {
-      icon: Heart,
-      title: "Уют и игра",
-      description: "Дети в знакомой обстановке с декорациями, которые увлекают."
-    }
-  ];
-
   return (
-    <section id="advantages" className="py-20 bg-background">
+    <section id="advantages" className="bg-background py-20">
       <div className="container mx-auto px-4">
-        <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Почему мы
+        <header className="mx-auto mb-12 max-w-3xl text-center">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Почему выбирают нас</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">
+            Удобно всем участникам
           </h2>
-        </div>
-        
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {advantages.map((advantage, index) => (
-            <div
-              key={index}
-              className={`group bg-gradient-card p-8 rounded-xl transition-all duration-300 ease-out hover:shadow-glow hover:-translate-y-1 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ 
-                transitionDelay: gridVisible ? `${index * 100}ms` : '0ms'
-              }}
-            >
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ease-out">
-                  <advantage.icon className="w-6 h-6 text-white" />
+          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+            Хорошая детская съёмка — это не только красивые фотографии. Важно, как чувствует себя ребёнок,
+            насколько спокойно родителю и сколько работы остаётся учреждению.
+          </p>
+        </header>
+
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-3">
+          {audiences.map((audience) => {
+            const Icon = audience.icon;
+
+            return (
+              <article key={audience.label} className="flex h-full flex-col rounded-2xl border border-border bg-gradient-card p-6 shadow-soft md:p-8">
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-2xl ${audience.accent}`}>
+                  <Icon className="h-7 w-7" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">
-                    {advantage.title}
-                  </h3>
-                   <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: advantage.description }}></p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div ref={extraRef} className={`mt-16 bg-accent-soft p-8 rounded-xl max-w-4xl mx-auto transition-all duration-700 ${extraVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
-            Дополнительные возможности
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="text-center">
-              <h4 className="font-semibold text-foreground mb-2">Оформление помещений</h4>
-              <p className="text-muted-foreground text-sm">Баннеры, стенды, фотосъемка сотрудников</p>
-            </div>
-            <div className="text-center">
-              <h4 className="font-semibold text-foreground mb-2">Подробный отчёт</h4>
-              <p className="text-muted-foreground text-sm">По каждому ребёнку для администрации сада</p>
-            </div>
-          </div>
+                <p className="text-sm font-bold uppercase tracking-[0.14em] text-primary-dark">{audience.label}</p>
+                <h3 className="mt-2 text-2xl font-bold text-foreground">{audience.title}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{audience.description}</p>
+                <ul className="mt-6 space-y-3 border-t border-border pt-6">
+                  {audience.points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm leading-relaxed text-foreground">
+                      <Check className="mt-0.5 h-4 w-4 flex-none text-primary" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
