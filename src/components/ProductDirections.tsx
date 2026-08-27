@@ -10,7 +10,7 @@ const directions = [
     image: "/kindergarten/hero-square/slide-2.webp",
     imageAlt: "Пример выпускного альбома",
     features: ["Для детских садов и школ", "Несколько вариантов оформления", "Понятные сроки и согласование"],
-    action: "Посмотреть альбомы",
+    action: "Альбомы для детского сада",
     href: "/kindergarten",
     icon: BookOpen,
   },
@@ -21,7 +21,7 @@ const directions = [
     image: "/galleries/tykvennoe/cover.webp",
     imageAlt: "Пример тематического фотодня",
     features: ["Без обязательной покупки", "Все доступные съёмки сразу", "Для детских садов и школ"],
-    action: "Выбрать съёмку",
+    action: "Фотодни для детского сада",
     href: "#gallery",
     icon: Camera,
   },
@@ -76,11 +76,16 @@ const ProductDirections = () => {
                         </li>
                       ))}
                     </ul>
-                    {direction.href.startsWith("#") ? (
-                      <div className="mt-auto w-fit" onClick={() => handleAnchor(direction.href)}>{button}</div>
-                    ) : (
-                      <Link to={direction.href} className="mt-auto w-fit">{button}</Link>
-                    )}
+                    <div className="mt-auto flex flex-col gap-2 sm:flex-row sm:items-center">
+                      {direction.href.startsWith("#") ? (
+                        <div onClick={() => handleAnchor(direction.href)}>{button}</div>
+                      ) : (
+                        <Link to={direction.href} className="w-fit">{button}</Link>
+                      )}
+                      <Button variant="outline" size="lg" disabled className="w-full sm:w-fit">
+                        Для школы — добавляем
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </article>
