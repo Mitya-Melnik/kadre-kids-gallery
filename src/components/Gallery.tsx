@@ -74,26 +74,31 @@ function ResponsiveImage({
 
 const MAX_IMAGES_PER_ALBUM = 20; // You can change this if needed
 
+type Audience = "kindergarten" | "school";
+
 const albums = [
-  { slug: "suhocvety", title: "Мгновенья Весны" },
-  { slug: "tykvennoe", title: "Тыквенное настроение" },
-  { slug: "osenkach", title: "Осенние качели" },
-  { slug: "osenskazka", title: "Осенняя сказка" },
-  { slug: "makaroni", title: "Сладкие истории" },
-  { slug: "zimaskazka", title: "Зимняя сказка" },
-  { slug: "paravoz", title: "В объятиях зимы" },
-  { slug: "zimniy-vecher", title: "Зимний вечер" },
-  { slug: "podarki-na-rozhdestvo", title: "Подарки на рождество" },
-  { slug: "olen", title: "Легенда севера" },
-  { slug: "okno", title: "У окна" },
-  { slug: "provance", title: "Прованс" },
-  { slug: "italy", title: "Италия" },
-  { slug: "biker", title: "Байкер" },
-  { slug: "vderevne", title: "В деревне" },
+  { slug: "suhocvety", title: "Мгновенья Весны", audiences: ["kindergarten"] },
+  { slug: "tykvennoe", title: "Тыквенное настроение", audiences: ["kindergarten"] },
+  { slug: "osenkach", title: "Осенние качели", audiences: ["kindergarten"] },
+  { slug: "osenskazka", title: "Осенняя сказка", audiences: ["kindergarten"] },
+  { slug: "makaroni", title: "Сладкие истории", audiences: ["kindergarten"] },
+  { slug: "zimaskazka", title: "Зимняя сказка", audiences: ["kindergarten"] },
+  { slug: "paravoz", title: "В объятиях зимы", audiences: ["kindergarten"] },
+  { slug: "zimniy-vecher", title: "Зимний вечер", audiences: ["kindergarten"] },
+  { slug: "podarki-na-rozhdestvo", title: "Подарки на рождество", audiences: ["kindergarten"] },
+  { slug: "olen", title: "Легенда севера", audiences: ["kindergarten"] },
+  { slug: "okno", title: "У окна", audiences: ["kindergarten"] },
+  { slug: "provance", title: "Прованс", audiences: ["kindergarten"] },
+  { slug: "italy", title: "Италия", audiences: ["kindergarten"] },
+  { slug: "biker", title: "Байкер", audiences: ["kindergarten"] },
+  { slug: "vderevne", title: "В деревне", audiences: ["kindergarten"] },
 ];
 
 const Gallery = () => {
+  const [audience, setAudience] = useState<Audience>("kindergarten");
   const [galleryAnalyses, setGalleryAnalyses] = useState<Record<string, GalleryAnalysis>>({});
+  const visibleAlbums = albums.filter((album) => album.audiences.includes(audience));
+  const hasSchoolAlbums = albums.some((album) => album.audiences.includes("school"));
 
   // Analyze galleries on component mount
   useEffect(() => {
@@ -132,12 +137,34 @@ const Gallery = () => {
             Наши съемки
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Галерея наших съемок. Нажмите на фотосессию, чтобы посмотреть больше фотографий.
+            Выберите возраст, чтобы увидеть подходящие варианты фотодней.
           </p>
+          <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft" aria-label="Возраст участников">
+            <button
+              type="button"
+              onClick={() => setAudience("kindergarten")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                audience === "kindergarten" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
+              }`}
+            >
+              Детский сад
+            </button>
+            <button
+              type="button"
+              disabled={!hasSchoolAlbums}
+              onClick={() => setAudience("school")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                audience === "school" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              } disabled:cursor-not-allowed disabled:opacity-70`}
+              title={!hasSchoolAlbums ? "Добавим после загрузки школьного портфолио" : undefined}
+            >
+              Школа {!hasSchoolAlbums && <span className="ml-1 text-xs">— добавляем</span>}
+            </button>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {albums.map((album) => {
+          {visibleAlbums.map((album) => {
             const coverBase = `/galleries/${album.slug}/cover`;
 
             return (
