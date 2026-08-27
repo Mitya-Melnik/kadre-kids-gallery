@@ -49,7 +49,7 @@ const Hero = () => {
               <ArrowRight className="h-4 w-4" />
             </a>
 
-            <div className="mt-10 grid max-w-2xl grid-cols-3 gap-2 sm:gap-3">
+            <div className="mt-10 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
               <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
                 <div className="text-xl font-bold text-primary-dark sm:text-2xl">15 лет</div>
                 <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">снимаем детство бережно</div>
@@ -57,6 +57,10 @@ const Hero = () => {
               <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
                 <div className="text-xl font-bold text-primary-dark sm:text-2xl">2100+</div>
                 <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">проведённых фотосессий</div>
+              </div>
+              <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
+                <div className="text-xl font-bold text-primary-dark sm:text-2xl">168 тыс.+</div>
+                <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">фотографий куплено</div>
               </div>
               <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
                 <div className="text-xl font-bold text-primary-dark sm:text-2xl">75+</div>
