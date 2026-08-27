@@ -1,137 +1,96 @@
+import { ArrowRight, BookOpen, Camera, Images } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useCountUp } from "@/hooks/useCountUp";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Hero = () => {
-  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation(0.3);
-  const { ref: valuesRef, isVisible: valuesVisible } = useScrollAnimation(0.2);
-  
-  const yearsCount = useCountUp({ end: 15, duration: 2000, delay: 500, trigger: statsVisible });
-  const sessionsCount = useCountUp({ end: 2100, duration: 2500, delay: 700, trigger: statsVisible });
-  const photosCount = useCountUp({ end: 168, duration: 2000, delay: 900, trigger: statsVisible });
-  const institutionsCount = useCountUp({ end: 75, duration: 1800, delay: 1100, trigger: statsVisible });
-
-  const formatNumber = (num: number, suffix: string) => {
-    if (suffix === "k+") {
-      return `${num}k+`;
-    }
-    if (suffix === "+") {
-      return `${num}+`;
-    }
-    return `${num}`;
+  const scrollToGallery = () => {
+    document.querySelector("#gallery")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section id="hero" className="relative min-h-screen bg-gradient-hero flex items-center justify-center py-20">
-      <div className="absolute inset-0 bg-pattern opacity-30"></div>
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 via-transparent to-transparent"></div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12">
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
-              Выездные фотосессии<br />
-              в детском саду
+    <section id="hero" className="relative overflow-hidden bg-gradient-hero py-14 md:py-20 lg:py-24">
+      <div className="absolute inset-0 bg-pattern opacity-40" aria-hidden="true" />
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div className="max-w-3xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/80 px-4 py-2 text-sm font-medium text-foreground shadow-soft">
+              <Camera className="h-4 w-4 text-primary" />
+              Детские сады и школы Санкт-Петербурга
+            </div>
+
+            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-foreground md:text-6xl">
+              Сохраняем память о детстве
             </h1>
-            <h2 className="text-lg md:text-2xl leading-relaxed text-muted-foreground">
-              детям — комфортно, родителям — удобно
-            </h2>
-          </div>
-          
-          <div ref={statsRef} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
-                {formatNumber(yearsCount.count, "")}
-              </div>
-              <div className="text-sm text-muted-foreground">лет опыта</div>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+              Фотодни и выпускные альбомы, к которым хочется возвращаться. Детям комфортно,
+              родителям удобно, учреждению — минимум организационной работы.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link to="/kindergarten">
+                <Button size="xl" className="w-full gap-2 shadow-glow sm:w-auto">
+                  Выпускные альбомы
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Button size="xl" variant="outline" className="gap-2 bg-white/80" onClick={scrollToGallery}>
+                Выбрать фотосъёмку
+                <Images className="h-5 w-5" />
+              </Button>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
-                {formatNumber(sessionsCount.count, "+")}
-              </div>
-              <div className="text-sm text-muted-foreground">фотосессий</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
-                {formatNumber(photosCount.count, "k+")}
-              </div>
-              <div className="text-sm text-muted-foreground">фотографий куплено</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
-                {formatNumber(institutionsCount.count, "+")}
-              </div>
-              <div className="text-sm text-muted-foreground">учреждений оформлено</div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button 
-              variant="default" 
-              size="xl"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95"
-              onClick={() => {
-                const element = document.querySelector("#cta");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
+
+            <a
+              href="https://seenday.com/ru/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-foreground underline decoration-primary/50 underline-offset-4 transition-colors hover:text-primary"
             >
-              Заказать съемку
-            </Button>
-            <Button 
-              variant="secondary-accent" 
-              size="xl"
-              className="px-8 py-4 hover:scale-105 transition-all duration-200 ease-in-out active:scale-95"
-              onClick={() => {
-                const element = document.querySelector("#gallery");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-              Наши работы
-            </Button>
-          </div>
-          
-          {/* Ключевые ценности */}
-          <div ref={valuesRef} className={`grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto transition-all duration-700 delay-200 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">🔒</div>
-              <div className="text-sm font-medium text-foreground">Доступ по паролю</div>
-              <div className="text-xs text-muted-foreground">Фото только для родителей</div>
-            </div>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">💰</div>
-              <div className="text-sm font-medium text-foreground">Без предоплаты</div>
-              <div className="text-xs text-muted-foreground">Заказывайте только понравившиеся снимки</div>
-            </div>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">🤖</div>
-              <div className="text-sm font-medium text-foreground">Поддержка 24/7</div>
-              <div className="text-xs text-muted-foreground">Через Telegram-бот</div>
-            </div>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">🎭</div>
-              <div className="text-sm font-medium text-foreground">Игра вместо позирования</div>
-              <div className="text-xs text-muted-foreground">Ребёнок расслаблен и в кадре настоящий</div>
-            </div>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">🌿</div>
-              <div className="text-sm font-medium text-foreground">Атмосферные декорации</div>
-              <div className="text-xs text-muted-foreground">пространство для искренних улыбок</div>
-            </div>
-            <div className="bg-primary/5 backdrop-blur-sm rounded-xl p-4 shadow-soft hover:shadow-glow transition-all duration-300 border border-primary/20">
-              <div className="text-2xl mb-2">💳</div>
-              <div className="text-sm font-medium text-foreground">Оплата без хлопот</div>
-              <div className="text-xs text-muted-foreground">Карты, СБП, QR, чек на e-mail</div>
+              Я родитель — перейти к своим фотографиям
+              <ArrowRight className="h-4 w-4" />
+            </a>
+
+            <div className="mt-10 grid max-w-2xl grid-cols-3 gap-2 sm:gap-3">
+              <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
+                <div className="text-xl font-bold text-primary-dark sm:text-2xl">15 лет</div>
+                <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">снимаем детство бережно</div>
+              </div>
+              <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
+                <div className="text-xl font-bold text-primary-dark sm:text-2xl">2100+</div>
+                <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">проведённых фотосессий</div>
+              </div>
+              <div className="rounded-xl border border-border/80 bg-white/75 p-3 shadow-soft backdrop-blur-sm sm:p-4">
+                <div className="text-xl font-bold text-primary-dark sm:text-2xl">75+</div>
+                <div className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm">учреждений доверились нам</div>
+              </div>
             </div>
           </div>
 
-          
-          <p className="text-foreground mt-8 italic font-semibold">
-            "Ценим моменты и создаем их для вас"
-          </p>
+          <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+            <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-secondary-accent/20 blur-3xl" aria-hidden="true" />
+            <div className="absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-primary/20 blur-3xl" aria-hidden="true" />
+            <div className="relative grid grid-cols-2 gap-3 sm:gap-4">
+              <img
+                src="/kindergarten/hero-square/slide-1.webp"
+                alt="Выпускной альбом ребёнка"
+                className="aspect-[4/5] w-full rounded-2xl object-cover shadow-glow"
+                loading="eager"
+              />
+              <div className="grid gap-3 pt-8 sm:gap-4 sm:pt-12">
+                <img
+                  src="/galleries/paravoz/cover.webp"
+                  alt="Детская фотосъёмка"
+                  className="aspect-square w-full rounded-2xl object-cover shadow-soft"
+                  loading="eager"
+                />
+                <div className="rounded-2xl bg-foreground p-5 text-white shadow-soft">
+                  <BookOpen className="mb-3 h-7 w-7 text-primary-glow" />
+                  <p className="font-semibold leading-snug">
+                    Не просто фотографии — история детства вашей семьи
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
