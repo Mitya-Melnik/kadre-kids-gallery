@@ -1,4 +1,4 @@
-import { Images, Menu, Phone } from "lucide-react";
+import { Menu, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -74,10 +74,9 @@ const TopBar = () => {
               <Phone className="h-4 w-4 text-primary" />
               +7 995 600-21-11
             </a>
-            <Button size="sm" className="gap-2 shadow-soft sm:px-4" onClick={openParentGallery}>
-              <Images className="h-4 w-4" />
+            <Button size="sm" className="shadow-soft sm:px-4" onClick={openParentGallery}>
               <span className="hidden sm:inline">Получить фотографии</span>
-              <span className="sm:hidden">Фото</span>
+              <span className="sm:hidden">Получить фото</span>
             </Button>
 
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -114,7 +113,7 @@ const TopBar = () => {
                     <p className="text-xs leading-relaxed text-muted-foreground">
                       До запуска MAX-бота для связи доступны действующие каналы.
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <a
                         href="https://wa.me/79956002111"
                         target="_blank"
@@ -131,6 +130,12 @@ const TopBar = () => {
                       >
                         Telegram
                       </a>
+                      <span
+                        className="cursor-default rounded-lg border border-dashed border-border px-4 py-2 text-sm font-medium text-muted-foreground"
+                        title="Ссылка появится после создания группы"
+                      >
+                        ВКонтакте — скоро
+                      </span>
                     </div>
                   </div>
                 </div>
