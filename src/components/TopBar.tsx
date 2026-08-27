@@ -74,9 +74,8 @@ const TopBar = () => {
               <Phone className="h-4 w-4 text-primary" />
               +7 995 600-21-11
             </a>
-            <Button size="sm" className="shadow-soft sm:px-4" onClick={openParentGallery}>
-              <span className="hidden sm:inline">Получить фотографии</span>
-              <span className="sm:hidden">Получить фото</span>
+            <Button size="sm" className="px-3 text-xs shadow-soft sm:px-4 sm:text-sm" onClick={openParentGallery}>
+              Получить фотографии
             </Button>
 
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
