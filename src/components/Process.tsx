@@ -17,29 +17,31 @@ const photoDaySteps = [
   {
     title: "Запись на съёмку",
     description: "Родители отмечаются в опросе своей группы или класса.",
+    timing: "до дня съёмки",
     icon: CalendarCheck,
   },
   {
     title: "Фотосъёмка",
     description: "Фотографируем детей в знакомой обстановке, через игру и общение.",
+    timing: "в назначенный день",
     icon: Camera,
   },
   {
     title: "Обработка",
     description: "Готовые кадры появляются в закрытой галерее для выбора.",
-    timing: "до 7 дней",
+    timing: "до 7 дней после съёмки",
     icon: Sparkles,
   },
   {
     title: "Выбор и оплата",
     description: "Родители выбирают только понравившиеся кадры. Электронные файлы можно купить и позже.",
-    timing: "7 дней для общего заказа печати",
+    timing: "7 дней на общий заказ печати",
     icon: Images,
   },
   {
     title: "Получение фотографий",
     description: "Электронные файлы доступны сразу после оплаты, печатные фотографии доставляем в учреждение.",
-    timing: "печать — до 14 дней",
+    timing: "файлы — сразу · печать — до 14 дней",
     icon: PackageCheck,
   },
 ] as const;
@@ -112,9 +114,7 @@ const Process = () => {
           </div>
         </header>
 
-        <div className={`mx-auto mt-12 grid max-w-6xl gap-4 ${
-          processType === "photo-day" ? "md:grid-cols-5" : "md:grid-cols-2 lg:grid-cols-3"
-        }`}>
+        <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">
           {steps.map((step, index) => {
             const Icon = step.icon;
             const timing = "timing" in step ? step.timing : undefined;
@@ -130,7 +130,7 @@ const Process = () => {
                 <h3 className="text-lg font-bold text-foreground">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
                 {timing && (
-                  <p className="mt-4 inline-flex rounded-full bg-accent-soft px-3 py-1 text-xs font-bold text-foreground">
+                  <p className="mt-4 inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
                     {timing}
                   </p>
                 )}
