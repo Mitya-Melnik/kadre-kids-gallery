@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Link } from "react-router-dom";
 
 const Pricing = () => {
-  const packages = [
+  const [pricingType, setPricingType] = useState<"photo-day" | "albums">("photo-day");
+
+  const photoDayPackages = [
     {
       id: "photoshoot",
       title: "Фотосъёмка",
@@ -46,6 +48,62 @@ const Pricing = () => {
     }
   ];
 
+  const albumPackages = [
+    {
+      id: "folder",
+      title: "Альбом-папка",
+      price: "2 700 ₽",
+      description: "Компактный выпускной альбом",
+      items: [
+        { size: "Формат", price: "20×30 см", note: "Твёрдая обложка и один разворот" },
+        { size: "Фотосъёмка", price: "1 день", note: "Портреты выпускников и общие фотографии" }
+      ]
+    },
+    {
+      id: "trio",
+      title: "Альбом-трио",
+      price: "2 950 ₽",
+      description: "Три плотных разворота с главными кадрами",
+      items: [
+        { size: "Формат", price: "20×30 см", note: "Твёрдая обложка и три разворота" },
+        { size: "Фотосъёмка", price: "1 день", note: "Портреты, друзья и общие фотографии" }
+      ]
+    },
+    {
+      id: "six-pages",
+      title: "Альбом, 6 страниц",
+      price: "3 300 ₽",
+      description: "Небольшая история выпускной группы",
+      items: [
+        { size: "Объём", price: "6 страниц", note: "Портреты ребёнка, друзей и воспитателей" },
+        { size: "Фотосъёмка", price: "1 день", note: "Живые и постановочные кадры" }
+      ]
+    },
+    {
+      id: "ten-pages",
+      title: "Альбом, 10 страниц",
+      price: "3 900 ₽",
+      description: "Больше личных кадров и событий группы",
+      popular: true,
+      items: [
+        { size: "Объём", price: "10 страниц", note: "Полная история группы в одном альбоме" },
+        { size: "Фотосъёмка", price: "1 день", note: "Портреты, друзья и общие моменты" }
+      ]
+    },
+    {
+      id: "fourteen-pages",
+      title: "Альбом, 14 страниц",
+      price: "6 500 ₽",
+      description: "Максимальная версия выпускного альбома",
+      items: [
+        { size: "Объём", price: "14 страниц", note: "Расширенная персональная история ребёнка" },
+        { size: "Фотосъёмка", price: "до 3 дней", note: "Больше образов, сюжетов и живых кадров" }
+      ]
+    }
+  ];
+
+  const packages = pricingType === "photo-day" ? photoDayPackages : albumPackages;
+
   return (
     <section id="pricing" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -54,10 +112,38 @@ const Pricing = () => {
             Стоимость
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Прозрачные цены без скрытых платежей.<br />
-            Заказывайте только понравившиеся снимки
+            Прозрачные цены без скрытых платежей
           </p>
         </div>
+
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex rounded-xl bg-muted p-1" role="tablist" aria-label="Выбор направления">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pricingType === "photo-day"}
+              onClick={() => setPricingType("photo-day")}
+              className={`rounded-lg px-5 py-3 text-sm md:text-base font-semibold transition-all ${pricingType === "photo-day" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Фотодни
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pricingType === "albums"}
+              onClick={() => setPricingType("albums")}
+              className={`rounded-lg px-5 py-3 text-sm md:text-base font-semibold transition-all ${pricingType === "albums" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Выпускные альбомы
+            </button>
+          </div>
+        </div>
+
+        {pricingType === "albums" && (
+          <p className="text-center text-muted-foreground mb-8">
+            Цены на выпускные альбомы для детского сада
+          </p>
+        )}
         
         {/* Desktop версия - вертикальный аккордеон */}
         <div className="hidden md:block max-w-4xl mx-auto">
@@ -192,6 +278,7 @@ const Pricing = () => {
           </Accordion>
         </div>
         
+        {pricingType === "photo-day" ? (
         <div className="mt-16 bg-accent-soft p-8 rounded-xl max-w-4xl mx-auto text-center">
           <h3 className="text-2xl font-bold text-foreground mb-4">
             Специальное предложение
@@ -205,6 +292,13 @@ const Pricing = () => {
             </div>
           </div>
         </div>
+        ) : (
+          <div className="mt-10 text-center">
+            <Button asChild size="lg" className="rounded-xl">
+              <Link to="/kindergarten">Посмотреть альбомы подробнее</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
