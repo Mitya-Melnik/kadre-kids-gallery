@@ -206,7 +206,7 @@ const FAQ = () => {
             <p className="text-muted-foreground mb-6">
               Наша поддержка через Telegram-бот работает 24/7 — помощь и ответы на любые вопросы.
             </p>
-            <Button variant="default" size="lg">
+            <Button variant="default" size="lg" onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}>
               Связаться с поддержкой
             </Button>
           </div>
