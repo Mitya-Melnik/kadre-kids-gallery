@@ -64,7 +64,8 @@ const albumSteps = [
   },
   {
     title: "Фотосъёмка",
-    description: "Проводим 1 или несколько съёмочных дней — в зависимости от выбранного альбома.",
+    description: "Проводим от 1 до 3 съёмочных дней — в зависимости от выбранного альбома.",
+    timing: "1–3 съёмочных дня",
     icon: Camera,
   },
   {
@@ -122,7 +123,7 @@ const Process = () => {
             const timing = "timing" in step ? step.timing : undefined;
 
             return (
-              <article key={step.title} className="relative rounded-2xl border border-border bg-background p-5 shadow-soft">
+              <article key={step.title} className="relative flex flex-col rounded-2xl border border-border bg-background p-5 shadow-soft">
                 <div className="mb-5 flex items-center justify-between">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
@@ -132,9 +133,11 @@ const Process = () => {
                 <h3 className="text-lg font-bold text-foreground">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
                 {timing && (
-                  <p className="mt-4 inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
-                    {timing}
-                  </p>
+                  <div className="mt-auto pt-4">
+                    <p className="inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
+                      {timing}
+                    </p>
+                  </div>
                 )}
               </article>
             );
