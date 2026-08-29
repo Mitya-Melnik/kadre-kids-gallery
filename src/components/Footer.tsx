@@ -40,6 +40,22 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
                 <div className="text-xs text-slate-400">Найдите нас по номеру {contacts.max.display}</div>
               </div>
             </div>
+            <div className="mb-6">
+              {contacts.max.channelUrl ? (
+                <a
+                  href={contacts.max.channelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex rounded-lg border border-primary/40 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/20"
+                >
+                  Подписаться на канал в MAX
+                </a>
+              ) : (
+                <span className="inline-flex cursor-default rounded-lg border border-dashed border-slate-700 px-4 py-2 text-sm text-slate-400">
+                  Канал в MAX — скоро
+                </span>
+              )}
+            </div>
             
             <div className="mb-4">
               <h3 className="text-2xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
