@@ -12,6 +12,7 @@ export const contacts = {
   max: {
     display: "+7 995 600-21-11",
     inviteUrl: "",
+    channelUrl: "",
   },
   vkUrl: "",
 } as const;
