@@ -1,6 +1,7 @@
 import { ArrowRight, BookOpen, Camera, Images } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { contacts } from "@/config/contacts";
 
 const Hero = () => {
   const scrollToGallery = () => {
@@ -40,7 +41,7 @@ const Hero = () => {
             </div>
 
             <a
-              href="https://seenday.com/ru/login"
+              href={contacts.seendayUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-foreground underline decoration-primary/50 underline-offset-4 transition-colors hover:text-primary"
