@@ -2,6 +2,7 @@ import { Menu, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { contacts } from "@/config/contacts";
 
 const TopBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +35,7 @@ const TopBar = () => {
   };
 
   const openParentGallery = () => {
-    window.open("https://seenday.com/ru/login", "_blank", "noopener,noreferrer");
+    window.open(contacts.seendayUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -70,9 +71,9 @@ const TopBar = () => {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <a href="tel:+79956002111" className="hidden items-center gap-2 text-sm font-semibold text-foreground hover:text-primary md:flex">
+            <a href={contacts.phone.href} className="hidden items-center gap-2 text-sm font-semibold text-foreground hover:text-primary md:flex">
               <Phone className="h-4 w-4 text-primary" />
-              +7 995 600-21-11
+              {contacts.phone.display}
             </a>
             <Button size="sm" className="px-3 text-xs shadow-soft sm:px-4 sm:text-sm" onClick={openParentGallery}>
               Получить фотографии
@@ -105,30 +106,23 @@ const TopBar = () => {
                   </div>
 
                   <div className="space-y-3 border-t border-border pt-5">
-                    <a href="tel:+79956002111" className="flex items-center gap-3 font-semibold text-foreground hover:text-primary">
+                    <a href={contacts.phone.href} className="flex items-center gap-3 font-semibold text-foreground hover:text-primary">
                       <Phone className="h-5 w-5 text-primary" />
-                      +7 995 600-21-11
+                      {contacts.phone.display}
                     </a>
                     <p className="text-xs leading-relaxed text-muted-foreground">
-                      До запуска MAX-бота для связи доступны действующие каналы.
+                      Напишите нам в MAX — найдите рабочий профиль по номеру телефона.
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      <a
-                        href="https://wa.me/79956002111"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent/60"
-                      >
-                        WhatsApp
-                      </a>
-                      <a
-                        href="https://t.me/detivkadre_spb"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent/60"
-                      >
-                        Telegram
-                      </a>
+                      {contacts.max.inviteUrl ? (
+                        <a href={contacts.max.inviteUrl} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent/60">
+                          Написать в MAX
+                        </a>
+                      ) : (
+                        <span className="rounded-lg border border-border px-4 py-2 text-sm font-medium">
+                          MAX: {contacts.max.display}
+                        </span>
+                      )}
                       <span
                         className="cursor-default rounded-lg border border-dashed border-border px-4 py-2 text-sm font-medium text-muted-foreground"
                         title="Ссылка появится после создания группы"
