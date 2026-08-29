@@ -183,10 +183,10 @@ const CTA = () => {
               </label>
 
               <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
-                {isSending ? "Отправляем…" : "Получить предложение"}
+                {isSending ? "Отправляем…" : "Получить консультацию"}
               </Button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
-                Ответим в рабочее время и зададим только необходимые вопросы.
+                Менеджер свяжется с вами в течение рабочего дня.
               </p>
             </form>
           </div>
