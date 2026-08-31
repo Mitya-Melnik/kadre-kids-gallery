@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 
 const KindergartenBanner = () => {
   const handleConsultationClick = () => {
-    // Open WhatsApp with predefined message
-    window.open('https://wa.me/79956002111', '_blank');
+    window.location.href = '/?direction=album#cta';
   };
 
   return (

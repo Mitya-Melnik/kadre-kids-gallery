@@ -1,99 +1,194 @@
+import { FormEvent, useEffect, useState } from "react";
+import { Camera, CheckCircle2, GraduationCap } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, School } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+
+type Direction = "photo-day" | "album";
+type Audience = "kindergarten" | "school";
+
+const directions = {
+  "photo-day": {
+    label: "Организовать фотодень",
+    shortLabel: "Фотодень",
+    description: "Подберём подходящую съёмку и свободную дату.",
+    icon: Camera,
+  },
+  album: {
+    label: "Заказать выпускные альбомы",
+    shortLabel: "Выпускные альбомы",
+    description: "Поможем выбрать формат и рассчитаем заказ для группы или класса.",
+    icon: GraduationCap,
+  },
+};
 
 const CTA = () => {
-  const handleParentsClick = () => {
-    // Трекинг клика родителей
-    console.log('Клик: Родители - Чек-лист');
-    window.open('https://t.me/DetiVkadre_bot?start=checklist', '_blank', 'noopener,noreferrer');
-  };
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const [direction, setDirection] = useState<Direction>("photo-day");
+  const [audience, setAudience] = useState<Audience>("kindergarten");
+  const [isSending, setIsSending] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    institution: "",
+    comment: "",
+    consent: false,
+  });
 
-  const handleAdminClick = () => {
-    // Трекинг клика администрации
-    console.log('Клик: Администрация - Презентация');
-    window.open('https://goo.su/Wx7mJz', '_blank', 'noopener,noreferrer');
-  };
+  useEffect(() => {
+    if (searchParams.get("direction") === "album") setDirection("album");
+  }, [searchParams]);
 
-  const handleChannelClick = () => {
-    console.log('Клик: Подписка на канал');
-    window.open('https://t.me/detivkadre_spb', '_blank', 'noopener,noreferrer');
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!formData.name || !formData.phone || !formData.institution || !formData.consent) {
+      toast({
+        title: "Проверьте данные",
+        description: "Заполните обязательные поля и подтвердите согласие на обработку данных.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL;
+    if (!webhookUrl) {
+      toast({
+        title: "Форма готова к подключению",
+        description: "Отправка заработает после подключения amoCRM. Сейчас можно позвонить по номеру в шапке сайта.",
+      });
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          direction,
+          audience,
+          source: "detivkadre.spb.ru",
+          page: window.location.href,
+        }),
+      });
+      if (!response.ok) throw new Error("Lead submission failed");
+      toast({ title: "Заявка отправлена", description: "Свяжемся с вами и уточним детали." });
+      setFormData({ name: "", phone: "", institution: "", comment: "", consent: false });
+    } catch {
+      toast({
+        title: "Не удалось отправить заявку",
+        description: "Попробуйте ещё раз или позвоните по номеру в шапке сайта.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
-    <section id="cta" className="py-20 bg-accent-soft">
+    <section id="cta" className="py-16 md:py-24 bg-accent-soft scroll-mt-24">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
-            Бесплатные материалы для родителей и детских садов
-          </h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-stretch">
-            {/* Карточка для родителей */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
-              <CardHeader className="text-center pb-4 flex-shrink-0">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ClipboardList className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-foreground mb-2">
-                  Чек-лист для родителей: как подготовить ребёнка к фотосессии
-                </CardTitle>
-                <p className="text-muted-foreground text-lg">
-                  Практичный чек-лист с советами психолога и фотографа
-                </p>
-              </CardHeader>
-              <CardContent className="text-center flex-grow flex flex-col justify-end">
-                <Button 
-                  variant="default" 
-                  size="xl" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
-                  onClick={handleParentsClick}
-                >
-                  Скачать чек-лист бесплатно
-                </Button>
-                <p className="text-muted-foreground/70 text-sm">
-                  👉 В один клик в Telegram
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Карточка для администрации */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
-              <CardHeader className="text-center pb-4 flex-shrink-0">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <School className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-foreground mb-2">
-                  Подарки для детского сада
-                </CardTitle>
-                <p className="text-muted-foreground text-lg">
-                  Посмотреть, чем мы можем быть полезны
-                </p>
-              </CardHeader>
-              <CardContent className="text-center flex-grow flex flex-col justify-end">
-                <Button 
-                  variant="default" 
-                  size="xl" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
-                  onClick={handleAdminClick}
-                >
-                  Скачать презентацию
-                </Button>
-                <p className="text-muted-foreground/70 text-sm">
-                  👉 В один клик в Telegram
-                </p>
-              </CardContent>
-            </Card>
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="mb-3 font-semibold text-primary">Обсудим вашу съёмку</p>
+            <h2 className="mb-5 text-4xl font-bold text-foreground md:text-5xl">
+              Оставьте заявку — мы предложим подходящий вариант
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Для детского сада или школы. Без обязательств и долгих анкет.
+            </p>
           </div>
 
-          {/* Ссылка на канал */}
-          <div className="text-center">
-            <button 
-              onClick={handleChannelClick}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm underline underline-offset-4"
-            >
-              Подпишись на канал «Дети в кадре»
-            </button>
+          <div className="grid overflow-hidden rounded-2xl border border-border bg-background shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="bg-gradient-card p-6 md:p-10">
+              <h3 className="mb-5 text-xl font-bold text-foreground">Что вас интересует?</h3>
+              <div className="space-y-3">
+                {(Object.entries(directions) as [Direction, typeof directions[Direction]][]).map(([value, item]) => {
+                  const Icon = item.icon;
+                  const active = direction === value;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setDirection(value)}
+                      className={`w-full rounded-xl border p-4 text-left transition-all ${active ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-background hover:border-primary/50"}`}
+                    >
+                      <div className="flex gap-3">
+                        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">{item.label}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 space-y-3 text-sm text-muted-foreground">
+                {["Уточним задачу и количество детей", "Предложим формат и свободные даты", "Заранее объясним стоимость и этапы"].map((item) => (
+                  <div key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-6 md:p-10">
+              <div className="mb-6">
+                <p className="text-sm text-muted-foreground">Вы выбрали</p>
+                <h3 className="text-2xl font-bold text-foreground">{directions[direction].shortLabel}</h3>
+              </div>
+
+              <div className="mb-5">
+                <Label className="mb-2 block">Учреждение *</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => setAudience("kindergarten")}>Детский сад</Button>
+                  <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => setAudience("school")}>Школа</Button>
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <Label htmlFor="lead-name">Ваше имя *</Label>
+                  <Input id="lead-name" className="mt-2" autoComplete="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Дмитрий" />
+                </div>
+                <div>
+                  <Label htmlFor="lead-phone">Телефон *</Label>
+                  <Input id="lead-phone" className="mt-2" type="tel" inputMode="tel" autoComplete="tel" value={formData.phone} onChange={(event) => setFormData({ ...formData, phone: event.target.value })} placeholder="+7 999 000-00-00" />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <Label htmlFor="lead-institution">Название или номер учреждения *</Label>
+                <Input id="lead-institution" className="mt-2" value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
+              </div>
+
+              <div className="mt-5">
+                <Label htmlFor="lead-comment">Комментарий</Label>
+                <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder="Количество детей, желаемые даты или вопрос" />
+              </div>
+
+              <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+                <input type="checkbox" className="mt-1 h-4 w-4 accent-primary" checked={formData.consent} onChange={(event) => setFormData({ ...formData, consent: event.target.checked })} />
+                <span>Согласен на обработку персональных данных для ответа на заявку.</span>
+              </label>
+
+              <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
+                {isSending ? "Отправляем…" : "Получить консультацию"}
+              </Button>
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                Менеджер свяжется с вами в течение рабочего дня.
+              </p>
+            </form>
           </div>
         </div>
       </div>

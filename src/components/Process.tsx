@@ -1,177 +1,147 @@
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import {
+  CalendarCheck,
+  Camera,
+  CheckCircle2,
+  FileSignature,
+  Images,
+  LayoutTemplate,
+  PackageCheck,
+  Printer,
+  Sparkles,
+} from "lucide-react";
+
+type ProcessType = "photo-day" | "album";
+
+const photoDaySteps = [
+  {
+    title: "Запись на съёмку",
+    description: "Запись занимает 1 минуту: родителям достаточно отметиться в опросе в своей группе или классе.",
+    timing: "1 минута",
+    icon: CalendarCheck,
+  },
+  {
+    title: "Фотосъёмка",
+    description: "Съёмка начинается в 9:00. Фотографируем детей в знакомой обстановке — через игру и общение.",
+    timing: "начало в 9:00",
+    icon: Camera,
+  },
+  {
+    title: "Обработка",
+    description: "В течение 7 дней обрабатываем фотографии и размещаем их в закрытой галерее.",
+    timing: "до 7 дней",
+    icon: Sparkles,
+  },
+  {
+    title: "Выбор и оплата",
+    description: "Родители выбирают только понравившиеся кадры. На выбор и заказ печатных фотографий — 7 дней.",
+    timing: "7 дней на выбор и заказ",
+    icon: Images,
+  },
+  {
+    title: "Получение фотографий",
+    description: "Электронные файлы — сразу после оплаты. Печатные фото доставим за 10 дней после закрытия заказа.",
+    timing: "файлы — сразу · печать — до 10 дней",
+    icon: PackageCheck,
+  },
+] as const;
+
+const albumSteps = [
+  {
+    title: "Выбор альбома",
+    description: "Выбираем формат, дизайн и комплектацию для группы или класса.",
+    icon: LayoutTemplate,
+  },
+  {
+    title: "Подписание договора",
+    description: "Фиксируем 4 главных условия: стоимость, комплектацию, сроки и ответственность сторон.",
+    icon: FileSignature,
+  },
+  {
+    title: "Подготовка",
+    description: "Согласовываем график и заранее рассказываем, как подготовиться к съёмке.",
+    icon: CalendarCheck,
+  },
+  {
+    title: "Фотосъёмка",
+    description: "Проводим от 1 до 3 съёмочных дней — в зависимости от выбранного альбома.",
+    timing: "1–3 съёмочных дня",
+    icon: Camera,
+  },
+  {
+    title: "Макет и проверка",
+    description: "Первый макет готовим после завершения съёмок. Родители проверяют данные и утверждают альбомы.",
+    timing: "макет — до 14 дней · проверка — 7 дней",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Печать и выдача",
+    description: "После утверждения печатаем тираж и передаём готовые альбомы.",
+    timing: "печать — до 1 месяца",
+    icon: Printer,
+  },
+] as const;
 
 const Process = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.1);
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.1);
-  const [activeStep, setActiveStep] = useState(-1);
-  const [isMobileVisible, setIsMobileVisible] = useState(false);
-
-  // Fallback for mobile visibility
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsMobileVisible(true);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-  const steps = [
-    {
-      number: "1",
-      title: "Запись на съемку",
-      description: "Родители отмечаются в опросе в группе"
-    },
-    {
-      number: "2", 
-      title: "Напоминание",
-      description: "За 24 часа до съёмки приходит уведомление в Telegram-боте"
-    },
-    {
-      number: "3",
-      title: "Фотосъёмка",
-      description: "Съёмка с 8:00/9:00 до 12:30 (можем остаться после тихого часа)"
-    },
-    {
-      number: "4",
-      title: "Обработка",
-      description: "Через 7 дней все кадры готовы в личном кабинете"
-    },
-    {
-      number: "5",
-      title: "Выбор и оплата",
-      description: "7 дней на покупку, электронные файлы - доступны для покупки в любое время"
-    },
-    {
-      number: "6",
-      title: "Мгновенный доступ",
-      description: "Электронные файлы доступны сразу для скачивания после оплаты"
-    },
-    {
-      number: "7",
-      title: "Доставка печати",
-      description: "Напечатанные снимки привезём в сад в течение 14 дней"
-    },
-    {
-      number: "8",
-      title: "Отчёт",
-      description: "Предоставим полный отчёт по каждому ребёнку для администрации"
-    }
-  ];
-
+  const [processType, setProcessType] = useState<ProcessType>("photo-day");
+  const steps = processType === "photo-day" ? photoDaySteps : albumSteps;
 
   return (
-    <section id="process" className="py-12 md:py-20 bg-secondary/30">
+    <section id="process" className="bg-secondary/30 py-20">
       <div className="container mx-auto px-4">
-        <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Как проходит фотосессия
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Простой и прозрачный алгоритм позволит вам не переживать о деталях и наслаждаться результатом
+        <header className="mx-auto max-w-3xl text-center">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Понятный процесс</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">Как всё проходит</h2>
+          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+            Выберите продукт — покажем путь от записи до готового результата.
           </p>
-        </div>
-        
-        {/* Desktop Timeline */}
-        <div className="hidden md:block max-w-6xl mx-auto">
-          <div ref={contentRef} className={`transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Horizontal Timeline */}
-            <div className="relative">
-              {/* Continuous gradient timeline tracks */}
-              {/* Top row track (steps 1-4) */}
-              <div className="absolute top-8 left-16 right-16 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
-              {/* Bottom row track (steps 5-8) - positioned at center of second row circles */}
-              <div className="absolute top-[200px] left-16 right-16 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full hidden lg:block shadow-sm"></div>
-              
-              {/* Steps grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 lg:gap-4">
-                {steps.map((step, index) => (
-                  <div 
-                    key={index}
-                    className={`relative group transition-all duration-700 delay-${index * 100} ${
-                      contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                    }`}
-                    style={{ 
-                      transitionDelay: contentVisible ? `${index * 100}ms` : '0ms'
-                    }}
-                  >
-                    {/* Step content */}
-                    <div className="relative z-10 text-center hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer group-hover:drop-shadow-lg">
-                      {/* Step icon */}
-                      <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 mx-auto shadow-soft group-hover:shadow-xl transition-all duration-200">
-                        {step.number}
-                      </div>
-                      
-                      {/* Step title */}
-                      <h3 className="text-base lg:text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
-                        {step.title}
-                      </h3>
-                      
-                      {/* Step description */}
-                      <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-200 max-h-12 overflow-hidden">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft">
+            <button
+              type="button"
+              onClick={() => setProcessType("photo-day")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                processType === "photo-day" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
+              }`}
+            >
+              Фотодень
+            </button>
+            <button
+              type="button"
+              onClick={() => setProcessType("album")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                processType === "album" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
+              }`}
+            >
+              Выпускной альбом
+            </button>
           </div>
-        </div>
+        </header>
 
-        {/* Mobile Accordion */}
-        <div className="md:hidden max-w-md mx-auto">
-          <div className={`transition-all duration-700 ${(contentVisible || isMobileVisible) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="space-y-3">
-              {steps.map((step, index) => (
-                <div key={index} className="border border-border rounded-xl overflow-hidden bg-background shadow-soft">
-                  <button
-                    className="w-full p-4 text-left flex items-center justify-between hover:bg-secondary/50 transition-all duration-200 ease-in-out hover:scale-[1.01] active:scale-[0.99]"
-                    onClick={() => {
-                      setActiveStep(activeStep === index ? -1 : index);
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        {step.number}
-                      </div>
-                      <span className="font-semibold text-foreground">Шаг {step.number}: {step.title}</span>
-                    </div>
-                    <span className={`text-primary text-lg transition-transform duration-300 ease-in-out ${
-                      activeStep === index ? 'rotate-90' : ''
-                    }`}>
-                      {activeStep === index ? '▼' : '►'}
-                    </span>
-                  </button>
-                  
-                  <div 
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                      activeStep === index ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <div className="p-4 pt-0">
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
+        <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            const timing = "timing" in step ? step.timing : undefined;
+
+            return (
+              <article key={step.title} className="relative flex flex-col rounded-2xl border border-border bg-background p-5 shadow-soft">
+                <div className="mb-5 flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="text-sm font-bold text-primary-dark">{index + 1}</span>
                 </div>
-              ))}
-            </div>
-            
-            <div className={`text-center mt-8 transition-all duration-700 ${(contentVisible || isMobileVisible) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              <p className="text-lg text-primary font-semibold">
-                Образцы привезем для каждой группы
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className={`text-center mt-16 transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <p className="text-lg text-primary font-semibold">
-            Образцы привезем для каждой группы
-          </p>
+                <h3 className="text-lg font-bold text-foreground">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+                {timing && (
+                  <div className="mt-auto pt-4">
+                    <p className="inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
+                      {timing}
+                    </p>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

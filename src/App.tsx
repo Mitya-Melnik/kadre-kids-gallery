@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Projects from "./pages/Projects";
 import Kindergarten from "./pages/Kindergarten";
 import NotFound from "./pages/NotFound";
+import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTopOnRouteChange />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/projects" element={<Projects />} />
