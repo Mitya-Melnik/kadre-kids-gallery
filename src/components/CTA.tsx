@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { business } from "@/config/business";
 
 type Direction = "photo-day" | "album";
 type Audience = "kindergarten" | "school";
@@ -69,11 +70,20 @@ const CTA = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
+          name: formData.name,
+          phone: formData.phone,
+          institution: formData.institution,
+          comment: formData.comment,
           direction,
           audience,
           source: "detivkadre.spb.ru",
           page: window.location.href,
+          consent: {
+            given: true,
+            version: business.consentVersion,
+            givenAt: new Date().toISOString(),
+          },
+          privacyPolicyVersion: business.privacyPolicyVersion,
         }),
       });
       if (!response.ok) throw new Error("Lead submission failed");
@@ -175,15 +185,21 @@ const CTA = () => {
               <div className="mt-5">
                 <Label htmlFor="lead-comment">Комментарий</Label>
                 <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder="Количество детей, желаемые даты или вопрос" />
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  Не указывайте здесь ФИО ребёнка, сведения о здоровье и другие чувствительные данные.
+                </p>
               </div>
 
               <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
                 <input type="checkbox" required className="mt-1 h-4 w-4 accent-primary" checked={formData.consent} onChange={(event) => setFormData({ ...formData, consent: event.target.checked })} />
                 <span>
-                  Даю <Link to="/personal-data-consent" target="_blank" className="text-primary underline">согласие на обработку персональных данных</Link>
-                  {" "}и принимаю <Link to="/privacy" target="_blank" className="text-primary underline">политику обработки данных</Link>.
+                  Даю отдельное <Link to="/personal-data-consent" target="_blank" className="text-primary underline">согласие на обработку персональных данных</Link> для ответа на заявку.
                 </span>
               </label>
+
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                Перед отправкой ознакомьтесь с <Link to="/privacy" target="_blank" className="text-primary underline">политикой обработки персональных данных</Link>.
+              </p>
 
               <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
                 {isSending ? "Отправляем…" : "Получить консультацию"}

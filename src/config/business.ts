@@ -5,4 +5,6 @@ export const business = {
   city: "Санкт-Петербург",
   site: "https://detivkadre.spb.ru",
   privacyEmail: "info@detivkadre.spb.ru",
+  privacyPolicyVersion: "2026-09-01",
+  consentVersion: "2026-09-01",
 } as const;
