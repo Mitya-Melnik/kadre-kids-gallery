@@ -5,8 +5,8 @@ export const contacts = {
     digits: "+79956002111",
   },
   email: {
-    display: "info@detivkadre.ru",
-    href: "mailto:info@detivkadre.ru",
+    display: "info@detivkadre.spb.ru",
+    href: "mailto:info@detivkadre.spb.ru",
   },
   seendayUrl: "https://seenday.com/ru/login",
   max: {

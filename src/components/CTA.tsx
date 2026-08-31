@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Camera, CheckCircle2, GraduationCap } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -178,8 +178,11 @@ const CTA = () => {
               </div>
 
               <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
-                <input type="checkbox" className="mt-1 h-4 w-4 accent-primary" checked={formData.consent} onChange={(event) => setFormData({ ...formData, consent: event.target.checked })} />
-                <span>Согласен на обработку персональных данных для ответа на заявку.</span>
+                <input type="checkbox" required className="mt-1 h-4 w-4 accent-primary" checked={formData.consent} onChange={(event) => setFormData({ ...formData, consent: event.target.checked })} />
+                <span>
+                  Даю <Link to="/personal-data-consent" target="_blank" className="text-primary underline">согласие на обработку персональных данных</Link>
+                  {" "}и принимаю <Link to="/privacy" target="_blank" className="text-primary underline">политику обработки данных</Link>.
+                </span>
               </label>
 
               <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>

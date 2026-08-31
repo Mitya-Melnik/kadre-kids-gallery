@@ -8,6 +8,8 @@ import Projects from "./pages/Projects";
 import Kindergarten from "./pages/Kindergarten";
 import NotFound from "./pages/NotFound";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import PersonalDataConsent from "./pages/PersonalDataConsent";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,8 @@ const App = () => {
           <Route path="/" element={<Index />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/kindergarten" element={<Kindergarten />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/personal-data-consent" element={<PersonalDataConsent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

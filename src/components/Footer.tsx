@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { contacts } from "@/config/contacts";
+import { business } from "@/config/business";
 
 interface FooterProps { hideQuickLinks?: boolean }
 
@@ -157,12 +158,13 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
         {/* Нижняя часть футера */}
         <div className="pt-6 border-t border-slate-700/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-slate-400 text-sm">
-              <span className="font-semibold text-white">Фотостудия «Дети в кадре»</span> © 2026
-            </p>
+            <div className="text-center text-sm text-slate-400 md:text-left">
+              <p><span className="font-semibold text-white">Фотостудия «Дети в кадре»</span> © 2026</p>
+              <p className="mt-1 text-xs">{business.legalName} · ИНН {business.inn} · ОГРНИП {business.ogrnip}</p>
+            </div>
             <div className="flex gap-6 text-xs text-slate-500">
-              <a href="#" className="hover:text-slate-300 transition-colors">Политика конфиденциальности</a>
-              <a href="#" className="hover:text-slate-300 transition-colors">Пользовательское соглашение</a>
+              <Link to="/privacy" className="hover:text-slate-300 transition-colors">Политика обработки данных</Link>
+              <Link to="/personal-data-consent" className="hover:text-slate-300 transition-colors">Согласие на обработку данных</Link>
             </div>
           </div>
         </div>
