@@ -32,11 +32,14 @@ const CTA = () => {
   const [direction, setDirection] = useState<Direction>("photo-day");
   const [audience, setAudience] = useState<Audience>("kindergarten");
   const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [formStartedAt] = useState(() => Date.now());
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     institution: "",
     comment: "",
+    website: "",
     consent: false,
   });
 
@@ -55,14 +58,7 @@ const CTA = () => {
       return;
     }
 
-    const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL;
-    if (!webhookUrl) {
-      toast({
-        title: "Форма готова к подключению",
-        description: "Отправка заработает после подключения amoCRM. Сейчас можно позвонить по номеру в шапке сайта.",
-      });
-      return;
-    }
+    const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL || "/api/leads";
 
     setIsSending(true);
     try {
@@ -74,6 +70,8 @@ const CTA = () => {
           phone: formData.phone,
           institution: formData.institution,
           comment: formData.comment,
+          website: formData.website,
+          formElapsedMs: Date.now() - formStartedAt,
           direction,
           audience,
           source: "detivkadre.spb.ru",
@@ -87,8 +85,9 @@ const CTA = () => {
         }),
       });
       if (!response.ok) throw new Error("Lead submission failed");
-      toast({ title: "Заявка отправлена", description: "Свяжемся с вами и уточним детали." });
-      setFormData({ name: "", phone: "", institution: "", comment: "", consent: false });
+      setIsSent(true);
+      toast({ title: "Заявка отправлена", description: "Менеджер свяжется с вами в течение рабочего дня." });
+      setFormData({ name: "", phone: "", institution: "", comment: "", website: "", consent: false });
     } catch {
       toast({
         title: "Не удалось отправить заявку",
@@ -153,6 +152,21 @@ const CTA = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 md:p-10">
+              {isSent ? (
+                <div className="flex min-h-[430px] flex-col items-center justify-center text-center" role="status">
+                  <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <CheckCircle2 className="h-8 w-8" />
+                  </span>
+                  <h3 className="text-3xl font-bold text-foreground">Заявка принята</h3>
+                  <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
+                    Менеджер свяжется с вами в течение рабочего дня и уточнит детали съёмки.
+                  </p>
+                  <Button type="button" variant="outline" className="mt-7" onClick={() => setIsSent(false)}>
+                    Отправить ещё одну заявку
+                  </Button>
+                </div>
+              ) : (
+                <>
               <div className="mb-6">
                 <p className="text-sm text-muted-foreground">Вы выбрали</p>
                 <h3 className="text-2xl font-bold text-foreground">{directions[direction].shortLabel}</h3>
@@ -182,6 +196,11 @@ const CTA = () => {
                 <Input id="lead-institution" className="mt-2" value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
               </div>
 
+              <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+                <Label htmlFor="lead-website">Ваш сайт</Label>
+                <Input id="lead-website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={(event) => setFormData({ ...formData, website: event.target.value })} />
+              </div>
+
               <div className="mt-5">
                 <Label htmlFor="lead-comment">Комментарий</Label>
                 <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder="Количество детей, желаемые даты или вопрос" />
@@ -207,6 +226,8 @@ const CTA = () => {
               <p className="mt-3 text-center text-xs text-muted-foreground">
                 Менеджер свяжется с вами в течение рабочего дня.
               </p>
+                </>
+              )}
             </form>
           </div>
         </div>
