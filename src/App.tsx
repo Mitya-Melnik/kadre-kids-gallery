@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PersonalDataConsent from "./pages/PersonalDataConsent";
+import AnalyticsConsent from "./components/AnalyticsConsent";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => {
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <AnalyticsConsent />
       <BrowserRouter>
         <ScrollToTopOnRouteChange />
         <Routes>

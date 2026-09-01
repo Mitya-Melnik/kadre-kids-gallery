@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { contacts } from "@/config/contacts";
+import { reachGoal } from "@/lib/analytics";
 
 const TopBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,6 +36,7 @@ const TopBar = () => {
   };
 
   const openParentGallery = () => {
+    reachGoal("get_photos_click");
     window.open(contacts.seendayUrl, "_blank", "noopener,noreferrer");
   };
 
