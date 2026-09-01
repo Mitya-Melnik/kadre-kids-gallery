@@ -30,7 +30,7 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           
           {/* Контакты с соцсетями */}
           <div className="lg:col-span-2">
@@ -136,23 +136,6 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
             </nav>
           </div>
 
-          {/* Дополнительные разделы */}
-          <div className="lg:col-span-1">
-            {/* Детская среда */}
-            <div className="mb-6">
-              <h4 className="text-lg font-semibold mb-4 text-white">Детская среда</h4>
-            </div>
-
-            {/* Фотографам */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-white">Фотографам</h4>
-              <nav className="space-y-2">
-                <Link to="/projects" className="text-slate-300 hover:text-primary transition-colors text-sm block">
-                  Каталог декораций
-                </Link>
-              </nav>
-            </div>
-          </div>
         </div>
         
         {/* Нижняя часть футера */}

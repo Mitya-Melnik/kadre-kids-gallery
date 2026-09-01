@@ -7,6 +7,7 @@ const PersonalDataConsent = () => (
     <Helmet>
       <title>Согласие на обработку персональных данных — Дети в кадре</title>
       <meta name="robots" content="index, follow" />
+      <link rel="canonical" href="https://detivkadre.spb.ru/personal-data-consent" />
     </Helmet>
     <LegalPageLayout title="Согласие на обработку персональных данных" updatedAt="1 сентября 2026 года">
       <section>

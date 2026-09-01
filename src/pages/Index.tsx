@@ -13,17 +13,31 @@ import Footer from "@/components/Footer";
 import FabContact from "@/components/FabContact";
 import BackToTop from "@/components/BackToTop";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const Index = () => {
   useEffect(() => {
     if (!window.location.hash) return;
-    window.requestAnimationFrame(() => {
-      document.querySelector(window.location.hash)?.scrollIntoView({ behavior: "smooth" });
-    });
+
+    const scrollToTarget = () => {
+      document.querySelector(window.location.hash)?.scrollIntoView({ behavior: "auto", block: "start" });
+    };
+    const animationFrame = window.requestAnimationFrame(scrollToTarget);
+    const delayedScroll = window.setTimeout(scrollToTarget, 500);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(delayedScroll);
+    };
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-clip bg-background">
+      <Helmet>
+        <meta name="description" content="Фотодни и выпускные альбомы для детских садов и школ Санкт-Петербурга. Бережная съёмка, закрытые галереи и понятные сроки." />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href="https://detivkadre.spb.ru/" />
+      </Helmet>
       <TopBar />
       <Navigation />
       <Hero />

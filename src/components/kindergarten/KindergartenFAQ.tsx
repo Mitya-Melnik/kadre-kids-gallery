@@ -2,6 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { albumFaqs } from "@/components/FAQ";
 
 const KindergartenFAQ = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -9,68 +10,7 @@ const KindergartenFAQ = () => {
   
   const [visibleCount, setVisibleCount] = useState(7);
   
-  const faqs = [
-    {
-      emoji: "💰",
-      question: "Вы берёте предоплату?",
-      answer: "Да, 50% для брони даты. Заключаем договор. Остаток оплачивается после съёмки."
-    },
-    {
-      emoji: "💊",
-      question: "Что если ребёнок заболел или пропустил съёмку?",
-      answer: "Сделаем бесплатную досъёмку — ваш ребёнок точно будет в альбоме."
-    },
-    {
-      emoji: "📸",
-      question: "Все фото будут доступны или только часть?",
-      answer: "Отдаём все удачные кадры, а не только те, что попали в альбом."
-    },
-    {
-      emoji: "⏰",
-      question: "Когда будут готовы альбомы?",
-      answer: "Обычно весь процесс занимает около 10–14 рабочих дней после съёмки и утверждения макетов. Мы гарантируем готовность к выпускному, если съёмка проведена заранее (дата фиксируется в договоре)."
-    },
-    {
-      emoji: "🏥",
-      question: "Что если ребенок заболел в день съемки?",
-      answer: "Мы бесплатно доснимем отсутствующих детей в течение месяца после основной съемки."
-    },
-    {
-      emoji: "📅",
-      question: "Как долго длится фотосъемка в саду?",
-      answer: "Обычно съемка занимает 3-4 часа. За это время мы успеваем сфотографировать всех детей индивидуально и группой, провести тематические кадры."
-    },
-    {
-      emoji: "📷",
-      question: "Сколько фотографий получает каждый ребенок?",
-      answer: "В среднем для каждого ребенка получается 8-12 индивидуальных фотографий плюс групповые снимки. Все фото проходят обработку и ретушь."
-    },
-    {
-      emoji: "🤖",
-      question: "Как проходит обработка фото?",
-      answer: "Да, мы используем AI-инструменты для ускорения обработки, но каждый финальный образ просматривает и дорабатывает ретушёр вручную. Благодаря этому лица и эмоции остаются живыми и натуральными."
-    },
-    {
-      emoji: "🎨",
-      question: "Можно выбрать дизайн альбома?",
-      answer: "Да. На сайте доступно 12 готовых макетов, группа выбирает один для всего выпуска."
-    },
-    {
-      emoji: "📦",
-      question: "Что входит в пакет? Можно ли добавить опции?",
-      answer: "Всё под ключ. В каждом пакете уже включены съёмка, индивидуальные портреты, групповая фотография и сами альбомы. Дополнительно можно заказать индивидуальные развороты (+350 ₽/разворот)."
-    },
-    {
-      emoji: "🚚",
-      question: "Как происходит доставка?",
-      answer: "Готовые альбомы доставляем Яндекс-доставкой в ближайший к вам пункт выдачи."
-    },
-    {
-      emoji: "👩‍🏫",
-      question: "А альбом воспитателю?",
-      answer: "Конечно! Альбом для воспитателя включен в стоимость и предоставляется бесплатно."
-    }
-  ];
+  const faqs = albumFaqs;
 
   return (
     <section id="kindergarten-faq" className="py-20 bg-accent-soft">
@@ -100,14 +40,13 @@ const KindergartenFAQ = () => {
               >
                 <AccordionTrigger className="text-left hover:no-underline py-6">
                   <div className="flex items-center gap-4 pr-4">
-                    <span className="text-2xl flex-shrink-0">{faq.emoji}</span>
                     <span className="text-lg font-semibold text-foreground">
                       {faq.question}
                     </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pb-6">
-                  <div className="ml-12">
+                  <div>
                     <p className="text-muted-foreground leading-relaxed">
                       {faq.answer}
                     </p>
