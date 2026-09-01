@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { business } from "@/config/business";
+import { reachGoal } from "@/lib/analytics";
 
 type Direction = "photo-day" | "album";
 type Audience = "kindergarten" | "school";
@@ -33,6 +34,7 @@ const CTA = () => {
   const [audience, setAudience] = useState<Audience>("kindergarten");
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [formStartedAt] = useState(() => Date.now());
   const [formData, setFormData] = useState({
     name: "",
@@ -86,6 +88,7 @@ const CTA = () => {
       });
       if (!response.ok) throw new Error("Lead submission failed");
       setIsSent(true);
+      reachGoal("lead_success", { direction, audience });
       toast({ title: "Заявка отправлена", description: "Менеджер свяжется с вами в течение рабочего дня." });
       setFormData({ name: "", phone: "", institution: "", comment: "", website: "", consent: false });
     } catch {
@@ -124,7 +127,7 @@ const CTA = () => {
                     <button
                       key={value}
                       type="button"
-                      onClick={() => setDirection(value)}
+                      onClick={() => { setDirection(value); reachGoal("product_select", { product: value }); }}
                       className={`w-full rounded-xl border p-4 text-left transition-all ${active ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-background hover:border-primary/50"}`}
                     >
                       <div className="flex gap-3">
@@ -151,7 +154,12 @@ const CTA = () => {
               </div>
             </div>
 
-            <form noValidate onSubmit={handleSubmit} className="p-6 md:p-10">
+            <form noValidate onSubmit={handleSubmit} onFocus={() => {
+              if (!hasStarted) {
+                setHasStarted(true);
+                reachGoal("lead_form_start", { direction, audience });
+              }
+            }} className="p-6 md:p-10">
               {isSent ? (
                 <div className="flex min-h-[430px] flex-col items-center justify-center text-center" role="status">
                   <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -175,8 +183,8 @@ const CTA = () => {
               <div className="mb-5">
                 <Label className="mb-2 block">Учреждение *</Label>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => setAudience("kindergarten")}>Детский сад</Button>
-                  <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => setAudience("school")}>Школа</Button>
+                  <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => { setAudience("kindergarten"); reachGoal("audience_select", { audience: "kindergarten" }); }}>Детский сад</Button>
+                  <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => { setAudience("school"); reachGoal("audience_select", { audience: "school" }); }}>Школа</Button>
                 </div>
               </div>
 

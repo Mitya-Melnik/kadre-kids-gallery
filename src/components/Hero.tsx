@@ -2,9 +2,11 @@ import { ArrowRight, BookOpen, Camera, Images } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { contacts } from "@/config/contacts";
+import { reachGoal } from "@/lib/analytics";
 
 const Hero = () => {
   const scrollToGallery = () => {
+    reachGoal("product_select", { product: "photo-day", placement: "hero" });
     document.querySelector("#gallery")?.scrollIntoView({ behavior: "smooth" });
   };
 
