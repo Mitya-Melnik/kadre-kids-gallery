@@ -151,7 +151,7 @@ const CTA = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 md:p-10">
+            <form noValidate onSubmit={handleSubmit} className="p-6 md:p-10">
               {isSent ? (
                 <div className="flex min-h-[430px] flex-col items-center justify-center text-center" role="status">
                   <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -183,17 +183,17 @@ const CTA = () => {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="lead-name">Ваше имя *</Label>
-                  <Input id="lead-name" className="mt-2" autoComplete="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Дмитрий" />
+                  <Input id="lead-name" className="mt-2" required autoComplete="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Дмитрий" />
                 </div>
                 <div>
                   <Label htmlFor="lead-phone">Телефон *</Label>
-                  <Input id="lead-phone" className="mt-2" type="tel" inputMode="tel" autoComplete="tel" value={formData.phone} onChange={(event) => setFormData({ ...formData, phone: event.target.value })} placeholder="+7 999 000-00-00" />
+                  <Input id="lead-phone" className="mt-2" required type="tel" inputMode="tel" autoComplete="tel" value={formData.phone} onChange={(event) => setFormData({ ...formData, phone: event.target.value })} placeholder="+7 999 000-00-00" />
                 </div>
               </div>
 
               <div className="mt-5">
                 <Label htmlFor="lead-institution">Название или номер учреждения *</Label>
-                <Input id="lead-institution" className="mt-2" value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
+                <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
               </div>
 
               <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
