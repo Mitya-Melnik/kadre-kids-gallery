@@ -71,7 +71,7 @@ const Pricing = () => {
     },
     {
       id: "six-pages",
-      title: "Альбом, 6 страниц",
+      title: "Наша группа — 6 страниц",
       price: "3 300 ₽",
       description: "Небольшая история выпускной группы",
       items: [
@@ -81,7 +81,7 @@ const Pricing = () => {
     },
     {
       id: "ten-pages",
-      title: "Альбом, 10 страниц",
+      title: "История детства — 10 страниц",
       price: "3 900 ₽",
       description: "Больше личных кадров и событий группы",
       popular: true,
@@ -92,7 +92,7 @@ const Pricing = () => {
     },
     {
       id: "fourteen-pages",
-      title: "Альбом, 14 страниц",
+      title: "Большая история — 14 страниц",
       price: "6 500 ₽",
       description: "Максимальная версия выпускного альбома",
       items: [
