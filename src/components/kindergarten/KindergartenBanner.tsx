@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 
 const KindergartenBanner = () => {
+  const now = new Date();
+  const promoDeadline = new Date(now.getFullYear(), 9, 1, 23, 59, 59);
+  const isPromoActive = now <= promoDeadline;
   const handleConsultationClick = () => {
     window.location.href = '/?direction=album#cta';
   };
@@ -25,17 +28,17 @@ const KindergartenBanner = () => {
           </div>
 
           {/* Right side - Promotion Banner */}
-          <div className="flex-1 text-center md:text-right">
+          {isPromoActive && <div className="flex-1 text-center md:text-right">
             <div className="bg-gradient-to-r from-primary-glow to-primary-dark text-white px-8 py-4 rounded-xl shadow-soft">
               <div className="flex items-center justify-center md:justify-end gap-3">
                 <span className="text-2xl">🎉</span>
                 <div>
-                  <p className="text-xl font-bold">Скидка 10% до 5 октября</p>
+                  <p className="text-xl font-bold">Скидка 15% при бронировании до 1 октября</p>
                   <p className="text-sm opacity-90">на все виды альбомов</p>
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
         </div>
       </div>
     </section>

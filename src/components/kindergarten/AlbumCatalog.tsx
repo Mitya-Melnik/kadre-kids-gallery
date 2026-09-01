@@ -222,13 +222,13 @@ const AlbumCatalog = () => {
                     })}
                   </ul>
                   
-                  {('additionalInfo' in currentAlbum) && (
+                  {"additionalInfo" in currentAlbum && (
                     <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-accent-soft rounded-lg">
                       <div className="flex items-start gap-2 lg:gap-3">
                         <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
                         <div>
                           <p className="font-semibold text-foreground text-sm lg:text-base">
-                            {(currentAlbum as any).additionalInfo}
+                            {currentAlbum.additionalInfo}
                           </p>
                         </div>
                       </div>

@@ -163,6 +163,8 @@ const Testimonials = () => {
                     : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
                 }`}
                 onClick={() => api?.scrollTo(index)}
+                aria-label={`Показать отзыв ${index + 1}`}
+                aria-current={index + 1 === current ? "true" : undefined}
               />
             ))}
           </div>

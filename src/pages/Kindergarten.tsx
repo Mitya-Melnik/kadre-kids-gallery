@@ -1,4 +1,3 @@
-import React from "react";
 import { Helmet } from "react-helmet";
 import TopBar from "@/components/TopBar";
 import KindergartenHero from "@/components/kindergarten/KindergartenHero";
@@ -14,21 +13,21 @@ import Footer from "@/components/Footer";
 
 const Kindergarten = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-clip bg-background">
       <Helmet>
-        <title>Выпускные альбомы для детского сада - Фотосъемка в детских садах Санкт-Петербурга</title>
+        <title>Выпускные альбомы для детского сада и школы | Дети в кадре</title>
         <meta 
           name="description" 
-          content="Профессиональная фотосъемка и выпускные альбомы для детских садов в СПб. Без предоплаты, все фото включены, выезд с декорациями. Скидка 15% до 1 октября." 
+          content="Выпускные альбомы для детских садов и школ Санкт-Петербурга: договор, 1–3 съёмочных дня, выбор портрета, электронные фотографии и доставка СДЭК."
         />
         <meta name="keywords" content="выпускные альбомы детский сад, фотосъемка детский сад спб, фотограф в детский сад, выпускной детский сад" />
-        <link rel="canonical" href="/kindergarten" />
+        <link rel="canonical" href="https://detivkadre.spb.ru/kindergarten" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Выпускные альбомы для детского сада - Дети в кадре" />
-        <meta property="og:description" content="Профессиональная фотосъемка в детских садах. Без предоплаты, все фото включены." />
+        <meta property="og:description" content="Фотосъёмка, макеты, печать, электронные фотографии и доставка СДЭК — с условиями и сроками в договоре." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="/kindergarten" />
+        <meta property="og:url" content="https://detivkadre.spb.ru/kindergarten" />
       </Helmet>
 
       <TopBar />
