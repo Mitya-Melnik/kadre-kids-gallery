@@ -12,6 +12,8 @@ import KindergartenMobileCTA from "@/components/kindergarten/KindergartenMobileC
 import Testimonials from "@/components/Testimonials";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
 import KindergartenCase from "@/components/kindergarten/KindergartenCase";
+import FabContact from "@/components/FabContact";
+import BackToTop from "@/components/BackToTop";
 
 import Footer from "@/components/Footer";
 
@@ -51,6 +53,8 @@ const Kindergarten = () => {
       </main>
       
       <Footer hideSchoolAlbumLink kindergartenPage />
+      <FabContact aboveMobileBar />
+      <BackToTop aboveMobileBar />
       <KindergartenMobileCTA />
     </div>
   );
