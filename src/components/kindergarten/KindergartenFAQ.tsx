@@ -4,6 +4,29 @@ import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { albumFaqs } from "@/components/FAQ";
 
+const kindergartenQuestion = (question: string) => {
+  if (question === "Фотографируете ли вы воспитателей и учителей?") return "Фотографируете ли вы воспитателей?";
+  if (question === "Получит ли воспитатель или учитель бесплатный альбом?") return "Получат ли воспитатели бесплатные альбомы?";
+  return question;
+};
+
+const kindergartenAnswer = (faq: (typeof albumFaqs)[number]) => {
+  switch (faq.question) {
+    case "Какие выпускные альбомы можно заказать?":
+      return <>Можно выбрать один из пяти вариантов: <strong>«Альбом-папка»</strong> — компактный и самый доступный формат; <strong>«Альбом-трио»</strong> — больше фотографий ребёнка, друзей и воспитателей; <strong>«Наша группа»</strong> — полноценный альбом на 6 страниц; <strong>«История детства»</strong> — 10 страниц с личными фотографиями и событиями группы; <strong>«Большая история»</strong> — 14 страниц и до 3 съёмочных дней, включая выпускной. Посмотреть состав и стоимость каждого альбома можно в каталоге выше.</>;
+    case "Можно ли выбрать дизайн?":
+      return "Да. Группа выбирает два разных полноценных макета: один для мальчиков и один для девочек. Фотографии и данные каждого ребёнка остаются индивидуальными.";
+    case "Фотографируете ли вы воспитателей и учителей?":
+      return "Да. В альбом можно добавить портреты воспитателей и совместные фотографии с детьми.";
+    case "Получит ли воспитатель или учитель бесплатный альбом?":
+      return "Один альбом для воспитателя предоставляется бесплатно. На второй альбом для второго воспитателя действует скидка 50%.";
+    case "Как проходит проверка макетов?":
+      return "Каждый родитель проверяет данные и фотографии своего ребёнка. Ответственный родитель собирает замечания всей группы и передаёт их нам одним списком. На проверку предоставляется 7 дней. В стоимость входят до трёх согласованных этапов корректировок.";
+    default:
+      return "answerContent" in faq ? faq.answerContent : faq.answer;
+  }
+};
+
 const KindergartenFAQ = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: accordionRef, isVisible: accordionVisible } = useScrollAnimation(0.1);
@@ -41,14 +64,14 @@ const KindergartenFAQ = () => {
                 <AccordionTrigger className="text-left hover:no-underline py-6">
                   <div className="flex items-center gap-4 pr-4">
                     <span className="text-lg font-semibold text-foreground">
-                      {faq.question}
+                      {kindergartenQuestion(faq.question)}
                     </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pb-6">
                   <div>
                     <p className="text-muted-foreground leading-relaxed">
-                      {"answerContent" in faq ? faq.answerContent : faq.answer}
+                      {kindergartenAnswer(faq)}
                     </p>
                   </div>
                 </AccordionContent>

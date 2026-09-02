@@ -72,8 +72,8 @@ const TopBar = () => {
               />
             </a>
             <div className="hidden border-l border-border pl-4 text-xs leading-tight text-muted-foreground sm:block">
-              <div>фотодни и альбомы</div>
-              <div>для детских садов и школ</div>
+              <div>{isAlbumPage ? "выпускные альбомы" : "фотодни и альбомы"}</div>
+              <div>{isAlbumPage ? "для детских садов" : "для детских садов и школ"}</div>
             </div>
           </div>
 

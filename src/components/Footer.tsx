@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { contacts } from "@/config/contacts";
 import { business } from "@/config/business";
 
-interface FooterProps { hideQuickLinks?: boolean }
+interface FooterProps { hideQuickLinks?: boolean; hideSchoolAlbumLink?: boolean }
 
-const Footer = ({ hideQuickLinks = false }: FooterProps) => {
+const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false }: FooterProps) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -132,7 +132,7 @@ const Footer = ({ hideQuickLinks = false }: FooterProps) => {
               >
                 Детский сад
               </a>
-              <span className="text-slate-500 text-sm block">Для школы — раздел готовится</span>
+              {!hideSchoolAlbumLink && <span className="text-slate-500 text-sm block">Для школы — раздел готовится</span>}
             </nav>
           </div>
 
