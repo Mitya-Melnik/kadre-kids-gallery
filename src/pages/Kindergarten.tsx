@@ -11,6 +11,7 @@ import KindergartenInlineCTA from "@/components/kindergarten/KindergartenInlineC
 import KindergartenMobileCTA from "@/components/kindergarten/KindergartenMobileCTA";
 import Testimonials from "@/components/Testimonials";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
+import KindergartenCase from "@/components/kindergarten/KindergartenCase";
 
 import Footer from "@/components/Footer";
 
@@ -39,6 +40,7 @@ const Kindergarten = () => {
         <KindergartenHero />
         <AlbumCatalog />
         <Process initialType="album" fixedType="album" />
+        <KindergartenCase />
         <KindergartenLayouts />
         <KindergartenInlineCTA />
         <KindergartenGallery />
