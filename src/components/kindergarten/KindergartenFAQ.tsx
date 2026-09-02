@@ -48,7 +48,7 @@ const KindergartenFAQ = () => {
                 <AccordionContent className="pb-6">
                   <div>
                     <p className="text-muted-foreground leading-relaxed">
-                      {faq.answer}
+                      {"answerContent" in faq ? faq.answerContent : faq.answer}
                     </p>
                   </div>
                 </AccordionContent>
