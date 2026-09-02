@@ -86,7 +86,7 @@ const TopBar = () => {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <a href={contacts.phone.href} className="hidden items-center gap-2 text-sm font-semibold text-foreground hover:text-primary md:flex">
+            <a href={contacts.phone.href} className="hidden shrink-0 items-center gap-2 whitespace-nowrap text-sm font-semibold text-foreground hover:text-primary md:flex">
               <Phone className="h-4 w-4 text-primary" />
               {contacts.phone.display}
             </a>
