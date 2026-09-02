@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { contacts } from "@/config/contacts";
 import { business } from "@/config/business";
 
-interface FooterProps { hideQuickLinks?: boolean; hideSchoolAlbumLink?: boolean }
+interface FooterProps {
+  hideQuickLinks?: boolean;
+  hideSchoolAlbumLink?: boolean;
+  kindergartenPage?: boolean;
+}
 
-const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false }: FooterProps) => {
+const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergartenPage = false }: FooterProps) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -13,15 +17,25 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false }: FooterP
     }
   };
 
-  const quickLinks = [
-    { name: "О нас", href: "#hero" },
-    { name: "Преимущества", href: "#advantages" },
-    { name: "Галерея", href: "#gallery" },
-    { name: "Как проходит съемка", href: "#process" },
-    { name: "Стоимость", href: "#pricing" },
-    { name: "Вопросы и ответы", href: "#faq" },
-    { name: "Обсудить съёмку", href: "#cta" },
-  ];
+  const quickLinks = kindergartenPage
+    ? [
+        { name: "Каталог альбомов", href: "#albums" },
+        { name: "Реальный проект", href: "#case-kindergarten-108" },
+        { name: "Как создаётся альбом", href: "#process" },
+        { name: "Макеты", href: "#layouts" },
+        { name: "Галерея", href: "#gallery" },
+        { name: "Вопросы и ответы", href: "#kindergarten-faq" },
+        { name: "Оставить заявку", href: "#cta" },
+      ]
+    : [
+        { name: "О нас", href: "#hero" },
+        { name: "Преимущества", href: "#advantages" },
+        { name: "Галерея", href: "#gallery" },
+        { name: "Как проходит съемка", href: "#process" },
+        { name: "Стоимость", href: "#pricing" },
+        { name: "Вопросы и ответы", href: "#faq" },
+        { name: "Обсудить съёмку", href: "#cta" },
+      ];
 
   return (
     <footer className="bg-slate-900 text-white py-16 relative overflow-hidden">
@@ -124,14 +138,21 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false }: FooterP
           <div>
             <h4 className="text-lg font-semibold mb-4 text-white">Выпускные альбомы</h4>
             <nav className="space-y-2">
-              <a 
-                href="/kindergarten" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary-glow transition-colors text-sm block font-semibold"
-              >
-                Детский сад
-              </a>
+              {kindergartenPage ? (
+                <>
+                  <span className="text-primary text-sm block font-semibold">Для детского сада</span>
+                  <Link to="/" className="text-slate-300 hover:text-primary transition-colors text-sm block">
+                    Вернуться на главную
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  to="/kindergarten"
+                  className="text-primary hover:text-primary-glow transition-colors text-sm block font-semibold"
+                >
+                  Детский сад
+                </Link>
+              )}
               {!hideSchoolAlbumLink && <span className="text-slate-500 text-sm block">Для школы — раздел готовится</span>}
             </nav>
           </div>
