@@ -83,7 +83,7 @@ const KindergartenHero = () => {
               Выпускной альбом, который хочется пересматривать
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-              Живые фотографии детей без шаблонных постановочных кадров, более 10 вариантов дизайна и понятный путь до готового тиража.
+              Живые фотографии ребёнка, друзей, воспитателей и событий группы — в одном альбоме на память о детстве.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
