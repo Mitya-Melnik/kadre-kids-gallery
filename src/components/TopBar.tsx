@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { contacts } from "@/config/contacts";
 import { reachGoal } from "@/lib/analytics";
+import { useLocation } from "react-router-dom";
 
 const TopBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 0);
@@ -16,7 +18,7 @@ const TopBar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const menuItems = [
+  const mainMenuItems = [
     { name: "Главная", href: "/" },
     { name: "Выпускные альбомы", href: "/kindergarten" },
     { name: "Фотодни", href: "/#gallery" },
@@ -25,8 +27,23 @@ const TopBar = () => {
     { name: "Стоимость фотографий", href: "/#pricing" },
     { name: "Вопросы и ответы", href: "/#faq" },
   ];
+  const albumMenuItems = [
+    { name: "Главная", href: "/" },
+    { name: "Альбомы и цены", href: "#albums" },
+    { name: "Как создаётся альбом", href: "#process" },
+    { name: "Макеты", href: "#layouts" },
+    { name: "Примеры съёмки", href: "#gallery" },
+    { name: "Вопросы и ответы", href: "#kindergarten-faq" },
+  ];
+  const isAlbumPage = location.pathname === "/kindergarten";
+  const menuItems = isAlbumPage ? albumMenuItems : mainMenuItems;
 
   const handleMenuClick = (href: string) => {
+    if (href.startsWith("#")) {
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+      setIsMenuOpen(false);
+      return;
+    }
     if (href.startsWith("/#") && window.location.pathname === "/") {
       document.querySelector(href.replace("/", ""))?.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -61,15 +78,11 @@ const TopBar = () => {
           </div>
 
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Основная навигация">
-            <button onClick={() => handleMenuClick("/kindergarten")} className="text-sm font-medium hover:text-primary">
-              Выпускные альбомы
-            </button>
-            <button onClick={() => handleMenuClick("/#gallery")} className="text-sm font-medium hover:text-primary">
-              Фотодни
-            </button>
-            <button onClick={() => handleMenuClick("/#advantages")} className="text-sm font-medium hover:text-primary">
-              Почему мы
-            </button>
+            {(isAlbumPage ? albumMenuItems.slice(1, 4) : mainMenuItems.slice(1, 4)).map((item) => (
+              <button key={item.href} onClick={() => handleMenuClick(item.href)} className="text-sm font-medium hover:text-primary">
+                {item.name}
+              </button>
+            ))}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">

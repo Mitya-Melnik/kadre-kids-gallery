@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-type ProcessType = "photo-day" | "album";
+export type ProcessType = "photo-day" | "album";
 
 const photoDaySteps = [
   {
@@ -46,10 +46,10 @@ const photoDaySteps = [
   },
 ] as const;
 
-const albumSteps = [
+export const albumSteps = [
   {
     title: "Выбор альбома",
-    description: "Выбираем формат, дизайн и комплектацию для группы или класса.",
+    description: "Выбираем формат и комплектацию. Для группы готовим два полноценных дизайна — отдельно для мальчиков и девочек.",
     icon: LayoutTemplate,
   },
   {
@@ -64,26 +64,26 @@ const albumSteps = [
   },
   {
     title: "Фотосъёмка",
-    description: "Проводим от 1 до 3 съёмочных дней — в зависимости от выбранного альбома.",
+    description: "Проводим от 1 до 3 съёмочных дней. Заболевших детей бесплатно доснимаем по договорённости.",
     timing: "1–3 съёмочных дня",
     icon: Camera,
   },
   {
     title: "Макет и проверка",
-    description: "Первый макет готовим после завершения съёмок. Родители проверяют данные и утверждают альбомы.",
+    description: "Каждый родитель выбирает портрет на сайте. Ответственный родитель собирает проверку макета; включено до 3 этапов правок.",
     timing: "макет — до 14 дней · проверка — 7 дней",
     icon: CheckCircle2,
   },
   {
     title: "Печать и выдача",
-    description: "После утверждения печатаем тираж и передаём готовые альбомы.",
-    timing: "печать — до 1 месяца",
+    description: "После утверждения макета вносится вторая часть оплаты. Печатаем тираж и доставляем его до пункта выдачи СДЭК.",
+    timing: "печать — до 1 месяца · доставка СДЭК",
     icon: Printer,
   },
 ] as const;
 
-const Process = () => {
-  const [processType, setProcessType] = useState<ProcessType>("photo-day");
+const Process = ({ initialType = "photo-day", fixedType }: { initialType?: ProcessType; fixedType?: ProcessType }) => {
+  const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
   const steps = processType === "photo-day" ? photoDaySteps : albumSteps;
 
   return (
@@ -92,10 +92,10 @@ const Process = () => {
         <header className="mx-auto max-w-3xl text-center">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Понятный процесс</p>
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">Как всё проходит</h2>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+          {!fixedType && <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
             Выберите продукт — покажем путь от записи до готового результата.
-          </p>
-          <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft">
+          </p>}
+          {!fixedType && <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft">
             <button
               type="button"
               onClick={() => setProcessType("photo-day")}
@@ -114,7 +114,7 @@ const Process = () => {
             >
               Выпускной альбом
             </button>
-          </div>
+          </div>}
         </header>
 
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">

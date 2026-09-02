@@ -5,106 +5,20 @@ import { Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import { albumPackages } from "@/config/albumPackages";
 
 const AlbumCatalog = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
   
-  const [selectedSize, setSelectedSize] = useState("Mini");
+  const [selectedId, setSelectedId] = useState("ten-pages");
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
-  const albumSizes = {
-    "Small": {
-      price: "2700 ₽",
-      subtitle: "Альбом папка",
-      image: "/albums/images/small.jpg",
-      video: "/albums/videos/small.mp4",
-      popular: false,
-      features: [
-        "1 съемочный день",
-        "Индивидуальный портрет ребенка",
-        "Разворот с владельцем альбома и одногруппниками",
-        "12 дизайнов на выбор (выбрать 1 на группу)"
-      ]
-    },
-    "Small+": {
-      price: "2950 ₽", 
-      subtitle: "Альбом трио",
-      image: "/albums/images/small-plus.jpg",
-      video: "/albums/videos/small-plus.mp4",
-      popular: false,
-      features: [
-        "1 съемочный день",
-        "Индивидуальный портрет ребенка",
-        "Разворот с владельцем альбома и одногруппниками",
-        { text: "Можно добавить воспитателей", bold: true },
-        { text: "Общая фотография всей группы", bold: true },
-        "12 дизайнов на выбор (выбрать 1 на группу)"
-      ]
-    },
-    "Mini": {
-      price: "3300 ₽",
-      subtitle: "Альбом на 6 страниц",
-      image: "/albums/images/mini.jpg",
-      video: "/albums/videos/mini.mp4",
-      popular: false,
-      features: [
-        "1 съемочный день",
-        "Индивидуальный портрет ребенка",
-        "Разворот с владельцем альбома и одногруппниками",
-        "Общая фотография всей группы",
-        { text: "2 страницы групповых фотографий", bold: true },
-        { text: "Фотография на обложке (по желанию группы)", bold: true },
-        "12 дизайнов на выбор (выбрать 1 на группу)"
-      ],
-      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
-    },
-    "Extra": {
-      price: "3900 ₽",
-      subtitle: "Альбом на 10 страниц",
-      image: "/albums/images/extra.jpg",
-      video: "/albums/videos/extra.mp4",
-      popular: true,
-      features: [
-        "1 съемочный день",
-        "Индивидуальный разворот ребенка",
-        { text: "3 индивидуальных портрета ребенка", bold: true },
-        { text: "6 страниц групповых фотографий", bold: true },
-        { text: "Есть цитаты (по желанию)", bold: true },
-        { text: "Фотография на обложке (по желанию группы)", bold: true },
-        "Разворот с воспитателями и одногруппниками",
-        "Общая фотография всей группы",
-        "12 дизайнов на выбор (выбрать 1 на группу)"
-      ],
-      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
-    },
-    "Max": {
-      price: "6500 ₽",
-      subtitle: "Альбом на 14 страниц",
-      image: "/albums/images/max.jpg",
-      video: "/albums/videos/max.mp4",
-      popular: false,
-      features: [
-        { text: "До 3 съемочных дня", bold: true },
-        { text: "Индивидуальный разворот ребенка", bold: true },
-        { text: "3 индивидуальных портрета ребенка", bold: true },
-        { text: "10 страниц групповых фотографий", bold: true },
-        { text: "Фотография на обложке (по желанию группы)", bold: true },
-        "Разворот с воспитателями и одногруппниками",
-        "Общая фотография всей группы",
-        { text: "Фотосъемка выпускного", bold: true },
-        { text: "Уникальные грамоты/медали на выпускной", bold: true },
-        "12 дизайнов на выбор (выбрать 1 на группу)"
-      ],
-      additionalInfo: "Можно добавить индивидуальные развороты (+350₽/разворот)"
-    }
-  } as const;
 
   const handleVideoClick = () => {
     setIsVideoModalOpen(true);
   };
 
-  const currentAlbum = albumSizes[selectedSize as keyof typeof albumSizes];
+  const currentAlbum = albumPackages.find((album) => album.id === selectedId) ?? albumPackages[3];
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -116,27 +30,37 @@ const AlbumCatalog = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Каталог
           </h2>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+            Пять форматов — от компактного альбома-папки до большой истории детства на 14 страниц.
+          </p>
         </div>
 
         <div 
           ref={catalogRef}
           className={`max-w-6xl mx-auto transition-all duration-700 ${catalogVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
+          <div className="mb-10 grid gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm sm:grid-cols-2 lg:grid-cols-4">
+            <p><strong className="block text-foreground">Электронные фотографии</strong><span className="text-muted-foreground">Все удачные кадры — в подарок</span></p>
+            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От 10 альбомов</span></p>
+            <p><strong className="block text-foreground">Для воспитателей</strong><span className="text-muted-foreground">1 альбом бесплатно, второй — со скидкой 50%</span></p>
+            <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
+          </div>
+
           {/* Size Switcher */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {Object.keys(albumSizes).map((size) => (
+            {albumPackages.map((album) => (
               <Button
-                key={size}
-                variant={selectedSize === size ? "default" : "outline"}
-                onClick={() => setSelectedSize(size)}
+                key={album.id}
+                variant={selectedId === album.id ? "default" : "outline"}
+                onClick={() => setSelectedId(album.id)}
                 className={`px-6 py-3 transition-all duration-200 relative ${
-                  selectedSize === size 
+                  selectedId === album.id
                     ? 'bg-primary hover:bg-primary/90 scale-105' 
                     : 'hover:bg-accent hover:text-foreground hover:scale-105'
                 }`}
               >
-                {size}
-                {albumSizes[size as keyof typeof albumSizes].popular && (
+                {album.shortTitle}
+                {album.popular && (
                   <span className="absolute -top-4 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
                     Популярный
                   </span>
@@ -153,7 +77,7 @@ const AlbumCatalog = () => {
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
                 <ResponsiveImage
                   basePath={currentAlbum.image.replace(/\.(webp|jpg|jpeg|png)$/, '')}
-                  alt={`Разворот альбома ${selectedSize}`}
+                  alt={`Разворот альбома ${currentAlbum.title}`}
                   className="w-full aspect-square object-cover rounded-lg shadow-soft"
                   loading="lazy"
                   type="cover"
@@ -177,7 +101,7 @@ const AlbumCatalog = () => {
               <Card className="bg-gradient-card border-primary/20 shadow-glow">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-2xl text-foreground flex items-center justify-between">
-                    {selectedSize}
+                    {currentAlbum.title}
                     {currentAlbum.popular && (
                       <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
                         Популярный
@@ -187,13 +111,18 @@ const AlbumCatalog = () => {
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="mb-4">
-                    <p className="text-lg text-muted-foreground">{currentAlbum.subtitle}</p>
+                    <p className="text-lg text-muted-foreground">{currentAlbum.description}</p>
+                    <p className="mt-3 rounded-lg bg-primary/5 p-3 text-sm leading-relaxed text-foreground">
+                      <strong>Подойдёт, если:</strong> {currentAlbum.suitableFor}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-2xl lg:text-3xl font-bold text-primary">
                       {currentAlbum.price}
                     </span>
+                    <span className="text-sm text-muted-foreground">за 1 альбом</span>
                   </div>
+                  <p className="mt-2 text-xs text-muted-foreground">При тираже от 10 экземпляров</p>
                 </CardContent>
               </Card>
 
@@ -207,15 +136,11 @@ const AlbumCatalog = () => {
                 <CardContent className="pt-0">
                   <ul className="space-y-2 lg:space-y-3">
                     {currentAlbum.features.map((feature, index) => {
-                      const isFeatureObject = typeof feature === 'object';
-                      const featureText = isFeatureObject ? feature.text : feature;
-                      const isBold = isFeatureObject && feature.bold;
-                      
                       return (
                         <li key={index} className="flex items-start gap-2 lg:gap-3">
                           <span className="text-primary font-bold text-base lg:text-lg">✓</span>
-                          <span className={`text-foreground text-sm lg:text-base ${isBold ? 'font-bold' : ''}`}>
-                            {featureText}
+                          <span className="text-foreground text-sm lg:text-base">
+                            {feature}
                           </span>
                         </li>
                       );
@@ -238,6 +163,62 @@ const AlbumCatalog = () => {
               </Card>
             </div>
           </div>
+
+          <div className="mt-16">
+            <div className="mb-7 text-center">
+              <h3 className="text-2xl font-bold text-foreground md:text-3xl">Сравните форматы</h3>
+              <p className="mt-2 text-muted-foreground">Главные различия всех пяти вариантов на одном экране</p>
+            </div>
+
+            <div className="hidden overflow-hidden rounded-2xl border border-border md:block">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead className="bg-muted/70 text-foreground">
+                  <tr>
+                    <th className="p-4 font-semibold">Альбом</th>
+                    <th className="p-4 font-semibold">Формат</th>
+                    <th className="p-4 font-semibold">Съёмка</th>
+                    <th className="p-4 font-semibold">Цена за альбом</th>
+                    <th className="p-4 font-semibold">Лучше всего подходит</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {albumPackages.map((album) => (
+                    <tr key={album.id} className={`border-t border-border ${album.popular ? "bg-primary/5" : "bg-background"}`}>
+                      <td className="p-4 font-semibold text-foreground">{album.title}{album.popular && <span className="ml-2 text-xs text-primary">Оптимальный выбор</span>}</td>
+                      <td className="p-4 text-muted-foreground">{album.comparisonFormat}</td>
+                      <td className="p-4 text-muted-foreground">{album.shootingDays}</td>
+                      <td className="p-4 font-bold text-primary">{album.price}</td>
+                      <td className="max-w-xs p-4 text-muted-foreground">{album.suitableFor}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid gap-3 md:hidden">
+              {albumPackages.map((album) => (
+                <article key={album.id} className={`rounded-xl border p-4 ${album.popular ? "border-primary bg-primary/5" : "border-border bg-background"}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="font-bold text-foreground">{album.title}</h4>
+                      <p className="mt-1 text-sm text-muted-foreground">{album.comparisonFormat} · {album.shootingDays}</p>
+                    </div>
+                    <p className="shrink-0 font-bold text-primary">{album.price}</p>
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{album.suitableFor}</p>
+                  {album.popular && <p className="mt-2 text-xs font-bold text-primary">Оптимальный выбор</p>}
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 text-center">
+            <Button asChild size="lg">
+              <a href="/kindergarten#cta" onClick={(event) => { event.preventDefault(); document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }); }}>
+                Рассчитать стоимость для группы
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
       
@@ -246,7 +227,7 @@ const AlbumCatalog = () => {
         isOpen={isVideoModalOpen}
         onClose={() => setIsVideoModalOpen(false)}
         videoSrc={currentAlbum.video}
-        title={`Видео альбома ${selectedSize}`}
+        title={`Видео альбома ${currentAlbum.title}`}
       />
     </section>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
+import { albumPackages } from "@/config/albumPackages";
 
 const Pricing = () => {
   const [pricingType, setPricingType] = useState<"photo-day" | "albums">("photo-day");
@@ -44,60 +45,6 @@ const Pricing = () => {
         { size: "Магнит 10×15", price: "550 ₽", note: "Увеличенный магнит" },
         { size: "Картина на холсте 20×30, А4", price: "2900 ₽", note: "Художественная печать" },
         { size: "Картина на холсте 30×45, А3", price: "4500 ₽", note: "Большой художественный холст" }
-      ]
-    }
-  ];
-
-  const albumPackages = [
-    {
-      id: "folder",
-      title: "Альбом-папка",
-      price: "2 700 ₽",
-      description: "Компактный выпускной альбом",
-      items: [
-        { size: "Формат", price: "20×30 см", note: "Твёрдая обложка и один разворот" },
-        { size: "Фотосъёмка", price: "1 день", note: "Портреты детей, воспитателей и общие фотографии" }
-      ]
-    },
-    {
-      id: "trio",
-      title: "Альбом-трио",
-      price: "2 950 ₽",
-      description: "Три плотных разворота с главными кадрами",
-      items: [
-        { size: "Формат", price: "20×30 см", note: "Твёрдая обложка и три разворота" },
-        { size: "Фотосъёмка", price: "1 день", note: "Портреты, друзья, воспитатели и общие фотографии" }
-      ]
-    },
-    {
-      id: "six-pages",
-      title: "Наша группа — 6 страниц",
-      price: "3 300 ₽",
-      description: "Небольшая история выпускной группы",
-      items: [
-        { size: "Объём", price: "6 страниц", note: "Портреты ребёнка, друзей и воспитателей" },
-        { size: "Фотосъёмка", price: "1 день", note: "Живые и постановочные кадры" }
-      ]
-    },
-    {
-      id: "ten-pages",
-      title: "История детства — 10 страниц",
-      price: "3 900 ₽",
-      description: "Больше личных кадров и событий группы",
-      popular: true,
-      items: [
-        { size: "Объём", price: "10 страниц", note: "Полная история группы в одном альбоме" },
-        { size: "Фотосъёмка", price: "1 день", note: "Портреты, друзья, воспитатели и общие моменты" }
-      ]
-    },
-    {
-      id: "fourteen-pages",
-      title: "Большая история — 14 страниц",
-      price: "6 500 ₽",
-      description: "Максимальная версия выпускного альбома",
-      items: [
-        { size: "Объём", price: "14 страниц", note: "Расширенная персональная история ребёнка" },
-        { size: "Фотосъёмка", price: "до 3 дней", note: "Больше образов, сюжетов и живых кадров" }
       ]
     }
   ];

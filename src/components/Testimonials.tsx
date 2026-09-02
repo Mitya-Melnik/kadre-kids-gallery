@@ -3,7 +3,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { useState, useEffect } from "react";
 import { type CarouselApi } from "@/components/ui/carousel";
 
-const Testimonials = () => {
+const Testimonials = ({ variant = "default" }: { variant?: "default" | "albums" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -101,14 +101,18 @@ const Testimonials = () => {
       initials: "ТС"
     }
   ];
+  const visibleTestimonials = variant === "albums"
+    ? testimonials.filter((testimonial) => [2, 6, 11].includes(testimonial.id))
+    : testimonials;
 
   return (
     <section className="py-20 bg-gradient-card">
       <div className="container mx-auto px-4">
         <div ref={titleRef} className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Отзывы
+            {variant === "albums" ? "Отзывы о работе команды" : "Отзывы"}
           </h2>
+          {variant === "albums" && <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Что отмечают воспитатели и представители детских садов после совместной работы.</p>}
         </div>
         
         <div className="max-w-6xl mx-auto">
@@ -122,7 +126,7 @@ const Testimonials = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-2 md:-ml-4">
-              {testimonials.map((testimonial) => (
+              {visibleTestimonials.map((testimonial) => (
                 <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                   <div className="bg-white rounded-lg p-6 shadow-soft hover:shadow-glow transition-all duration-300 hover:scale-[1.02] border border-border h-full">
                     <div className="flex flex-col h-full">

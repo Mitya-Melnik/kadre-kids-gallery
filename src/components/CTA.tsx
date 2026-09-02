@@ -27,11 +27,21 @@ const directions = {
   },
 };
 
-const CTA = () => {
+const CTA = ({
+  initialDirection = "photo-day",
+  initialAudience = "kindergarten",
+  fixedDirection,
+  fixedAudience,
+}: {
+  initialDirection?: Direction;
+  initialAudience?: Audience;
+  fixedDirection?: Direction;
+  fixedAudience?: Audience;
+}) => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const [direction, setDirection] = useState<Direction>("photo-day");
-  const [audience, setAudience] = useState<Audience>("kindergarten");
+  const [direction, setDirection] = useState<Direction>(fixedDirection ?? initialDirection);
+  const [audience, setAudience] = useState<Audience>(fixedAudience ?? initialAudience);
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -40,14 +50,17 @@ const CTA = () => {
     name: "",
     phone: "",
     institution: "",
+    childrenCount: "",
     comment: "",
     website: "",
     consent: false,
   });
 
   useEffect(() => {
-    if (searchParams.get("direction") === "album") setDirection("album");
-  }, [searchParams]);
+    if (!fixedDirection && searchParams.get("direction") === "album") setDirection("album");
+    if (!fixedAudience && searchParams.get("audience") === "school") setAudience("school");
+    if (!fixedAudience && searchParams.get("audience") === "kindergarten") setAudience("kindergarten");
+  }, [searchParams, fixedDirection, fixedAudience]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,6 +84,7 @@ const CTA = () => {
           name: formData.name,
           phone: formData.phone,
           institution: formData.institution,
+          childrenCount: formData.childrenCount,
           comment: formData.comment,
           website: formData.website,
           formElapsedMs: Date.now() - formStartedAt,
@@ -90,7 +104,7 @@ const CTA = () => {
       setIsSent(true);
       reachGoal("lead_success", { direction, audience });
       toast({ title: "Заявка отправлена", description: "Менеджер свяжется с вами в течение рабочего дня." });
-      setFormData({ name: "", phone: "", institution: "", comment: "", website: "", consent: false });
+      setFormData({ name: "", phone: "", institution: "", childrenCount: "", comment: "", website: "", consent: false });
     } catch {
       toast({
         title: "Не удалось отправить заявку",
@@ -102,32 +116,37 @@ const CTA = () => {
     }
   };
 
+  const isKindergartenAlbum = fixedDirection === "album" && fixedAudience === "kindergarten";
+
   return (
     <section id="cta" className="py-16 md:py-24 bg-accent-soft scroll-mt-24">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="mb-3 font-semibold text-primary">Обсудим вашу съёмку</p>
+            <p className="mb-3 font-semibold text-primary">{isKindergartenAlbum ? "Расчёт без обязательств" : "Обсудим вашу съёмку"}</p>
             <h2 className="mb-5 text-4xl font-bold text-foreground md:text-5xl">
-              Оставьте заявку — мы предложим подходящий вариант
+              {isKindergartenAlbum ? "Рассчитаем выпускные альбомы для вашей группы" : "Оставьте заявку — мы предложим подходящий вариант"}
             </h2>
             <p className="text-lg text-muted-foreground">
-              Для детского сада или школы. Без обязательств и долгих анкет.
+              {isKindergartenAlbum ? "Укажите контакты и примерное количество детей. Рассчитаем стоимость и подскажем свободные даты." : "Для детского сада или школы. Без обязательств и долгих анкет."}
             </p>
           </div>
 
           <div className="grid overflow-hidden rounded-2xl border border-border bg-background shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
             <div className="bg-gradient-card p-6 md:p-10">
-              <h3 className="mb-5 text-xl font-bold text-foreground">Что вас интересует?</h3>
+              <h3 className="mb-5 text-xl font-bold text-foreground">{isKindergartenAlbum ? "Что рассчитаем" : "Что вас интересует?"}</h3>
               <div className="space-y-3">
-                {(Object.entries(directions) as [Direction, typeof directions[Direction]][]).map(([value, item]) => {
+                {(fixedDirection
+                  ? [[fixedDirection, directions[fixedDirection]]] as [Direction, typeof directions[Direction]][]
+                  : Object.entries(directions) as [Direction, typeof directions[Direction]][]
+                ).map(([value, item]) => {
                   const Icon = item.icon;
                   const active = direction === value;
                   return (
                     <button
                       key={value}
                       type="button"
-                      onClick={() => { setDirection(value); reachGoal("product_select", { product: value }); }}
+                      onClick={() => { if (!fixedDirection) setDirection(value); reachGoal("product_select", { product: value }); }}
                       className={`w-full rounded-xl border p-4 text-left transition-all ${active ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-background hover:border-primary/50"}`}
                     >
                       <div className="flex gap-3">
@@ -136,7 +155,7 @@ const CTA = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground">{item.label}</p>
-                          <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">{isKindergartenAlbum ? "Поможем выбрать формат и рассчитаем заказ для вашей группы." : item.description}</p>
                         </div>
                       </div>
                     </button>
@@ -145,7 +164,7 @@ const CTA = () => {
               </div>
 
               <div className="mt-8 space-y-3 text-sm text-muted-foreground">
-                {["Уточним задачу и количество детей", "Предложим формат и свободные даты", "Заранее объясним стоимость и этапы"].map((item) => (
+                {(isKindergartenAlbum ? ["Рассчитаем стоимость для вашей группы", "Поможем сравнить форматы и дизайны", "Расскажем о свободных датах и этапах"] : ["Уточним задачу и количество детей", "Предложим формат и свободные даты", "Заранее объясним стоимость и этапы"]).map((item) => (
                   <div key={item} className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <span>{item}</span>
@@ -182,10 +201,16 @@ const CTA = () => {
 
               <div className="mb-5">
                 <Label className="mb-2 block">Учреждение *</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => { setAudience("kindergarten"); reachGoal("audience_select", { audience: "kindergarten" }); }}>Детский сад</Button>
-                  <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => { setAudience("school"); reachGoal("audience_select", { audience: "school" }); }}>Школа</Button>
-                </div>
+                {fixedAudience ? (
+                  <div className="rounded-lg border border-primary bg-primary/5 px-4 py-3 font-semibold text-foreground">
+                    {fixedAudience === "kindergarten" ? "Детский сад" : "Школа"}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => { setAudience("kindergarten"); reachGoal("audience_select", { audience: "kindergarten" }); }}>Детский сад</Button>
+                    <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => { setAudience("school"); reachGoal("audience_select", { audience: "school" }); }}>Школа</Button>
+                  </div>
+                )}
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -204,6 +229,20 @@ const CTA = () => {
                 <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
               </div>
 
+              {isKindergartenAlbum && (
+                <div className="mt-5">
+                  <Label htmlFor="lead-children-count">Сколько детей в группе?</Label>
+                  <select id="lead-children-count" className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" value={formData.childrenCount} onChange={(event) => setFormData({ ...formData, childrenCount: event.target.value })}>
+                    <option value="">Выберите вариант</option>
+                    <option value="10–15">10–15</option>
+                    <option value="16–20">16–20</option>
+                    <option value="21–25">21–25</option>
+                    <option value="Больше 25">Больше 25</option>
+                    <option value="Пока не знаю">Пока не знаю</option>
+                  </select>
+                </div>
+              )}
+
               <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
                 <Label htmlFor="lead-website">Ваш сайт</Label>
                 <Input id="lead-website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={(event) => setFormData({ ...formData, website: event.target.value })} />
@@ -211,7 +250,7 @@ const CTA = () => {
 
               <div className="mt-5">
                 <Label htmlFor="lead-comment">Комментарий</Label>
-                <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder="Количество детей, желаемые даты или вопрос" />
+                <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder={isKindergartenAlbum ? "Желаемые даты или вопрос" : "Количество детей, желаемые даты или вопрос"} />
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                   Не указывайте здесь ФИО ребёнка, сведения о здоровье и другие чувствительные данные.
                 </p>
@@ -229,7 +268,7 @@ const CTA = () => {
               </p>
 
               <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
-                {isSending ? "Отправляем…" : "Получить консультацию"}
+                {isSending ? "Отправляем…" : isKindergartenAlbum ? "Получить расчёт" : "Получить консультацию"}
               </Button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
                 Менеджер свяжется с вами в течение рабочего дня.
