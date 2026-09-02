@@ -52,7 +52,7 @@ const Kindergarten = () => {
         <CTA initialDirection="album" initialAudience="kindergarten" fixedDirection="album" fixedAudience="kindergarten" />
       </main>
       
-      <Footer hideSchoolAlbumLink kindergartenPage />
+      <Footer kindergartenPage />
       <FabContact aboveMobileBar />
       <BackToTop aboveMobileBar />
       <KindergartenMobileCTA />
