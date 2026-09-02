@@ -1,4 +1,4 @@
-import { Star, Clock, Gamepad2, MessageCircle, Palette, Camera, CheckCircle } from "lucide-react";
+import { BookOpen, FileCheck2, Heart, ListChecks, UserCheck, UserRoundPlus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const KindergartenAdvantages = () => {
@@ -7,39 +7,34 @@ const KindergartenAdvantages = () => {
 
   const advantages = [
     {
-      icon: Star,
-      title: "Высокое качество",
-      description: "Печать на цифровом оборудовании HP Indigo и Ricoh Pro. Твердая фотообложка, развороты на 180 градусов, ламинированная поверхность, плотные листы."
+      icon: Heart,
+      title: "Живые фотографии без принуждения",
+      description: "Знакомимся с детьми, снимаем через игру и общение, сохраняя настоящие эмоции и характер ребёнка."
     },
     {
-      icon: Clock,
-      title: "100% заказов вовремя",
-      description: "Сроки соблюдаем и не срываем дедлайны."
+      icon: UserCheck,
+      title: "Каждый родитель выбирает портрет",
+      description: "После съёмки родители самостоятельно выбирают фотографию своего ребёнка в закрытой галерее."
     },
     {
-      icon: Gamepad2,
-      title: "Игра вместо позирования", 
-      description: "Съёмка проходит в игровой форме: дети не зажимаются и улыбаются искренне."
+      icon: ListChecks,
+      title: "Организацию берём на себя",
+      description: "Помогаем ответственному родителю пройти весь путь — от выбора альбома до получения готового тиража."
     },
     {
-      icon: MessageCircle,
-      title: "Быстрая коммуникация",
-      description: "Отвечаем быстро в мессенджерах и всегда на связи с родителями."
+      icon: UserRoundPlus,
+      title: "Не пропустим ни одного ребёнка",
+      description: "Если ребёнок заболел или отсутствовал, бесплатно организуем дополнительную съёмку по договорённости."
     },
     {
-      icon: Palette,
-      title: "Живая ретушь + AI",
-      description: "Технологии помогают ускорить процесс, а ретушёр сохраняет естественность обработки."
+      icon: FileCheck2,
+      title: "Стоимость и сроки — в договоре",
+      description: "Заранее фиксируем комплектацию, стоимость, даты съёмок, сроки подготовки макета, печати и доставки."
     },
     {
-      icon: Camera,
-      title: "Техника",
-      description: "Привозим оборудование и создаём настоящую фотостудию прямо в детском саду."
-    },
-    {
-      icon: CheckCircle, 
-      title: "Все документы и разрешения",
-      description: "У нас есть полный комплект документов и все разрешения на съёмку в соответствии с требованиями детских садов."
+      icon: BookOpen,
+      title: "Альбом, рассчитанный на годы",
+      description: "Твёрдая фотообложка, плотные ламинированные страницы и развороты на 180 градусов."
     }
   ];
 
@@ -51,10 +46,10 @@ const KindergartenAdvantages = () => {
           className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Преимущества
+            Почему группы выбирают «Дети в кадре»
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Почему детские сады выбирают именно нас
+            Детям комфортно, родителям всё понятно, а ответственному не приходится организовывать проект в одиночку.
           </p>
         </div>
         

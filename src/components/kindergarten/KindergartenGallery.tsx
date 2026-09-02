@@ -12,7 +12,7 @@ const KindergartenGallery = () => {
   
   const [imageNumbers, setImageNumbers] = useState<number[]>([]);
   const [galleryAnalysis, setGalleryAnalysis] = useState<GalleryAnalysis | null>(null);
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(8);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ const KindergartenGallery = () => {
   const hasMore = visibleCount < imageNumbers.length;
   
   const showMore = () => {
-    setVisibleCount(prev => Math.min(prev + 12, imageNumbers.length));
+    setVisibleCount(prev => Math.min(prev + 8, imageNumbers.length));
   };
 
   const openImageDialog = (imageIndex: number) => {
@@ -66,10 +66,10 @@ const KindergartenGallery = () => {
           className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Галерея
+            Живые фотографии для выпускных альбомов
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Посмотрите примеры наших работ в детских садах
+            Портреты, фотографии с друзьями и моменты из жизни группы, которые становятся частью общей истории.
           </p>
         </div>
 

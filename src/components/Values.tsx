@@ -22,8 +22,8 @@ const Values = () => {
     },
     {
       icon: MessageCircle,
-      title: "Поддержка 24/7",
-      description: "Удобный Telegram-бот: статус заказа всегда доступен в Telegram-боте."
+      title: "Связь в MAX",
+      description: "По вопросам заказа можно написать на рабочий номер «Дети в кадре» в MAX."
     },
     {
       icon: CheckCircle,

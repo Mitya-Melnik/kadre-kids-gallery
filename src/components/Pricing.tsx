@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Link } from "react-router-dom";
+import { albumPackages } from "@/config/albumPackages";
 
 const Pricing = () => {
-  const packages = [
+  const [pricingType, setPricingType] = useState<"photo-day" | "albums">("photo-day");
+
+  const photoDayPackages = [
     {
       id: "photoshoot",
       title: "Фотосъёмка",
@@ -46,6 +49,8 @@ const Pricing = () => {
     }
   ];
 
+  const packages = pricingType === "photo-day" ? photoDayPackages : albumPackages;
+
   return (
     <section id="pricing" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -54,10 +59,38 @@ const Pricing = () => {
             Стоимость
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Прозрачные цены без скрытых платежей.<br />
-            Заказывайте только понравившиеся снимки
+            Прозрачные цены без скрытых платежей
           </p>
         </div>
+
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex rounded-xl bg-muted p-1" role="tablist" aria-label="Выбор направления">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pricingType === "photo-day"}
+              onClick={() => setPricingType("photo-day")}
+              className={`rounded-lg px-5 py-3 text-sm md:text-base font-semibold transition-all ${pricingType === "photo-day" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Фотодни
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pricingType === "albums"}
+              onClick={() => setPricingType("albums")}
+              className={`rounded-lg px-5 py-3 text-sm md:text-base font-semibold transition-all ${pricingType === "albums" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Выпускные альбомы
+            </button>
+          </div>
+        </div>
+
+        {pricingType === "albums" && (
+          <p className="text-center text-muted-foreground mb-8">
+            Цены на выпускные альбомы для детского сада
+          </p>
+        )}
         
         {/* Desktop версия - вертикальный аккордеон */}
         <div className="hidden md:block max-w-4xl mx-auto">
@@ -115,7 +148,9 @@ const Pricing = () => {
                   ) : (
                     <div className="text-center mt-4">
                       <p className="text-muted-foreground mb-4">
-                        После съемки на сайте выбираете понравившиеся фотографии и оплачиваете онлайн
+                        {pkg.id === "online"
+                          ? "Электронные файлы доступны для скачивания сразу после оплаты"
+                          : "После съемки на сайте выбираете понравившиеся фотографии и оплачиваете онлайн"}
                       </p>
                     </div>
                   )}
@@ -182,7 +217,9 @@ const Pricing = () => {
                   ) : (
                     <div className="mt-4">
                       <p className="text-muted-foreground">
-                        После съемки на сайте выбираете понравившиеся фотографии и оплачиваете онлайн
+                        {pkg.id === "online"
+                          ? "Электронные файлы доступны для скачивания сразу после оплаты"
+                          : "После съемки на сайте выбираете понравившиеся фотографии и оплачиваете онлайн"}
                       </p>
                     </div>
                   )}
@@ -192,6 +229,7 @@ const Pricing = () => {
           </Accordion>
         </div>
         
+        {pricingType === "photo-day" ? (
         <div className="mt-16 bg-accent-soft p-8 rounded-xl max-w-4xl mx-auto text-center">
           <h3 className="text-2xl font-bold text-foreground mb-4">
             Специальное предложение
@@ -205,6 +243,13 @@ const Pricing = () => {
             </div>
           </div>
         </div>
+        ) : (
+          <div className="mt-10 text-center">
+            <Button asChild size="lg" className="rounded-xl">
+              <Link to="/kindergarten">Посмотреть альбомы подробнее</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

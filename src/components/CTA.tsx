@@ -1,99 +1,281 @@
+import { FormEvent, useEffect, useState } from "react";
+import { Camera, CheckCircle2, GraduationCap } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, School } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { business } from "@/config/business";
+import { reachGoal } from "@/lib/analytics";
 
-const CTA = () => {
-  const handleParentsClick = () => {
-    // Трекинг клика родителей
-    console.log('Клик: Родители - Чек-лист');
-    window.open('https://t.me/your_bot?start=checklist', '_blank');
+type Direction = "photo-day" | "album";
+type Audience = "kindergarten" | "school";
+
+const directions = {
+  "photo-day": {
+    label: "Организовать фотодень",
+    shortLabel: "Фотодень",
+    description: "Подберём подходящую съёмку и свободную дату.",
+    icon: Camera,
+  },
+  album: {
+    label: "Заказать выпускные альбомы",
+    shortLabel: "Выпускные альбомы",
+    description: "Поможем выбрать формат и рассчитаем заказ для группы или класса.",
+    icon: GraduationCap,
+  },
+};
+
+const CTA = ({
+  initialDirection = "photo-day",
+  initialAudience = "kindergarten",
+  fixedDirection,
+  fixedAudience,
+}: {
+  initialDirection?: Direction;
+  initialAudience?: Audience;
+  fixedDirection?: Direction;
+  fixedAudience?: Audience;
+}) => {
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const [direction, setDirection] = useState<Direction>(fixedDirection ?? initialDirection);
+  const [audience, setAudience] = useState<Audience>(fixedAudience ?? initialAudience);
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [formStartedAt] = useState(() => Date.now());
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    institution: "",
+    childrenCount: "",
+    comment: "",
+    website: "",
+    consent: false,
+  });
+
+  useEffect(() => {
+    if (!fixedDirection && searchParams.get("direction") === "album") setDirection("album");
+    if (!fixedAudience && searchParams.get("audience") === "school") setAudience("school");
+    if (!fixedAudience && searchParams.get("audience") === "kindergarten") setAudience("kindergarten");
+  }, [searchParams, fixedDirection, fixedAudience]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!formData.name || !formData.phone || !formData.institution || !formData.consent) {
+      toast({
+        title: "Проверьте данные",
+        description: "Заполните обязательные поля и подтвердите согласие на обработку данных.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL || "/api/leads";
+
+    setIsSending(true);
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          institution: formData.institution,
+          childrenCount: formData.childrenCount,
+          comment: formData.comment,
+          website: formData.website,
+          formElapsedMs: Date.now() - formStartedAt,
+          direction,
+          audience,
+          source: "detivkadre.spb.ru",
+          page: window.location.href,
+          consent: {
+            given: true,
+            version: business.consentVersion,
+            givenAt: new Date().toISOString(),
+          },
+          privacyPolicyVersion: business.privacyPolicyVersion,
+        }),
+      });
+      if (!response.ok) throw new Error("Lead submission failed");
+      setIsSent(true);
+      reachGoal("lead_success", { direction, audience });
+      toast({ title: "Заявка отправлена", description: "Менеджер свяжется с вами в течение рабочего дня." });
+      setFormData({ name: "", phone: "", institution: "", childrenCount: "", comment: "", website: "", consent: false });
+    } catch {
+      toast({
+        title: "Не удалось отправить заявку",
+        description: "Попробуйте ещё раз или позвоните по номеру в шапке сайта.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const handleAdminClick = () => {
-    // Трекинг клика администрации
-    console.log('Клик: Администрация - Презентация');
-    window.open('https://goo.su/Wx7mJz', '_blank');
-  };
-
-  const handleChannelClick = () => {
-    console.log('Клик: Подписка на канал');
-    window.open('https://t.me/detivkadrespb', '_blank');
-  };
+  const isKindergartenAlbum = fixedDirection === "album" && fixedAudience === "kindergarten";
 
   return (
-    <section id="cta" className="py-20 bg-accent-soft">
+    <section id="cta" className="py-16 md:py-24 bg-accent-soft scroll-mt-24">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
-            Бесплатные материалы для родителей и детских садов
-          </h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-stretch">
-            {/* Карточка для родителей */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
-              <CardHeader className="text-center pb-4 flex-shrink-0">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ClipboardList className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-foreground mb-2">
-                  Чек-лист для родителей: как подготовить ребёнка к фотосессии
-                </CardTitle>
-                <p className="text-muted-foreground text-lg">
-                  Практичный чек-лист с советами психолога и фотографа
-                </p>
-              </CardHeader>
-              <CardContent className="text-center flex-grow flex flex-col justify-end">
-                <Button 
-                  variant="default" 
-                  size="xl" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
-                  onClick={handleParentsClick}
-                >
-                  Скачать чек-лист бесплатно
-                </Button>
-                <p className="text-muted-foreground/70 text-sm">
-                  👉 В один клик в Telegram
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Карточка для администрации */}
-            <Card className="bg-background border border-border hover:shadow-glow transition-all duration-300 hover-lift flex flex-col h-full">
-              <CardHeader className="text-center pb-4 flex-shrink-0">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <School className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-foreground mb-2">
-                  Подарки для детского сада
-                </CardTitle>
-                <p className="text-muted-foreground text-lg">
-                  Посмотреть, чем мы можем быть полезны
-                </p>
-              </CardHeader>
-              <CardContent className="text-center flex-grow flex flex-col justify-end">
-                <Button 
-                  variant="default" 
-                  size="xl" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 shadow-glow hover:scale-105 hover:brightness-110 transition-all duration-200 ease-in-out active:scale-95 mb-2"
-                  onClick={handleAdminClick}
-                >
-                  Скачать презентацию
-                </Button>
-                <p className="text-muted-foreground/70 text-sm">
-                  👉 В один клик в Telegram
-                </p>
-              </CardContent>
-            </Card>
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="mb-3 font-semibold text-primary">{isKindergartenAlbum ? "Расчёт без обязательств" : "Обсудим вашу съёмку"}</p>
+            <h2 className="mb-5 text-4xl font-bold text-foreground md:text-5xl">
+              {isKindergartenAlbum ? "Рассчитаем выпускные альбомы для вашей группы" : "Оставьте заявку — мы предложим подходящий вариант"}
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              {isKindergartenAlbum ? "Укажите контакты и примерное количество детей. Рассчитаем стоимость и подскажем свободные даты." : "Для детского сада или школы. Без обязательств и долгих анкет."}
+            </p>
           </div>
 
-          {/* Ссылка на канал */}
-          <div className="text-center">
-            <button 
-              onClick={handleChannelClick}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm underline underline-offset-4"
-            >
-              Подпишись на канал «Дети в кадре»
-            </button>
+          <div className="grid overflow-hidden rounded-2xl border border-border bg-background shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="bg-gradient-card p-6 md:p-10">
+              <h3 className="mb-5 text-xl font-bold text-foreground">{isKindergartenAlbum ? "Что рассчитаем" : "Что вас интересует?"}</h3>
+              <div className="space-y-3">
+                {(fixedDirection
+                  ? [[fixedDirection, directions[fixedDirection]]] as [Direction, typeof directions[Direction]][]
+                  : Object.entries(directions) as [Direction, typeof directions[Direction]][]
+                ).map(([value, item]) => {
+                  const Icon = item.icon;
+                  const active = direction === value;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => { if (!fixedDirection) setDirection(value); reachGoal("product_select", { product: value }); }}
+                      className={`w-full rounded-xl border p-4 text-left transition-all ${active ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-background hover:border-primary/50"}`}
+                    >
+                      <div className="flex gap-3">
+                        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">{item.label}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">{isKindergartenAlbum ? "Поможем выбрать формат и рассчитаем заказ для вашей группы." : item.description}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 space-y-3 text-sm text-muted-foreground">
+                {(isKindergartenAlbum ? ["Рассчитаем стоимость для вашей группы", "Поможем сравнить форматы и дизайны", "Расскажем о свободных датах и этапах"] : ["Уточним задачу и количество детей", "Предложим формат и свободные даты", "Заранее объясним стоимость и этапы"]).map((item) => (
+                  <div key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <form noValidate onSubmit={handleSubmit} onFocus={() => {
+              if (!hasStarted) {
+                setHasStarted(true);
+                reachGoal("lead_form_start", { direction, audience });
+              }
+            }} className="p-6 md:p-10">
+              {isSent ? (
+                <div className="flex min-h-[430px] flex-col items-center justify-center text-center" role="status">
+                  <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <CheckCircle2 className="h-8 w-8" />
+                  </span>
+                  <h3 className="text-3xl font-bold text-foreground">Заявка принята</h3>
+                  <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
+                    Менеджер свяжется с вами в течение рабочего дня и уточнит детали съёмки.
+                  </p>
+                  <Button type="button" variant="outline" className="mt-7" onClick={() => setIsSent(false)}>
+                    Отправить ещё одну заявку
+                  </Button>
+                </div>
+              ) : (
+                <>
+              <div className="mb-6">
+                <p className="text-sm text-muted-foreground">Вы выбрали</p>
+                <h3 className="text-2xl font-bold text-foreground">{directions[direction].shortLabel}</h3>
+              </div>
+
+              <div className="mb-5">
+                <Label className="mb-2 block">Учреждение *</Label>
+                {fixedAudience ? (
+                  <div className="rounded-lg border border-primary bg-primary/5 px-4 py-3 font-semibold text-foreground">
+                    {fixedAudience === "kindergarten" ? "Детский сад" : "Школа"}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button type="button" variant={audience === "kindergarten" ? "default" : "outline"} onClick={() => { setAudience("kindergarten"); reachGoal("audience_select", { audience: "kindergarten" }); }}>Детский сад</Button>
+                    <Button type="button" variant={audience === "school" ? "default" : "outline"} onClick={() => { setAudience("school"); reachGoal("audience_select", { audience: "school" }); }}>Школа</Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <Label htmlFor="lead-name">Ваше имя *</Label>
+                  <Input id="lead-name" className="mt-2" required autoComplete="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} placeholder="Дмитрий" />
+                </div>
+                <div>
+                  <Label htmlFor="lead-phone">Телефон *</Label>
+                  <Input id="lead-phone" className="mt-2" required type="tel" inputMode="tel" autoComplete="tel" value={formData.phone} onChange={(event) => setFormData({ ...formData, phone: event.target.value })} placeholder="+7 999 000-00-00" />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <Label htmlFor="lead-institution">Название или номер учреждения *</Label>
+                <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
+              </div>
+
+              {isKindergartenAlbum && (
+                <div className="mt-5">
+                  <Label htmlFor="lead-children-count">Сколько детей в группе?</Label>
+                  <select id="lead-children-count" className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" value={formData.childrenCount} onChange={(event) => setFormData({ ...formData, childrenCount: event.target.value })}>
+                    <option value="">Выберите вариант</option>
+                    <option value="10–15">10–15</option>
+                    <option value="16–20">16–20</option>
+                    <option value="21–25">21–25</option>
+                    <option value="Больше 25">Больше 25</option>
+                    <option value="Пока не знаю">Пока не знаю</option>
+                  </select>
+                </div>
+              )}
+
+              <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+                <Label htmlFor="lead-website">Ваш сайт</Label>
+                <Input id="lead-website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={(event) => setFormData({ ...formData, website: event.target.value })} />
+              </div>
+
+              <div className="mt-5">
+                <Label htmlFor="lead-comment">Комментарий</Label>
+                <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder={isKindergartenAlbum ? "Желаемые даты или вопрос" : "Количество детей, желаемые даты или вопрос"} />
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  Не указывайте здесь ФИО ребёнка, сведения о здоровье и другие чувствительные данные.
+                </p>
+              </div>
+
+              <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+                <input type="checkbox" required className="mt-1 h-4 w-4 accent-primary" checked={formData.consent} onChange={(event) => setFormData({ ...formData, consent: event.target.checked })} />
+                <span>
+                  Даю отдельное <Link to="/personal-data-consent" target="_blank" className="text-primary underline">согласие на обработку персональных данных</Link> для ответа на заявку.
+                </span>
+              </label>
+
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                Перед отправкой ознакомьтесь с <Link to="/privacy" target="_blank" className="text-primary underline">политикой обработки персональных данных</Link>.
+              </p>
+
+              <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
+                {isSending ? "Отправляем…" : isKindergartenAlbum ? "Получить расчёт" : "Получить консультацию"}
+              </Button>
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                Менеджер свяжется с вами в течение рабочего дня.
+              </p>
+                </>
+              )}
+            </form>
           </div>
         </div>
       </div>

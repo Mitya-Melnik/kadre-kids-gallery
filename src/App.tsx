@@ -4,27 +4,29 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Projects from "./pages/Projects";
 import Kindergarten from "./pages/Kindergarten";
 import NotFound from "./pages/NotFound";
+import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import PersonalDataConsent from "./pages/PersonalDataConsent";
+import AnalyticsConsent from "./components/AnalyticsConsent";
 
 const queryClient = new QueryClient();
 
-console.log("App.tsx: Routes configured with Kindergarten import:", typeof Kindergarten);
-
 const App = () => {
-  console.log("Route /kindergarten registered with component:", Kindergarten);
-  
   return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <AnalyticsConsent />
+        <ScrollToTopOnRouteChange />
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/projects" element={<Projects />} />
           <Route path="/kindergarten" element={<Kindergarten />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/personal-data-consent" element={<PersonalDataConsent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

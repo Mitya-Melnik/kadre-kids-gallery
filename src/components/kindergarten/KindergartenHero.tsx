@@ -8,6 +8,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { Button } from "@/components/ui/button";
+import { reachGoal } from "@/lib/analytics";
 
 const KindergartenHero = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -33,20 +35,20 @@ const KindergartenHero = () => {
 
   const advantages = [
     {
-      emoji: "📸",
-      text: "<strong>Отдаем все</strong><br/>фотографии со съемки"
+      emoji: "🎁",
+      text: "<strong>Все удачные фотографии</strong><br/>со съёмки — в подарок"
     },
     {
-      emoji: "🆓",
-      text: "<strong>Бесплатно доснимем</strong><br/>если заболели или не смогли прийти" 
+      emoji: "▦",
+      text: "<strong>Более 10 вариантов дизайна</strong><br/>на выбор группы"
     },
     {
-      emoji: "⏰",
-      text: "<strong>100% заказов</strong><br/>отдали вовремя"
+      emoji: "📄",
+      text: "<strong>Работаем по договору</strong><br/>фиксируем условия и сроки"
     },
     {
-      emoji: "✨",
-      text: "<strong>Высокое качество съемки</strong><br/>в любых условиях и локациях"
+      emoji: "♡",
+      text: "<strong>Организацию берём на себя</strong><br/>от выбора до готового тиража"
     }
   ];
 
@@ -60,6 +62,11 @@ const KindergartenHero = () => {
     });
   }, [api]);
 
+  const scrollTo = (event: React.MouseEvent<HTMLAnchorElement>, selector: string) => {
+    event.preventDefault();
+    document.querySelector(selector)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="py-20 bg-gradient-hero min-h-[80vh] flex items-center">
       <div className="container mx-auto px-4">
@@ -69,9 +76,27 @@ const KindergartenHero = () => {
             ref={titleRef}
             className={`order-1 lg:order-1 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
+            <p className="mb-4 font-semibold uppercase tracking-[0.14em] text-primary">
+              Выпускные альбомы для детского сада
+            </p>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-              Каждая страница — кусочек детства, который не вернуть
+              Выпускной альбом, который хочется пересматривать
             </h1>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+              Живые фотографии ребёнка, друзей, воспитателей и событий группы — в одном альбоме на память о детстве.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg">
+                <a href="/kindergarten#albums" onClick={(event) => { scrollTo(event, "#albums"); reachGoal("album_catalog_open", { audience: "kindergarten" }); }}>
+                  Посмотреть альбомы и цены
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href="/kindergarten#cta" onClick={(event) => { scrollTo(event, "#cta"); reachGoal("consultation_click", { page: "kindergarten" }); }}>
+                  Получить консультацию
+                </a>
+              </Button>
+            </div>
           </div>
 
           {/* Photo slider - Second on mobile, right column on desktop */}
