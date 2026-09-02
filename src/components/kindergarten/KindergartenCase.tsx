@@ -120,7 +120,7 @@ const KindergartenCase = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Нашли решение</p>
             <h3 className="mt-2 text-2xl font-bold text-foreground">Для каждого ребёнка нашли решение</h3>
             <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
-              Для одного ребёнка родители передали групповую фотографию прошлого года. Мы отсканировали её в хорошем разрешении и аккуратно добавили в персональный экземпляр — ребёнок остался частью общей истории.
+              Один ребёнок не смог принять участие в съёмке общей фотографии. Родители передали групповой снимок прошлого года — мы отсканировали его в хорошем разрешении и аккуратно добавили в персональный альбом. Так ребёнок остался частью общей истории.
             </p>
           </div>
           <Button size="lg" onClick={scrollToForm} className="w-full md:w-auto">
