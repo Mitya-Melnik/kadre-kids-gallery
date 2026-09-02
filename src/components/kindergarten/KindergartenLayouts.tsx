@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getLayoutImageNumbers } from "@/lib/imageUtils";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 // Helper that creates responsive images with mobile/desktop versions optimized for square layouts
 function ResponsiveImage({
@@ -167,6 +169,8 @@ const KindergartenLayouts = () => {
   // State to store image numbers and loading states for each layout
   const [layoutImageNumbers, setLayoutImageNumbers] = useState<Record<string, number[]>>({});
   const [loadingLayouts, setLoadingLayouts] = useState<Record<string, boolean>>({});
+  const [showAllDesigns, setShowAllDesigns] = useState(false);
+  const visibleDesigns = showAllDesigns ? layoutDesigns : layoutDesigns.slice(0, 6);
 
   // Lazy load image numbers for a specific layout
   const loadLayoutImages = async (layoutSlug: string) => {
@@ -215,7 +219,7 @@ const KindergartenLayouts = () => {
           ref={gridRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
-          {layoutDesigns.map((design, index) => {
+          {visibleDesigns.map((design, index) => {
             const coverBase = `/layouts/${design.slug}/cover`;
 
             return (
@@ -268,6 +272,13 @@ const KindergartenLayouts = () => {
             );
           })}
         </div>
+        {!showAllDesigns && (
+          <div className="mt-10 text-center">
+            <Button variant="outline" size="lg" onClick={() => setShowAllDesigns(true)}>
+              Показать все 12 дизайнов <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

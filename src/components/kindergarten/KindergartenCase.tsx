@@ -1,4 +1,5 @@
-import { ArrowRight, CalendarDays, Camera, CheckCircle2, Images, Users } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, CalendarDays, Camera, CheckCircle2, ChevronDown, Images, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { reachGoal } from "@/lib/analytics";
 
@@ -31,7 +32,11 @@ const scrollToForm = () => {
   reachGoal("consultation_click", { page: "kindergarten", placement: "case_108" });
 };
 
-const KindergartenCase = () => (
+const KindergartenCase = () => {
+  const [showAllAlbumImages, setShowAllAlbumImages] = useState(false);
+  const visibleAlbumImages = showAllAlbumImages ? albumImages : albumImages.slice(0, 3);
+
+  return (
   <section id="case-kindergarten-108" className="bg-background py-20">
     <div className="container mx-auto px-4">
       <div className="mx-auto max-w-6xl">
@@ -78,7 +83,7 @@ const KindergartenCase = () => (
             <p className="mt-3 text-lg text-muted-foreground">Портреты, воспитатели, друзья и события года собраны в одной цельной истории — не в наборе одинаковых постановочных кадров.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            {albumImages.map((image, index) => (
+            {visibleAlbumImages.map((image, index) => (
               <img
                 key={image.src}
                 src={image.src}
@@ -88,6 +93,13 @@ const KindergartenCase = () => (
               />
             ))}
           </div>
+          {!showAllAlbumImages && (
+            <div className="mt-6 text-center">
+              <Button variant="outline" onClick={() => setShowAllAlbumImages(true)}>
+                Посмотреть ещё развороты <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="mb-14">
@@ -106,7 +118,7 @@ const KindergartenCase = () => (
         <div className="grid gap-6 rounded-2xl border border-primary/20 bg-primary/5 p-7 md:grid-cols-[1fr_auto] md:items-center md:p-9">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Нашли решение</p>
-            <h3 className="mt-2 text-2xl font-bold text-foreground">Даже когда ребёнок не захотел сниматься на групповую фотографию</h3>
+            <h3 className="mt-2 text-2xl font-bold text-foreground">Для каждого ребёнка нашли решение</h3>
             <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
               Для одного ребёнка родители передали групповую фотографию прошлого года. Мы отсканировали её в хорошем разрешении и аккуратно добавили в персональный экземпляр — ребёнок остался частью общей истории.
             </p>
@@ -118,6 +130,7 @@ const KindergartenCase = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default KindergartenCase;

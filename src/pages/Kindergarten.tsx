@@ -39,8 +39,8 @@ const Kindergarten = () => {
       <main>
         <KindergartenHero />
         <AlbumCatalog />
-        <Process initialType="album" fixedType="album" />
         <KindergartenCase />
+        <Process initialType="album" fixedType="album" />
         <KindergartenLayouts />
         <KindergartenInlineCTA />
         <KindergartenGallery />

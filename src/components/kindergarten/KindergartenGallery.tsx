@@ -12,7 +12,7 @@ const KindergartenGallery = () => {
   
   const [imageNumbers, setImageNumbers] = useState<number[]>([]);
   const [galleryAnalysis, setGalleryAnalysis] = useState<GalleryAnalysis | null>(null);
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(8);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ const KindergartenGallery = () => {
   const hasMore = visibleCount < imageNumbers.length;
   
   const showMore = () => {
-    setVisibleCount(prev => Math.min(prev + 12, imageNumbers.length));
+    setVisibleCount(prev => Math.min(prev + 8, imageNumbers.length));
   };
 
   const openImageDialog = (imageIndex: number) => {
