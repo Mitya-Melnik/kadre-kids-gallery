@@ -19,6 +19,11 @@ const AlbumCatalog = () => {
   };
 
   const currentAlbum = albumPackages.find((album) => album.id === selectedId) ?? albumPackages[3];
+  const seniorPackageComparison = [
+    { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
+    { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Полная стоимость" },
+    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
+  ];
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -209,6 +214,51 @@ const AlbumCatalog = () => {
                   {album.popular && <p className="mt-2 text-xs font-bold text-primary">Оптимальный выбор</p>}
                 </article>
               ))}
+            </div>
+
+            <div className="mt-8 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
+              <div className="border-b border-primary/15 px-5 py-4">
+                <h4 className="font-bold text-foreground">Особые дополнения старших форматов</h4>
+                <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
+              </div>
+              <div className="hidden md:block">
+                <table className="w-full border-collapse text-left text-sm">
+                  <thead className="bg-background/70 text-foreground">
+                    <tr>
+                      <th className="p-4 font-semibold">Формат</th>
+                      <th className="p-4 font-semibold">Диплом</th>
+                      <th className="p-4 font-semibold">Персональная грамота</th>
+                      <th className="p-4 font-semibold">«Письмо в будущее»</th>
+                      <th className="p-4 font-semibold">Копия для близких</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {seniorPackageComparison.map((item) => (
+                      <tr key={item.format} className="border-t border-primary/10 bg-background/50">
+                        <td className="p-4 font-semibold text-foreground">{item.format}</td>
+                        <td className="p-4 text-muted-foreground">{item.diploma ? "✓" : "—"}</td>
+                        <td className="p-4 text-muted-foreground">{item.certificate ? "✓" : "—"}</td>
+                        <td className="p-4 text-muted-foreground">{item.futureLetter ? "✓" : "—"}</td>
+                        <td className="p-4 font-medium text-foreground">{item.copy}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="grid gap-3 p-4 md:hidden">
+                {seniorPackageComparison.map((item) => (
+                  <article key={item.format} className="rounded-xl border border-primary/15 bg-background p-4">
+                    <h5 className="font-bold text-foreground">{item.format}</h5>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {[item.diploma && "диплом", item.certificate && "персональная грамота", item.futureLetter && "«Письмо в будущее»"].filter(Boolean).join(" · ") || "Без дополнительных материалов"}
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-foreground">Копия для близких: {item.copy.toLowerCase()}</p>
+                  </article>
+                ))}
+              </div>
+              <p className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+                «Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде.
+              </p>
             </div>
           </div>
 
