@@ -21,7 +21,7 @@ const AlbumCatalog = () => {
   const currentAlbum = albumPackages.find((album) => album.id === selectedId) ?? albumPackages[3];
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
-    { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Полная стоимость" },
+    { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
     { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
   ];
 
