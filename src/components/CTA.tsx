@@ -74,6 +74,7 @@ const CTA = ({
     }
 
     const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL || "/api/leads";
+    const trackingParams = new URLSearchParams(window.location.search);
 
     setIsSending(true);
     try {
@@ -92,6 +93,15 @@ const CTA = ({
           audience,
           source: "detivkadre.spb.ru",
           page: window.location.href,
+          tracking: {
+            utmSource: trackingParams.get("utm_source") || "",
+            utmMedium: trackingParams.get("utm_medium") || "",
+            utmCampaign: trackingParams.get("utm_campaign") || "",
+            utmContent: trackingParams.get("utm_content") || "",
+            utmTerm: trackingParams.get("utm_term") || "",
+            yclid: trackingParams.get("yclid") || "",
+            referrer: document.referrer,
+          },
           consent: {
             given: true,
             version: business.consentVersion,

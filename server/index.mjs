@@ -6,6 +6,20 @@ const config = {
   amoToken: process.env.AMO_LONG_TOKEN || "",
   photoDayPipelineId: Number(process.env.AMO_PHOTODAY_PIPELINE_ID || 1882579),
   albumPipelineId: Number(process.env.AMO_ALBUM_PIPELINE_ID || 1973458),
+  fields: {
+    institution: Number(process.env.AMO_FIELD_INSTITUTION || 743411),
+    product: Number(process.env.AMO_FIELD_LEAD_PRODUCT || 743715),
+    audience: Number(process.env.AMO_FIELD_AUDIENCE || 743717),
+    source: Number(process.env.AMO_FIELD_LEAD_SOURCE || 743719),
+    page: Number(process.env.AMO_FIELD_LEAD_PAGE || 743721),
+    childrenCount: Number(process.env.AMO_FIELD_LEAD_CHILDREN_COUNT || 743723),
+  },
+  enums: {
+    photoDay: Number(process.env.AMO_ENUM_PRODUCT_PHOTODAY || 1002233),
+    album: Number(process.env.AMO_ENUM_PRODUCT_ALBUM || 1002235),
+    kindergarten: Number(process.env.AMO_ENUM_AUDIENCE_KINDERGARTEN || 1002237),
+    school: Number(process.env.AMO_ENUM_AUDIENCE_SCHOOL || 1002239),
+  },
   allowedOrigins: new Set((process.env.ALLOWED_ORIGINS || "https://detivkadre.spb.ru,https://www.detivkadre.spb.ru,http://127.0.0.1:8080,http://127.0.0.1:8082").split(",")),
 };
 
@@ -93,11 +107,29 @@ const createLead = async (lead) => {
   const product = lead.direction === "album" ? "Выпускные альбомы" : "Фотодень";
   const audience = lead.audience === "school" ? "Школа" : "Детский сад";
   const contactId = await findOrCreateContact(lead);
+  const customFields = [
+    { field_id: config.fields.institution, values: [{ value: lead.institution }] },
+    { field_id: config.fields.product, values: [{ enum_id: lead.direction === "album" ? config.enums.album : config.enums.photoDay }] },
+    { field_id: config.fields.audience, values: [{ enum_id: lead.audience === "school" ? config.enums.school : config.enums.kindergarten }] },
+    { field_id: config.fields.source, values: [{ value: lead.source }] },
+    { field_id: config.fields.page, values: [{ value: lead.page }] },
+    ...(lead.childrenCount ? [{ field_id: config.fields.childrenCount, values: [{ value: lead.childrenCount }] }] : []),
+    ...[
+      ["UTM_SOURCE", lead.tracking.utmSource],
+      ["UTM_MEDIUM", lead.tracking.utmMedium],
+      ["UTM_CAMPAIGN", lead.tracking.utmCampaign],
+      ["UTM_CONTENT", lead.tracking.utmContent],
+      ["UTM_TERM", lead.tracking.utmTerm],
+      ["YCLID", lead.tracking.yclid],
+      ["REFERRER", lead.tracking.referrer],
+    ].filter(([, value]) => value).map(([fieldCode, value]) => ({ field_code: fieldCode, values: [{ value }] })),
+  ];
   const created = await amoRequest("/api/v4/leads", {
     method: "POST",
     body: JSON.stringify([{
       name: `${product} — ${lead.institution}`,
       pipeline_id: pipelineId,
+      custom_fields_values: customFields,
       _embedded: {
         contacts: [{ id: contactId, is_main: true }],
         tags: [{ name: "Заявка с сайта" }],
@@ -114,6 +146,9 @@ const createLead = async (lead) => {
     `Телефон: ${lead.phone}`,
     lead.comment ? `Комментарий: ${lead.comment}` : "Комментарий: не указан",
     `Страница: ${lead.page}`,
+    lead.tracking.utmSource ? `UTM source: ${lead.tracking.utmSource}` : "UTM source: не указан",
+    lead.tracking.utmMedium ? `UTM medium: ${lead.tracking.utmMedium}` : "UTM medium: не указан",
+    lead.tracking.utmCampaign ? `UTM campaign: ${lead.tracking.utmCampaign}` : "UTM campaign: не указан",
     `Согласие: ${lead.consent.givenAt}; версия ${lead.consent.version}`,
     `Политика: версия ${lead.privacyPolicyVersion}`,
   ].join("\n");
@@ -145,9 +180,19 @@ const server = createServer(async (req, res) => {
       institution: clean(body.institution, 140),
       childrenCount: clean(body.childrenCount, 40),
       comment: clean(body.comment, 800),
+      source: clean(body.source, 80) || "detivkadre.spb.ru",
       direction: body.direction === "album" ? "album" : "photo-day",
       audience: body.audience === "school" ? "school" : "kindergarten",
       page: clean(body.page, 300),
+      tracking: {
+        utmSource: clean(body.tracking?.utmSource, 120),
+        utmMedium: clean(body.tracking?.utmMedium, 120),
+        utmCampaign: clean(body.tracking?.utmCampaign, 160),
+        utmContent: clean(body.tracking?.utmContent, 160),
+        utmTerm: clean(body.tracking?.utmTerm, 160),
+        yclid: clean(body.tracking?.yclid, 200),
+        referrer: clean(body.tracking?.referrer, 300),
+      },
       consent: {
         given: body.consent?.given === true,
         version: clean(body.consent?.version, 30),
