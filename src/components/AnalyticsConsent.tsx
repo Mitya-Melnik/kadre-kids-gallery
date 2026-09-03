@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { loadMetrika, reachGoal } from "@/lib/analytics";
+import { loadMetrika, reachGoal, trackPageView } from "@/lib/analytics";
 
 const STORAGE_KEY = "detivkadre-analytics-consent";
 type Consent = "accepted" | "declined" | null;
 
 const AnalyticsConsent = () => {
+  const location = useLocation();
   const [consent, setConsent] = useState<Consent>(null);
   const [isReady, setIsReady] = useState(false);
+  const previousPage = useRef(`${window.location.pathname}${window.location.search}`);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY) as Consent;
@@ -16,6 +18,19 @@ const AnalyticsConsent = () => {
     setIsReady(true);
     if (saved === "accepted") loadMetrika();
   }, []);
+
+  useEffect(() => {
+    const currentPage = `${location.pathname}${location.search}`;
+    const referer = `${window.location.origin}${previousPage.current}`;
+
+    if (currentPage === previousPage.current) return;
+    previousPage.current = currentPage;
+
+    if (window.localStorage.getItem(STORAGE_KEY) !== "accepted") return;
+
+    const timer = window.setTimeout(() => trackPageView(currentPage, referer), 0);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     const trackLink = (event: MouseEvent) => {

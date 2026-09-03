@@ -10,6 +10,13 @@ export const reachGoal = (goal: string, params?: Record<string, unknown>) => {
   window.ym?.(METRIKA_COUNTER_ID, "reachGoal", goal, params);
 };
 
+export const trackPageView = (url: string, referer: string) => {
+  window.ym?.(METRIKA_COUNTER_ID, "hit", url, {
+    title: document.title,
+    referer,
+  });
+};
+
 export const loadMetrika = () => {
   if (window.ym) return;
 
