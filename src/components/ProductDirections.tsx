@@ -82,8 +82,10 @@ const ProductDirections = () => {
                       ) : (
                         <Link to={direction.href} className="w-fit">{button}</Link>
                       )}
-                      <Button variant="outline" size="lg" disabled className="w-full sm:w-fit">
-                        Для школы — добавляем
+                      <Button asChild variant="outline" size="lg" className="w-full sm:w-fit">
+                        <Link to={direction.title === "Выпускные альбомы" ? "/school" : "/#gallery"}>
+                          {direction.title === "Выпускные альбомы" ? "Альбомы для школы" : "Фотодни для школы"}
+                        </Link>
                       </Button>
                     </div>
                   </div>

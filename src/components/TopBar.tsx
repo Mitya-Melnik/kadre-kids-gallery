@@ -35,7 +35,7 @@ const TopBar = () => {
     { name: "Примеры съёмки", href: "#gallery" },
     { name: "Вопросы и ответы", href: "#kindergarten-faq" },
   ];
-  const isAlbumPage = location.pathname === "/kindergarten";
+  const isAlbumPage = location.pathname === "/kindergarten" || location.pathname === "/school";
   const menuItems = isAlbumPage ? albumMenuItems : mainMenuItems;
 
   const handleMenuClick = (href: string) => {
@@ -73,7 +73,7 @@ const TopBar = () => {
             </a>
             <div className="hidden border-l border-border pl-4 text-xs leading-tight text-muted-foreground sm:block">
               <div>{isAlbumPage ? "выпускные альбомы" : "фотодни и альбомы"}</div>
-              <div>{isAlbumPage ? "для детских садов" : "для детских садов и школ"}</div>
+              <div>{location.pathname === "/school" ? "для школ" : isAlbumPage ? "для детских садов" : "для детских садов и школ"}</div>
             </div>
           </div>
 
