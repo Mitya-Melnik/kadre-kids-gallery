@@ -14,7 +14,8 @@ const schoolText = (text: string) => text
   .replace(/воспитатели/g, "учитель")
   .replace(/группы/g, "класса")
   .replace(/группа/g, "класс")
-  .replace(/детском саде/g, "школе");
+  .replace(/детском саде/g, "школе")
+  .replace(/Более 10 дизайнов/g, "6 дизайнов");
 
 const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -34,7 +35,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
     shortTitle: schoolText(album.shortTitle),
     description: schoolText(album.description),
     suitableFor: schoolText(album.suitableFor),
-    features: album.features.map(schoolText),
+    features: ["Формат альбома — 21×30 см", ...album.features.map(schoolText)],
     items: album.items.map((item) => ({ ...item, note: schoolText(item.note) })),
   } : album);
   const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
@@ -65,7 +66,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
         >
           <div className="mb-10 grid gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm sm:grid-cols-2 lg:grid-cols-4">
             <p><strong className="block text-foreground">Электронные фотографии</strong><span className="text-muted-foreground">Все удачные кадры — в подарок</span></p>
-            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От 10 альбомов</span></p>
+            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От {isSchool ? "15" : "10"} альбомов</span></p>
             <p><strong className="block text-foreground">{isSchool ? "Для учителя" : "Для воспитателей"}</strong><span className="text-muted-foreground">{isSchool ? "1 альбом для учителя — бесплатно" : "1 альбом бесплатно, второй — со скидкой 50%"}</span></p>
             <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
           </div>
@@ -150,7 +151,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
                     </span>
                     <span className="text-sm text-muted-foreground">за 1 альбом</span>
                   </div>
-                  <p className="mt-2 text-xs text-muted-foreground">При тираже от 10 экземпляров</p>
+                  <p className="mt-2 text-xs text-muted-foreground">При тираже от {isSchool ? "15" : "10"} экземпляров</p>
                 </CardContent>
               </Card>
 

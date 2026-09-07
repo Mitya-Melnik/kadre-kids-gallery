@@ -39,7 +39,7 @@ const School = () => (
             <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl">История класса, которую захочется пересматривать</h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">Портреты, друзья, школьные будни и общие события — в современном выпускном альбоме с понятными условиями и сроками.</p>
             <div className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
-              {["Все удачные фотографии — в подарок", "Более 10 вариантов дизайна", "Работаем по договору", "Доставка СДЭК включена"].map((item) => <p key={item} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{item}</p>)}
+              {["Все удачные фотографии — в подарок", "6 вариантов дизайна", "Работаем по договору", "Доставка СДЭК включена"].map((item) => <p key={item} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{item}</p>)}
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="#albums">Посмотреть альбомы</a></Button></div>
           </div>
