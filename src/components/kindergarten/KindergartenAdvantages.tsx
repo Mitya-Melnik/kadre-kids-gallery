@@ -1,7 +1,7 @@
 import { BookOpen, FileCheck2, Heart, ListChecks, UserCheck, UserRoundPlus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const KindergartenAdvantages = () => {
+const KindergartenAdvantages = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
 
@@ -39,17 +39,17 @@ const KindergartenAdvantages = () => {
   ];
 
   return (
-    <section id="kindergarten-advantages" className="py-20 bg-secondary/30">
+    <section id={audience === "school" ? "advantages" : "kindergarten-advantages"} className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div 
           ref={titleRef}
           className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Почему группы выбирают «Дети в кадре»
+            Почему {audience === "school" ? "классы" : "группы"} выбирают «Дети в кадре»
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Детям комфортно, родителям всё понятно, а ответственному не приходится организовывать проект в одиночку.
+            Детям комфортно, родителям всё понятно, а ответственному {audience === "school" ? "за класс" : "родителю"} не приходится организовывать проект в одиночку.
           </p>
         </div>
         

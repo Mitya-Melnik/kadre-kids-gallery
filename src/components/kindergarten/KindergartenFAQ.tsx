@@ -4,32 +4,39 @@ import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { albumFaqs } from "@/components/FAQ";
 
-const kindergartenQuestion = (question: string) => {
+const albumQuestion = (question: string, audience: "kindergarten" | "school") => {
+  if (audience === "school") {
+    if (question === "Фотографируете ли вы воспитателей и учителей?") return "Фотографируете ли вы учителя?";
+    if (question === "Получит ли воспитатель или учитель бесплатный альбом?") return "Получит ли учитель бесплатный альбом?";
+    return question;
+  }
   if (question === "Фотографируете ли вы воспитателей и учителей?") return "Фотографируете ли вы воспитателей?";
   if (question === "Получит ли воспитатель или учитель бесплатный альбом?") return "Получат ли воспитатели бесплатные альбомы?";
   return question;
 };
 
-const kindergartenAnswer = (faq: (typeof albumFaqs)[number]) => {
+const albumAnswer = (faq: (typeof albumFaqs)[number], audience: "kindergarten" | "school") => {
+  const isSchool = audience === "school";
   switch (faq.question) {
     case "Какие выпускные альбомы можно заказать?":
-      return <>Можно выбрать один из пяти вариантов: <strong>«Альбом-папка»</strong> — компактный и самый доступный формат; <strong>«Альбом-трио»</strong> — больше фотографий ребёнка, друзей и воспитателей; <strong>«Наша группа»</strong> — полноценный альбом на 6 страниц; <strong>«История детства»</strong> — 10 страниц с личными фотографиями и событиями группы; <strong>«Большая история»</strong> — 14 страниц и до 3 съёмочных дней, включая выпускной. Посмотреть состав и стоимость каждого альбома можно в каталоге выше.</>;
+      return <>Можно выбрать один из пяти вариантов: <strong>«Альбом-папка»</strong> — компактный и самый доступный формат; <strong>«Альбом-трио»</strong> — больше фотографий ребёнка, друзей и {isSchool ? "учителя" : "воспитателей"}; <strong>«Наша группа»</strong> — полноценный альбом на 6 страниц; <strong>«История детства»</strong> — 10 страниц с личными фотографиями и событиями {isSchool ? "класса" : "группы"}; <strong>«Большая история»</strong> — 14 страниц и до 3 съёмочных дней, включая выпускной. Посмотреть состав и стоимость каждого альбома можно в каталоге выше.</>;
     case "Можно ли выбрать дизайн?":
-      return "Да. Группа выбирает два разных полноценных макета: один для мальчиков и один для девочек. Фотографии и данные каждого ребёнка остаются индивидуальными.";
+      return `Да. ${isSchool ? "Класс" : "Группа"} выбирает два разных полноценных макета: один для мальчиков и один для девочек. Фотографии и данные каждого ребёнка остаются индивидуальными.`;
     case "Фотографируете ли вы воспитателей и учителей?":
-      return "Да. В альбом можно добавить портреты воспитателей и совместные фотографии с детьми.";
+      return isSchool ? "Да. В альбом можно добавить портрет учителя и совместные фотографии с учениками." : "Да. В альбом можно добавить портреты воспитателей и совместные фотографии с детьми.";
     case "Получит ли воспитатель или учитель бесплатный альбом?":
-      return "Один альбом для воспитателя предоставляется бесплатно. На второй альбом для второго воспитателя действует скидка 50%.";
+      return isSchool ? "Один альбом для классного руководителя предоставляется бесплатно." : "Один альбом для воспитателя предоставляется бесплатно. На второй альбом для второго воспитателя действует скидка 50%.";
     case "Как проходит проверка макетов?":
-      return "Каждый родитель проверяет данные и фотографии своего ребёнка. Ответственный родитель собирает замечания всей группы и передаёт их нам одним списком. На проверку предоставляется 7 дней. В стоимость входят до трёх согласованных этапов корректировок.";
+      return `Каждый родитель проверяет данные и фотографии своего ребёнка. Ответственный родитель собирает замечания ${isSchool ? "всего класса" : "всей группы"} и передаёт их нам одним списком. На проверку предоставляется 7 дней. В стоимость входят до трёх согласованных этапов корректировок.`;
     case "Что такое «Письмо в будущее»?":
-      return "«Письмо в будущее» — это отдельный персональный разворот в альбоме «Большая история». На нём размещаются фотография ребёнка и его ответы на вопросы: кем он хочет стать, что любит делать, что ему запомнилось в детском саду и что он хотел бы пожелать себе взрослому. Родители заполняют небольшую анкету, а мы оформляем ответы в стиле выбранного альбома. Так сохраняются не только фотографии, но и мысли ребёнка в этом возрасте.";
+      return `«Письмо в будущее» — это отдельный персональный разворот в альбоме «Большая история». На нём размещаются фотография ребёнка и его ответы на вопросы: кем он хочет стать, что любит делать, что ему запомнилось ${isSchool ? "в школе" : "в детском саду"} и что он хотел бы пожелать себе взрослому. Родители заполняют небольшую анкету, а мы оформляем ответы в стиле выбранного альбома. Так сохраняются не только фотографии, но и мысли ребёнка в этом возрасте.`;
     default:
-      return "answerContent" in faq ? faq.answerContent : faq.answer;
+      if ("answerContent" in faq) return faq.answerContent;
+      return isSchool ? faq.answer.replace(/группы или класса/g, "класса").replace(/воспитателя или учителя/g, "учителя").replace(/второго воспитателя/g, "учителя") : faq.answer;
   }
 };
 
-const KindergartenFAQ = () => {
+const KindergartenFAQ = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: accordionRef, isVisible: accordionVisible } = useScrollAnimation(0.1);
   
@@ -38,7 +45,7 @@ const KindergartenFAQ = () => {
   const faqs = albumFaqs;
 
   return (
-    <section id="kindergarten-faq" className="py-20 bg-accent-soft">
+    <section id={audience === "school" ? "school-faq" : "kindergarten-faq"} className="py-20 bg-accent-soft">
       <div className="container mx-auto px-4">
         <div 
           ref={titleRef}
@@ -48,7 +55,7 @@ const KindergartenFAQ = () => {
             Ответы на вопросы
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Самые частые вопросы от родителей и администрации детских садов
+            Самые частые вопросы от родителей и администрации {audience === "school" ? "школ" : "детских садов"}
           </p>
         </div>
         
@@ -66,14 +73,14 @@ const KindergartenFAQ = () => {
                 <AccordionTrigger className="text-left hover:no-underline py-6">
                   <div className="flex items-center gap-4 pr-4">
                     <span className="text-lg font-semibold text-foreground">
-                      {kindergartenQuestion(faq.question)}
+                      {albumQuestion(faq.question, audience)}
                     </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pb-6">
                   <div>
                     <p className="text-muted-foreground leading-relaxed">
-                      {kindergartenAnswer(faq)}
+                      {albumAnswer(faq, audience)}
                     </p>
                   </div>
                 </AccordionContent>

@@ -238,7 +238,7 @@ const CTA = ({
 
               <div className="mt-5">
                 <Label htmlFor="lead-institution">Название или номер учреждения *</Label>
-                <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder="Например, детский сад № 25" />
+                <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder={audience === "school" ? "Например, школа № 25" : "Например, детский сад № 25"} />
               </div>
 
               {isKindergartenAlbum && (

@@ -82,9 +82,17 @@ export const albumSteps = [
   },
 ] as const;
 
-const Process = ({ initialType = "photo-day", fixedType }: { initialType?: ProcessType; fixedType?: ProcessType }) => {
+const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten" }: { initialType?: ProcessType; fixedType?: ProcessType; audience?: "kindergarten" | "school" }) => {
   const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
-  const steps = processType === "photo-day" ? photoDaySteps : albumSteps;
+  const baseSteps = processType === "photo-day" ? photoDaySteps : albumSteps;
+  const steps = audience === "school"
+    ? baseSteps.map((step) => ({
+        ...step,
+        description: step.description
+          .replace("в своей группе или классе", "в своём классе")
+          .replace("Для группы", "Для класса"),
+      }))
+    : baseSteps;
 
   return (
     <section id="process" className="bg-secondary/30 py-20">
