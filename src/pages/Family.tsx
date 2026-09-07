@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { BookHeart, Camera, Check, Clock3, Download, Images, MapPin, MessageCircle, Shirt, Sparkles, Users } from "lucide-react";
+import { BookHeart, Camera, Check, Clock3, Images, MapPin, Shirt, Sparkles, Users } from "lucide-react";
 import TopBar from "@/components/TopBar";
 import Footer from "@/components/Footer";
 import FabContact from "@/components/FabContact";
@@ -22,7 +22,7 @@ const packages = [
     price: "8 000 ₽",
     duration: "до 1,5 часа",
     description: "Спокойная прогулка в любимом месте без сложного позирования.",
-    features: ["До 50 обработанных фотографий", "Галерея на 1 месяц", "Файлы для печати и соцсетей", "Памятка по подготовке"],
+    features: ["Все удачные обработанные фотографии", "До 50 кадров", "Вся семья, дети и родители с детьми", "Помощь с выбором места и подготовкой", "Файлы для печати и соцсетей", "Готовность через 10 дней"],
   },
   {
     name: "Семейная история",
@@ -30,14 +30,14 @@ const packages = [
     duration: "до 1,5 часа · в студии — 1 час",
     description: "Прогулка, домашняя история или съёмка в выбранной студии.",
     badge: "Выбирают чаще",
-    features: ["До 50 обработанных фотографий", "Вся семья и отдельные портреты", "Галерея на 1 месяц", "Аренда студии оплачивается отдельно"],
+    features: ["Все удачные обработанные фотографии", "До 50 кадров", "Вся семья, дети и родители с детьми", "Помощь с выбором и бронированием студии", "Памятка по одежде и подготовке", "Аренда студии оплачивается отдельно"],
   },
   {
     name: "История в фотокниге",
     price: "16 000 ₽",
     duration: "до 1,5 часа · в студии — 1 час",
     description: "Семейная съёмка и готовая история, которую можно держать в руках.",
-    features: ["До 50 обработанных фотографий", "Фотокнига 20×20 см, 10 страниц", "Галерея на 1 месяц", "Аренда студии оплачивается отдельно"],
+    features: ["Все удачные обработанные фотографии", "До 50 кадров", "Фотокнига 20×20 см, 10 страниц", "Вся семья, дети и родители с детьми", "Помощь с подготовкой и организацией", "Аренда студии оплачивается отдельно"],
   },
 ] as const;
 
@@ -96,8 +96,8 @@ const Family = () => {
           <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-[1.05fr_.95fr]">
             <div>
               <p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-primary">Семейные съёмки · Санкт-Петербург</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-6xl">Семейная съёмка, к которой хочется возвращаться</h1>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">Живые фотографии всей семьи — без натянутых улыбок и сложного позирования. Подберём формат и место под вашу семью.</p>
+              <h1 className="text-4xl font-bold leading-tight md:text-6xl">Семейная съёмка, которая сохранит вас настоящими</h1>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">Живые фотографии всей семьи без сложного позирования. Поможем выбрать место, подготовиться и спокойно проведём съёмку с детьми. Готовые фотографии — через 10 дней.</p>
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-sm">
                 <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />Фотографии через 10 дней</span>
                 <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />СПб и Ленинградская область</span>
@@ -112,13 +112,12 @@ const Family = () => {
         </section>
 
         <section className="py-16 md:py-20">
-          <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
-            <div><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Вся семья в кадре</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Не только портреты, а ваша жизнь сейчас</h2></div>
-            <div className="grid gap-4 sm:grid-cols-2">
+          <div className="container mx-auto px-4">
+            <header className="mx-auto mb-10 max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Вся семья в кадре</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Фотографии, в которых ваша семья остаётся собой</h2></header>
+            <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-3">
               {[
                 [Users, "Все вместе", "В семейном архиве наконец появляется фотография, на которой есть и дети, и родители."],
                 [Sparkles, "Живые моменты", "Сохраняем взгляды, прикосновения и общение — то, что со временем становится особенно ценным."],
-                [Camera, "Без сложных поз", "Подсказываем простые действия и помогаем семье чувствовать себя естественно."],
                 [BookHeart, "Память в печати", "Фотографии можно сохранить не только в телефоне, но и в семейной фотокниге."],
               ].map(([Icon, title, text]) => <article key={String(title)} className="rounded-2xl border border-border bg-card p-5 shadow-soft"><Icon className="h-6 w-6 text-primary" /><h3 className="mt-4 font-bold">{String(title)}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{String(text)}</p></article>)}
             </div>
@@ -133,15 +132,28 @@ const Family = () => {
           <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Понятные форматы</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Выберите свою семейную историю</h2><p className="mt-4 text-muted-foreground">Все удачные фотографии проходят авторскую цветокоррекцию и аккуратную обработку с сохранением естественности.</p></header><div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-3">{packages.map((item) => <article key={item.name} className={`relative flex flex-col rounded-2xl border bg-card p-6 shadow-soft ${"badge" in item ? "border-primary shadow-accent" : "border-border"}`}>{"badge" in item && <span className="absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">{item.badge}</span>}<h3 className="text-2xl font-bold">{item.name}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p><p className="mt-5 text-3xl font-bold text-primary">{item.price}</p><p className="mt-1 text-sm font-medium">{item.duration}</p><ul className="mt-5 flex-1 space-y-3">{item.features.map((feature) => <li key={feature} className="flex items-start gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{feature}</li>)}</ul><Button asChild className="mt-6 w-full" variant={"badge" in item ? "default" : "outline"}><a href="#family-cta" onClick={() => reachGoal("family_package_select", { package: item.name })}>Выбрать формат</a></Button></article>)}</div><div className="mx-auto mt-6 max-w-3xl rounded-xl bg-primary/5 p-4 text-center text-sm text-muted-foreground">Выезд по Санкт-Петербургу входит в стоимость. Ленинградская область — дополнительно 2 000 ₽. Аренда студии оплачивается отдельно.</div></div>
         </section>
 
+        <section id="family-advantages" className="bg-secondary/60 py-16 md:py-20">
+          <div className="container mx-auto px-4">
+            <header className="mx-auto mb-10 max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">С нами спокойно</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Продумываем съёмку, чтобы вам осталось быть вместе</h2><p className="mt-4 text-muted-foreground">Берём на себя подготовку и помогаем семье на каждом этапе — от выбора места до получения фотографий.</p></header>
+            <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                [Camera, "Не нужно уметь позировать", "Подскажем простые действия и поможем чувствовать себя естественно перед камерой."],
+                [Users, "Умеем работать с детьми", "Не торопим ребёнка, даём ему освоиться и проводим съёмку в комфортном темпе."],
+                [Shirt, "Помогаем подготовиться", "После бронирования отправим памятку и подскажем, как сочетать одежду семьи."],
+                [MapPin, "Подбираем место", "Предложим локацию, поможем забронировать студию и продумаем запасной вариант на случай погоды."],
+                [Images, "Ничего не нужно докупать", "Все удачные обработанные фотографии уже входят в выбранный пакет."],
+                [Clock3, "Понятный срок", "Передадим готовые фотографии через 10 дней в закрытой онлайн-галерее."],
+              ].map(([Icon, title, text]) => <article key={String(title)} className="rounded-2xl border border-border bg-background p-6 shadow-soft"><Icon className="h-6 w-6 text-primary" /><h3 className="mt-4 text-lg font-bold">{String(title)}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{String(text)}</p></article>)}
+            </div>
+            <p className="mx-auto mt-6 max-w-3xl text-center text-sm font-medium text-foreground">Стоимость не зависит от количества членов семьи — можно пригласить бабушек и дедушек.</p>
+          </div>
+        </section>
+
         <section className="bg-slate-900 py-16 text-white md:py-20">
           <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary-glow">Без лишней сложности</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Как проходит съёмка</h2></header><div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">{process.map(([title, text], index) => <article key={title} className="rounded-2xl border border-slate-700 bg-white/5 p-5"><span className="text-sm font-bold text-primary-glow">0{index + 1}</span><h3 className="mt-3 text-lg font-bold">{title}</h3><p className="mt-2 text-sm leading-relaxed text-slate-300">{text}</p></article>)}</div></div>
         </section>
 
-        <section className="py-16 md:py-20">
-          <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-2 lg:items-start"><div><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Подготовимся вместе</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Вам не нужно знать, как вести себя перед камерой</h2><div className="mt-7 space-y-4">{[[Shirt, "Поможем сочетать одежду семьи без сложных требований."], [MessageCircle, "Заранее обсудим характер и возраст детей."], [MapPin, "Подберём место и запасной вариант на случай погоды."], [Download, "После бронирования отправим короткую памятку."]].map(([Icon, text]) => <p key={String(text)} className="flex items-start gap-3"><Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" /><span>{String(text)}</span></p>)}</div></div><PhotoPlaceholder index={2} /></div>
-        </section>
-
-        <section className="bg-secondary/60 py-16 md:py-20"><div className="container mx-auto max-w-4xl px-4"><header className="mb-8 text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Вопросы и ответы</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Перед семейной съёмкой</h2></header><Accordion type="single" collapsible className="rounded-2xl border border-border bg-background px-5">{faq.map(([question, answer], index) => <AccordionItem key={question} value={`family-${index}`}><AccordionTrigger className="text-left font-semibold">{question}</AccordionTrigger><AccordionContent className="leading-relaxed text-muted-foreground">{answer}</AccordionContent></AccordionItem>)}</Accordion></div></section>
+        <section className="py-16 md:py-20"><div className="container mx-auto max-w-4xl px-4"><header className="mb-8 text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Вопросы и ответы</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Перед семейной съёмкой</h2></header><Accordion type="single" collapsible className="rounded-2xl border border-border bg-background px-5">{faq.map(([question, answer], index) => <AccordionItem key={question} value={`family-${index}`}><AccordionTrigger className="text-left font-semibold">{question}</AccordionTrigger><AccordionContent className="leading-relaxed text-muted-foreground">{answer}</AccordionContent></AccordionItem>)}</Accordion></div></section>
 
         <section id="family-cta" className="py-16 md:py-20">
           <div className="container mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[.9fr_1.1fr] lg:items-start"><div><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Подберём формат и дату</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Давайте сохраним вашу семейную историю</h2><p className="mt-5 leading-relaxed text-muted-foreground">Оставьте контакты — мы свяжемся в течение дня. Для бронирования даты понадобится предоплата 2 000 ₽, остаток оплачивается в день съёмки.</p><p className="mt-5 text-sm text-muted-foreground">Форма пока работает в режиме локального прототипа. Подключим её после создания отдельной воронки «Семейные съёмки» в amoCRM.</p></div><form onSubmit={previewSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-accent"><div className="grid gap-5 sm:grid-cols-2"><div><Label htmlFor="family-name">Имя *</Label><Input id="family-name" required className="mt-2" autoComplete="name" /></div><div><Label htmlFor="family-phone">Телефон *</Label><Input id="family-phone" required className="mt-2" type="tel" inputMode="tel" autoComplete="tel" placeholder="+7 999 000-00-00" /></div><div><Label htmlFor="family-children">Возраст детей</Label><Input id="family-children" className="mt-2" placeholder="Например: 3 и 8 лет" /></div><div><Label htmlFor="family-format">Желаемый формат</Label><Input id="family-format" className="mt-2" placeholder="Прогулка, дом или студия" /></div></div><div className="mt-5"><Label htmlFor="family-comment">Комментарий</Label><Textarea id="family-comment" className="mt-2" placeholder="Расскажите, какую съёмку вы представляете" /></div><label className="mt-5 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-muted-foreground"><Checkbox checked={consent} onCheckedChange={(value) => setConsent(value === true)} className="mt-0.5" /><span>Я согласен на <Link to="/personal-data-consent" className="text-primary underline">обработку персональных данных</Link> и ознакомлен с <Link to="/privacy" className="text-primary underline">политикой</Link>.</span></label><Button type="submit" size="lg" className="mt-6 w-full" disabled={!consent}>Подобрать формат съёмки</Button></form></div>
