@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { reachGoal } from "@/lib/analytics";
 import { rememberEntryTracking } from "@/lib/tracking";
+import { business } from "@/config/business";
 import { toast } from "sonner";
 
 const packages = [
@@ -78,6 +79,17 @@ const PhotoPlaceholder = ({ index, label }: { index: number; label?: string }) =
 const Family = () => {
   const [consent, setConsent] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [formStartedAt] = useState(() => Date.now());
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    familyAges: "",
+    comment: "",
+    website: "",
+  });
   useEffect(() => rememberEntryTracking(), []);
 
   const choosePackage = (packageName: string) => {
@@ -85,10 +97,62 @@ const Family = () => {
     reachGoal("family_package_select", { package: packageName });
   };
 
-  const previewSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    reachGoal("family_form_preview_submit", { package: selectedPackage || "not_selected" });
-    toast.info("Форма подготовлена. Подключим отправку после создания отдельной воронки семейных съёмок в amoCRM.");
+    if (!formData.name.trim() || !formData.phone.trim() || !consent) {
+      toast.error("Заполните имя и телефон и подтвердите согласие на обработку данных.");
+      return;
+    }
+
+    const trackingParams = new URLSearchParams(window.location.search);
+    const webhookUrl = import.meta.env.VITE_LEAD_WEBHOOK_URL || "/api/leads";
+    setIsSending(true);
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          familyAges: formData.familyAges,
+          familyPackage: selectedPackage,
+          comment: formData.comment,
+          website: formData.website,
+          formElapsedMs: Date.now() - formStartedAt,
+          direction: "family",
+          source: "detivkadre.spb.ru",
+          page: window.location.href,
+          tracking: {
+            utmSource: trackingParams.get("utm_source") || "",
+            utmMedium: trackingParams.get("utm_medium") || "",
+            utmCampaign: trackingParams.get("utm_campaign") || "",
+            utmContent: trackingParams.get("utm_content") || "",
+            utmTerm: trackingParams.get("utm_term") || "",
+            yclid: trackingParams.get("yclid") || "",
+            referrer: document.referrer,
+          },
+          consent: {
+            given: true,
+            version: business.consentVersion,
+            givenAt: new Date().toISOString(),
+          },
+          privacyPolicyVersion: business.privacyPolicyVersion,
+        }),
+      });
+      if (!response.ok) throw new Error("Lead submission failed");
+
+      setIsSent(true);
+      reachGoal("family_lead_success", { package: selectedPackage || "not_selected" });
+      toast.success("Заявка отправлена. Менеджер свяжется с вами в течение дня.");
+      setFormData({ name: "", phone: "", familyAges: "", comment: "", website: "" });
+      setSelectedPackage("");
+      setConsent(false);
+    } catch {
+      toast.error("Не удалось отправить заявку. Попробуйте ещё раз или позвоните по номеру в шапке сайта.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -172,7 +236,52 @@ const Family = () => {
         <section className="py-16 md:py-20"><div className="container mx-auto max-w-4xl px-4"><header className="mb-8 text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Честно отвечаем до бронирования</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Вопросы о семейной съёмке</h2></header><Accordion type="single" collapsible className="rounded-2xl border border-border bg-background px-5">{faq.map(([question, answer], index) => <AccordionItem key={question} value={`family-${index}`}><AccordionTrigger className="text-left font-semibold">{question}</AccordionTrigger><AccordionContent className="leading-relaxed text-muted-foreground">{answer}</AccordionContent></AccordionItem>)}</Accordion></div></section>
 
         <section id="family-cta" className="bg-gradient-to-br from-primary/10 via-background to-secondary/70 py-16 md:py-20">
-          <div className="container mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[.9fr_1.1fr] lg:items-start"><div><p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Подберём формат и дату</p><h2 className="mt-3 text-3xl font-bold md:text-5xl">Расскажите немного о вашей семье</h2><p className="mt-5 leading-relaxed text-muted-foreground">Оставьте контакты — в течение дня уточним возраст детей, предложим подходящий формат и подскажем свободные даты. Решение о бронировании можно принять после консультации.</p><div className="mt-6 space-y-3 text-sm"><p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Предоплата для бронирования — 2 000 ₽</p><p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Остаток оплачивается в день съёмки</p><p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Консультация ни к чему не обязывает</p></div></div><form onSubmit={previewSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-accent"><div className="grid gap-5 sm:grid-cols-2"><div><Label htmlFor="family-name">Имя *</Label><Input id="family-name" required className="mt-2" autoComplete="name" /></div><div><Label htmlFor="family-phone">Телефон *</Label><Input id="family-phone" required className="mt-2" type="tel" inputMode="tel" autoComplete="tel" placeholder="+7 999 000-00-00" /></div><div><Label htmlFor="family-children">Возраст детей</Label><Input id="family-children" className="mt-2" placeholder="Например: 3 и 8 лет" /></div><div><Label htmlFor="family-format">Формат съёмки</Label><Input id="family-format" className="mt-2" value={selectedPackage} onChange={(event) => setSelectedPackage(event.target.value)} placeholder="Можно выбрать после консультации" /></div></div><div className="mt-5"><Label htmlFor="family-comment">Что важно сохранить?</Label><Textarea id="family-comment" className="mt-2" placeholder="Например: общую фотографию, отношения детей или встречу с бабушкой и дедушкой" /></div><label className="mt-5 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-muted-foreground"><Checkbox checked={consent} onCheckedChange={(value) => setConsent(value === true)} className="mt-0.5" /><span>Я согласен на <Link to="/personal-data-consent" className="text-primary underline">обработку персональных данных</Link> и ознакомлен с <Link to="/privacy" className="text-primary underline">политикой</Link>.</span></label><Button type="submit" size="lg" className="mt-6 w-full" disabled={!consent}>Узнать свободные даты</Button><p className="mt-3 text-center text-xs text-muted-foreground">Менеджер свяжется с вами в течение дня.</p></form></div>
+          <div className="container mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Подберём формат и дату</p>
+              <h2 className="mt-3 text-3xl font-bold md:text-5xl">Расскажите немного о вашей семье</h2>
+              <p className="mt-5 leading-relaxed text-muted-foreground">Оставьте контакты — в течение дня уточним возраст детей, предложим подходящий формат и подскажем свободные даты. Решение о бронировании можно принять после консультации.</p>
+              <div className="mt-6 space-y-3 text-sm">
+                <p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Предоплата для бронирования — 2 000 ₽</p>
+                <p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Остаток оплачивается в день съёмки</p>
+                <p className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Консультация ни к чему не обязывает</p>
+              </div>
+            </div>
+            <form
+              noValidate
+              onSubmit={handleSubmit}
+              onFocus={() => {
+                if (!hasStarted) {
+                  setHasStarted(true);
+                  reachGoal("family_form_start", { package: selectedPackage || "not_selected" });
+                }
+              }}
+              className="rounded-2xl border border-border bg-card p-6 shadow-accent"
+            >
+              {isSent ? (
+                <div className="flex min-h-[420px] flex-col items-center justify-center text-center" role="status">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary"><Check className="h-8 w-8" /></span>
+                  <h3 className="mt-5 text-3xl font-bold">Заявка принята</h3>
+                  <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">Менеджер свяжется с вами в течение рабочего дня, уточнит состав семьи и предложит свободные даты.</p>
+                  <Button type="button" variant="outline" className="mt-7" onClick={() => setIsSent(false)}>Отправить ещё одну заявку</Button>
+                </div>
+              ) : (
+                <>
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div><Label htmlFor="family-name">Имя *</Label><Input id="family-name" required className="mt-2" autoComplete="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} /></div>
+                    <div><Label htmlFor="family-phone">Телефон *</Label><Input id="family-phone" required className="mt-2" type="tel" inputMode="tel" autoComplete="tel" value={formData.phone} onChange={(event) => setFormData({ ...formData, phone: event.target.value })} placeholder="+7 999 000-00-00" /></div>
+                    <div><Label htmlFor="family-children">Возраст детей</Label><Input id="family-children" className="mt-2" value={formData.familyAges} onChange={(event) => setFormData({ ...formData, familyAges: event.target.value })} placeholder="Например: 3 и 8 лет" /></div>
+                    <div><Label htmlFor="family-format">Формат съёмки</Label><Input id="family-format" className="mt-2" value={selectedPackage} onChange={(event) => setSelectedPackage(event.target.value)} placeholder="Можно выбрать после консультации" /></div>
+                  </div>
+                  <div className="hidden" aria-hidden="true"><Label htmlFor="family-website">Ваш сайт</Label><Input id="family-website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={(event) => setFormData({ ...formData, website: event.target.value })} /></div>
+                  <div className="mt-5"><Label htmlFor="family-comment">Что важно сохранить?</Label><Textarea id="family-comment" className="mt-2" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder="Например: общую фотографию, отношения детей или встречу с бабушкой и дедушкой" /></div>
+                  <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-muted-foreground"><Checkbox checked={consent} onCheckedChange={(value) => setConsent(value === true)} className="mt-0.5" /><span>Я согласен на <Link to="/personal-data-consent" className="text-primary underline">обработку персональных данных</Link> и ознакомлен с <Link to="/privacy" className="text-primary underline">политикой</Link>.</span></label>
+                  <Button type="submit" size="lg" className="mt-6 w-full" disabled={!consent || isSending}>{isSending ? "Отправляем…" : "Узнать свободные даты"}</Button>
+                  <p className="mt-3 text-center text-xs text-muted-foreground">Менеджер свяжется с вами в течение дня.</p>
+                </>
+              )}
+            </form>
+          </div>
         </section>
       </main>
       <Footer hideQuickLinks />
