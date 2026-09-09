@@ -241,15 +241,22 @@ const CTA = ({
                 <Input id="lead-institution" className="mt-2" required value={formData.institution} onChange={(event) => setFormData({ ...formData, institution: event.target.value })} placeholder={audience === "school" ? "Например, школа № 25" : "Например, детский сад № 25"} />
               </div>
 
-              {isKindergartenAlbum && (
+              {isFixedAlbum && (
                 <div className="mt-5">
-                  <Label htmlFor="lead-children-count">Сколько детей в группе?</Label>
+                  <Label htmlFor="lead-children-count">{isSchoolAlbum ? "Сколько выпускников в классе?" : "Сколько детей в группе?"}</Label>
                   <select id="lead-children-count" className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" value={formData.childrenCount} onChange={(event) => setFormData({ ...formData, childrenCount: event.target.value })}>
                     <option value="">Выберите вариант</option>
-                    <option value="10–15">10–15</option>
-                    <option value="16–20">16–20</option>
-                    <option value="21–25">21–25</option>
-                    <option value="Больше 25">Больше 25</option>
+                    {isSchoolAlbum ? <>
+                      <option value="15–20">15–20</option>
+                      <option value="21–25">21–25</option>
+                      <option value="26–30">26–30</option>
+                      <option value="Больше 30">Больше 30</option>
+                    </> : <>
+                      <option value="10–15">10–15</option>
+                      <option value="16–20">16–20</option>
+                      <option value="21–25">21–25</option>
+                      <option value="Больше 25">Больше 25</option>
+                    </>}
                     <option value="Пока не знаю">Пока не знаю</option>
                   </select>
                 </div>
@@ -280,7 +287,7 @@ const CTA = ({
               </p>
 
               <Button type="submit" size="xl" className="mt-6 w-full" disabled={isSending}>
-                {isSending ? "Отправляем…" : isKindergartenAlbum ? "Получить расчёт" : "Получить консультацию"}
+                {isSending ? "Отправляем…" : isFixedAlbum ? "Получить расчёт" : "Получить консультацию"}
               </Button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
                 Менеджер свяжется с вами в течение рабочего дня.

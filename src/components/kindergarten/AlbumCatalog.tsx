@@ -44,6 +44,24 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
     { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
     { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
   ];
+  const schoolScenarios = [
+    {
+      title: "Доступная память о классе",
+      description: "Три компактных формата для главных портретов и фотографий класса.",
+      options: packages.slice(0, 3),
+    },
+    {
+      title: "История детства",
+      description: "Оптимальный баланс личных кадров, друзей и событий школьной жизни.",
+      options: packages.slice(3, 4),
+      badge: "Рекомендуем",
+    },
+    {
+      title: "Большая история",
+      description: "Максимальная версия с несколькими съёмками и выпускным.",
+      options: packages.slice(4, 5),
+    },
+  ];
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -56,7 +74,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
             Каталог
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Пять форматов — от компактного альбома-папки до большой истории детства на 14 страниц.
+            {isSchool
+              ? "Три понятных уровня — от компактных форматов до большой истории школьных лет. Внутри доступны пять точных комплектаций."
+              : "Пять форматов — от компактного альбома-папки до большой истории детства на 14 страниц."}
           </p>
         </div>
 
@@ -71,28 +91,50 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
             <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
           </div>
 
-          {/* Size Switcher */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {packages.map((album) => (
-              <Button
-                key={album.id}
-                variant={selectedId === album.id ? "default" : "outline"}
-                onClick={() => setSelectedId(album.id)}
-                className={`px-6 py-3 transition-all duration-200 relative ${
-                  selectedId === album.id
-                    ? 'bg-primary hover:bg-primary/90 scale-105' 
-                    : 'hover:bg-accent hover:text-foreground hover:scale-105'
-                }`}
-              >
-                {album.shortTitle}
-                {album.popular && (
-                  <span className="absolute -top-4 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
-                    Популярный
-                  </span>
-                )}
-              </Button>
-            ))}
-          </div>
+          {/* Format selector */}
+          {isSchool ? (
+            <div className="mb-12 grid gap-4 lg:grid-cols-3">
+              {schoolScenarios.map((scenario) => {
+                const active = scenario.options.some((album) => album.id === selectedId);
+                return (
+                  <article key={scenario.title} className={`relative rounded-2xl border p-5 transition-all ${active ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-background shadow-soft"}`}>
+                    {scenario.badge && <span className="absolute -top-3 right-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">{scenario.badge}</span>}
+                    <h3 className="text-xl font-bold text-foreground">{scenario.title}</h3>
+                    <p className="mt-2 min-h-12 text-sm leading-relaxed text-muted-foreground">{scenario.description}</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {scenario.options.map((album) => (
+                        <Button key={album.id} type="button" size="sm" variant={selectedId === album.id ? "default" : "outline"} onClick={() => setSelectedId(album.id)}>
+                          {album.shortTitle} · {album.price}
+                        </Button>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {packages.map((album) => (
+                <Button
+                  key={album.id}
+                  variant={selectedId === album.id ? "default" : "outline"}
+                  onClick={() => setSelectedId(album.id)}
+                  className={`px-6 py-3 transition-all duration-200 relative ${
+                    selectedId === album.id
+                      ? 'bg-primary hover:bg-primary/90 scale-105'
+                      : 'hover:bg-accent hover:text-foreground hover:scale-105'
+                  }`}
+                >
+                  {album.shortTitle}
+                  {album.popular && (
+                    <span className="absolute -top-4 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
+                      Популярный
+                    </span>
+                  )}
+                </Button>
+              ))}
+            </div>
+          )}
 
           {/* Selected Album Display */}
           <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
@@ -194,6 +236,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
           </div>
 
           <div className="mt-16">
+            {!isSchool && <>
             <div className="mb-7 text-center">
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Сравните форматы</h3>
               <p className="mt-2 text-muted-foreground">Главные различия всех пяти вариантов на одном экране</p>
@@ -239,8 +282,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
                 </article>
               ))}
             </div>
+            </>}
 
-            <div className="mt-8 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
+            <div className={`${isSchool ? "" : "mt-8"} overflow-hidden rounded-2xl border border-primary/20 bg-primary/5`}>
               <div className="border-b border-primary/15 px-5 py-4">
                 <h4 className="font-bold text-foreground">Особые дополнения старших форматов</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
@@ -281,7 +325,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
                 ))}
               </div>
               <p className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-                «Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и {isSchool ? "школе" : "детском саде"}.
+                {isSchool
+                  ? "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
+                  : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
               </p>
             </div>
           </div>
