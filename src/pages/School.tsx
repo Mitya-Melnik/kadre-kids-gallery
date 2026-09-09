@@ -44,7 +44,7 @@ const School = () => (
       <meta name="description" content="Современные выпускные альбомы для 9 и 11 классов Санкт-Петербурга: личный выбор портрета, бесплатная досъёмка, проверка макетов, договор, печать и доставка СДЭК." />
       <link rel="canonical" href="https://detivkadre.spb.ru/school" />
       <meta property="og:title" content="Выпускные альбомы для 9 и 11 классов — Дети в кадре" />
-      <meta property="og:description" content="Современный выпускной альбом, который класс действительно захочет пересматривать." />
+      <meta property="og:description" content="Живые портреты, друзья и важные события школьной жизни — в современном выпускном альбоме с понятными условиями и сроками." />
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://detivkadre.spb.ru/school" />
     </Helmet>
@@ -54,8 +54,8 @@ const School = () => (
         <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-2">
           <div>
             <p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-primary">Выпускные альбомы для 9 и 11 классов</p>
-            <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl">Современный выпускной альбом, который класс действительно захочет пересматривать</h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">Живые портреты, фотографии друзей и важные события школьной жизни. Каждый выпускник выбирает свой портрет, отсутствующих бесплатно доснимаем, а условия и сроки фиксируем в договоре.</p>
+            <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl">История класса, которую захочется пересматривать</h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">Живые портреты, друзья и важные события школьной жизни — в современном выпускном альбоме с понятными условиями и сроками.</p>
             <div className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
               {["Личный выбор портрета и разворота", "Бесплатная досъёмка отсутствующих", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"].map((item) => <p key={item} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{item}</p>)}
             </div>
