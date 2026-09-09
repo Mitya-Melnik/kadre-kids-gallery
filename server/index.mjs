@@ -6,6 +6,7 @@ const config = {
   amoToken: process.env.AMO_LONG_TOKEN || "",
   photoDayPipelineId: Number(process.env.AMO_PHOTODAY_PIPELINE_ID || 1882579),
   albumPipelineId: Number(process.env.AMO_ALBUM_PIPELINE_ID || 1973458),
+  familyPipelineId: Number(process.env.AMO_FAMILY_PIPELINE_ID || 11286874),
   fields: {
     institution: Number(process.env.AMO_FIELD_INSTITUTION || 743411),
     product: Number(process.env.AMO_FIELD_LEAD_PRODUCT || 743715),
@@ -13,6 +14,8 @@ const config = {
     source: Number(process.env.AMO_FIELD_LEAD_SOURCE || 743719),
     page: Number(process.env.AMO_FIELD_LEAD_PAGE || 743721),
     childrenCount: Number(process.env.AMO_FIELD_LEAD_CHILDREN_COUNT || 743723),
+    familyAges: Number(process.env.AMO_FIELD_FAMILY_AGES || 743775),
+    familyPackage: Number(process.env.AMO_FIELD_FAMILY_PACKAGE || 743777),
   },
   enums: {
     photoDay: Number(process.env.AMO_ENUM_PRODUCT_PHOTODAY || 1002233),
@@ -103,17 +106,22 @@ const findOrCreateContact = async ({ name, phone }) => {
 };
 
 const createLead = async (lead) => {
-  const pipelineId = lead.direction === "album" ? config.albumPipelineId : config.photoDayPipelineId;
-  const product = lead.direction === "album" ? "Выпускные альбомы" : "Фотодень";
+  const isFamily = lead.direction === "family";
+  const pipelineId = isFamily ? config.familyPipelineId : lead.direction === "album" ? config.albumPipelineId : config.photoDayPipelineId;
+  const product = isFamily ? "Семейная съёмка" : lead.direction === "album" ? "Выпускные альбомы" : "Фотодень";
   const audience = lead.audience === "school" ? "Школа" : "Детский сад";
   const contactId = await findOrCreateContact(lead);
   const customFields = [
-    { field_id: config.fields.institution, values: [{ value: lead.institution }] },
-    { field_id: config.fields.product, values: [{ enum_id: lead.direction === "album" ? config.enums.album : config.enums.photoDay }] },
-    { field_id: config.fields.audience, values: [{ enum_id: lead.audience === "school" ? config.enums.school : config.enums.kindergarten }] },
+    ...(!isFamily ? [
+      { field_id: config.fields.institution, values: [{ value: lead.institution }] },
+      { field_id: config.fields.product, values: [{ enum_id: lead.direction === "album" ? config.enums.album : config.enums.photoDay }] },
+      { field_id: config.fields.audience, values: [{ enum_id: lead.audience === "school" ? config.enums.school : config.enums.kindergarten }] },
+    ] : []),
     { field_id: config.fields.source, values: [{ value: lead.source }] },
     { field_id: config.fields.page, values: [{ value: lead.page }] },
-    ...(lead.childrenCount ? [{ field_id: config.fields.childrenCount, values: [{ value: lead.childrenCount }] }] : []),
+    ...(!isFamily && lead.childrenCount ? [{ field_id: config.fields.childrenCount, values: [{ value: lead.childrenCount }] }] : []),
+    ...(isFamily && lead.familyAges ? [{ field_id: config.fields.familyAges, values: [{ value: lead.familyAges }] }] : []),
+    ...(isFamily && lead.familyPackage ? [{ field_id: config.fields.familyPackage, values: [{ value: lead.familyPackage }] }] : []),
     ...[
       ["UTM_SOURCE", lead.tracking.utmSource],
       ["UTM_MEDIUM", lead.tracking.utmMedium],
@@ -127,12 +135,12 @@ const createLead = async (lead) => {
   const created = await amoRequest("/api/v4/leads", {
     method: "POST",
     body: JSON.stringify([{
-      name: `${product} — ${lead.institution}`,
+      name: `${product} — ${isFamily ? lead.name : lead.institution}`,
       pipeline_id: pipelineId,
       custom_fields_values: customFields,
       _embedded: {
         contacts: [{ id: contactId, is_main: true }],
-        tags: [{ name: "Заявка с сайта" }],
+        tags: [{ name: "Заявка с сайта" }, ...(isFamily ? [{ name: "Семейная съёмка" }] : [])],
       },
     }]),
   });
@@ -140,8 +148,15 @@ const createLead = async (lead) => {
   const note = [
     `Заявка с сайта detivkadre.spb.ru`,
     `Продукт: ${product}`,
-    `Учреждение: ${audience} — ${lead.institution}`,
-    lead.childrenCount ? `Количество детей: ${lead.childrenCount}` : "Количество детей: не указано",
+    ...(isFamily
+      ? [
+          lead.familyAges ? `Возраст детей: ${lead.familyAges}` : "Возраст детей: не указан",
+          lead.familyPackage ? `Выбранный пакет: ${lead.familyPackage}` : "Выбранный пакет: не указан",
+        ]
+      : [
+          `Учреждение: ${audience} — ${lead.institution}`,
+          lead.childrenCount ? `Количество детей: ${lead.childrenCount}` : "Количество детей: не указано",
+        ]),
     `Имя: ${lead.name}`,
     `Телефон: ${lead.phone}`,
     lead.comment ? `Комментарий: ${lead.comment}` : "Комментарий: не указан",
@@ -179,9 +194,11 @@ const server = createServer(async (req, res) => {
       phone: normalizePhone(body.phone),
       institution: clean(body.institution, 140),
       childrenCount: clean(body.childrenCount, 40),
+      familyAges: clean(body.familyAges, 120),
+      familyPackage: clean(body.familyPackage, 120),
       comment: clean(body.comment, 800),
       source: clean(body.source, 80) || "detivkadre.spb.ru",
-      direction: body.direction === "album" ? "album" : "photo-day",
+      direction: body.direction === "family" ? "family" : body.direction === "album" ? "album" : "photo-day",
       audience: body.audience === "school" ? "school" : "kindergarten",
       page: clean(body.page, 300),
       tracking: {
@@ -201,7 +218,7 @@ const server = createServer(async (req, res) => {
       privacyPolicyVersion: clean(body.privacyPolicyVersion, 30),
     };
 
-    if (!lead.name || !lead.phone || !lead.institution || !lead.consent.given || !lead.consent.givenAt) {
+    if (!lead.name || !lead.phone || (lead.direction !== "family" && !lead.institution) || !lead.consent.given || !lead.consent.givenAt) {
       return json(res, 400, { ok: false, error: "validation" });
     }
     if (!config.amoToken) return json(res, 503, { ok: false, error: "not_configured" });
