@@ -196,7 +196,7 @@ const AlbumCatalog = () => {
               </div>
               <div>
                 <h4 className="font-bold text-foreground">Можно добавить</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Дополнительные развороты. Для старших форматов — копию альбома для близких со скидкой 25% или 50%.</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Дополнительные развороты. Копию альбома для близких со скидкой до 50%.</p>
               </div>
               <div>
                 <h4 className="font-bold text-foreground">Без дополнительной оплаты</h4>
