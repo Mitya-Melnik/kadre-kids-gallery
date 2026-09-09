@@ -15,7 +15,8 @@ const schoolText = (text: string) => text
   .replace(/группы/g, "класса")
   .replace(/группа/g, "класс")
   .replace(/детском саде/g, "школе")
-  .replace(/Более 10 дизайнов/g, "6 дизайнов");
+  .replace(/Более 10 дизайнов/g, "6 дизайнов")
+  .replace(/История детства/g, "Школьные годы");
 
 const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -41,7 +42,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
   const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
-    { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
     { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
   ];
   const schoolScenarios = [
@@ -51,7 +52,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
       options: packages.slice(0, 3),
     },
     {
-      title: "История детства",
+      title: "Школьные годы",
       description: "Оптимальный баланс личных кадров, друзей и событий школьной жизни.",
       options: packages.slice(3, 4),
       badge: "Рекомендуем",
