@@ -24,6 +24,24 @@ const AlbumCatalog = () => {
     { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
     { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
   ];
+  const catalogScenarios = [
+    {
+      title: "Память о группе",
+      description: "Три компактных формата для главных портретов, друзей и воспитателей.",
+      options: albumPackages.slice(0, 3),
+    },
+    {
+      title: "История детства",
+      description: "Оптимальный баланс личных кадров, событий группы и стоимости.",
+      options: albumPackages.slice(3, 4),
+      badge: "Рекомендуем",
+    },
+    {
+      title: "Большая история",
+      description: "История года в детском саду с несколькими съёмками и выпускным.",
+      options: albumPackages.slice(4, 5),
+    },
+  ];
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -36,7 +54,7 @@ const AlbumCatalog = () => {
             Каталог
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Пять форматов — от компактного альбома-папки до большой истории детства на 14 страниц.
+            Три понятных варианта — от компактной памяти о группе до большой истории года в детском саду. Все альбомы имеют формат 21×30 см.
           </p>
         </div>
 
@@ -51,27 +69,24 @@ const AlbumCatalog = () => {
             <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
           </div>
 
-          {/* Size Switcher */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {albumPackages.map((album) => (
-              <Button
-                key={album.id}
-                variant={selectedId === album.id ? "default" : "outline"}
-                onClick={() => setSelectedId(album.id)}
-                className={`px-6 py-3 transition-all duration-200 relative ${
-                  selectedId === album.id
-                    ? 'bg-primary hover:bg-primary/90 scale-105' 
-                    : 'hover:bg-accent hover:text-foreground hover:scale-105'
-                }`}
-              >
-                {album.shortTitle}
-                {album.popular && (
-                  <span className="absolute -top-4 -right-2 bg-secondary-accent text-secondary-accent-foreground text-xs px-2 py-1 rounded-full font-semibold">
-                    Популярный
-                  </span>
-                )}
-              </Button>
-            ))}
+          <div className="mb-12 grid gap-4 lg:grid-cols-3">
+            {catalogScenarios.map((scenario) => {
+              const active = scenario.options.some((album) => album.id === selectedId);
+              return (
+                <article key={scenario.title} className={`relative rounded-2xl border p-5 transition-all ${active ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-background shadow-soft"}`}>
+                  {scenario.badge && <span className="absolute -top-3 right-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">{scenario.badge}</span>}
+                  <h3 className="text-xl font-bold text-foreground">{scenario.title}</h3>
+                  <p className="mt-2 min-h-12 text-sm leading-relaxed text-muted-foreground">{scenario.description}</p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {scenario.options.map((album) => (
+                      <Button key={album.id} type="button" size="sm" variant={selectedId === album.id ? "default" : "outline"} onClick={() => setSelectedId(album.id)}>
+                        {album.shortTitle} · {album.price}
+                      </Button>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           {/* Selected Album Display */}
@@ -166,6 +181,27 @@ const AlbumCatalog = () => {
                   )}
                 </CardContent>
               </Card>
+            </div>
+          </div>
+
+          <div className="mt-12 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
+            <div className="border-b border-primary/15 px-5 py-4">
+              <h3 className="text-xl font-bold text-foreground">Цена без сюрпризов</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Заранее показываем, что входит в заказ и какие дополнения можно выбрать.</p>
+            </div>
+            <div className="grid gap-5 p-5 md:grid-cols-3">
+              <div>
+                <h4 className="font-bold text-foreground">Входит в стоимость</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Съёмка, обработка, макет и его проверка, печать альбома 21×30 см, все удачные электронные фотографии и доставка до пункта выдачи СДЭК.</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-foreground">Можно добавить</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Дополнительные развороты. Для старших форматов — копию альбома для близких со скидкой 25% или 50%.</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-foreground">Без дополнительной оплаты</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Досъёмка отсутствовавших детей по договорённости и до трёх согласованных этапов корректировок макета.</p>
+              </div>
             </div>
           </div>
 

@@ -40,13 +40,13 @@ const Kindergarten = () => {
       
       <main>
         <KindergartenHero />
+        <KindergartenAdvantages />
         <AlbumCatalog />
         <KindergartenCase />
         <Process initialType="album" fixedType="album" />
         <KindergartenLayouts />
         <KindergartenInlineCTA />
         <KindergartenGallery />
-        <KindergartenAdvantages />
         <Testimonials />
         <KindergartenFAQ />
         <CTA initialDirection="album" initialAudience="kindergarten" fixedDirection="album" fixedAudience="kindergarten" />
