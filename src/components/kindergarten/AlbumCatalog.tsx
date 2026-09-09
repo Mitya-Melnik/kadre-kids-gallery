@@ -1,13 +1,24 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Play, Plus } from "lucide-react";
+import { Images, Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { albumPackages } from "@/config/albumPackages";
 
-const AlbumCatalog = () => {
+const schoolText = (text: string) => text
+  .replace(/Наша группа/g, "Наш класс")
+  .replace(/одногруппниками/g, "одноклассниками")
+  .replace(/воспитателей/g, "учителя")
+  .replace(/воспитатели/g, "учитель")
+  .replace(/группы/g, "класса")
+  .replace(/группа/g, "класс")
+  .replace(/детском саде/g, "школе")
+  .replace(/Более 10 дизайнов/g, "6 дизайнов")
+  .replace(/История детства/g, "Школьные годы");
+
+const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
   
@@ -18,30 +29,59 @@ const AlbumCatalog = () => {
     setIsVideoModalOpen(true);
   };
 
-  const currentAlbum = albumPackages.find((album) => album.id === selectedId) ?? albumPackages[3];
+  const isSchool = audience === "school";
+  const packages = albumPackages.map((album) => isSchool ? {
+    ...album,
+    title: schoolText(album.title),
+    shortTitle: schoolText(album.shortTitle),
+    description: schoolText(album.description),
+    suitableFor: schoolText(album.suitableFor),
+    features: ["Формат альбома — 21×30 см", ...album.features.map(schoolText)],
+    items: album.items.map((item) => ({ ...item, note: schoolText(item.note) })),
+  } : album);
+  const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
-    { format: "История детства — 10 страниц", diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
     { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
   ];
-  const catalogScenarios = [
-    {
-      title: "Память о группе",
-      description: "Три компактных формата для главных портретов, друзей и воспитателей.",
-      options: albumPackages.slice(0, 3),
-    },
-    {
-      title: "История детства",
-      description: "Оптимальный баланс личных кадров, событий группы и стоимости.",
-      options: albumPackages.slice(3, 4),
-      badge: "Рекомендуем",
-    },
-    {
-      title: "Большая история",
-      description: "История года в детском саду с несколькими съёмками и выпускным.",
-      options: albumPackages.slice(4, 5),
-    },
-  ];
+  const catalogScenarios = isSchool
+    ? [
+        {
+          title: "Доступная память о классе",
+          description: "Три компактных формата для главных портретов и фотографий класса.",
+          options: packages.slice(0, 3),
+        },
+        {
+          title: "Школьные годы",
+          description: "Оптимальный баланс личных кадров, друзей и событий школьной жизни.",
+          options: packages.slice(3, 4),
+          badge: "Рекомендуем",
+        },
+        {
+          title: "Большая история",
+          description: "Максимальная версия с несколькими съёмками и выпускным.",
+          options: packages.slice(4, 5),
+        },
+      ]
+    : [
+        {
+          title: "Память о группе",
+          description: "Три компактных формата для главных портретов, друзей и воспитателей.",
+          options: packages.slice(0, 3),
+        },
+        {
+          title: "История детства",
+          description: "Оптимальный баланс личных кадров, событий группы и стоимости.",
+          options: packages.slice(3, 4),
+          badge: "Рекомендуем",
+        },
+        {
+          title: "Большая история",
+          description: "История года в детском саду с несколькими съёмками и выпускным.",
+          options: packages.slice(4, 5),
+        },
+      ];
 
   return (
     <section id="albums" className="py-20 bg-background">
@@ -54,7 +94,9 @@ const AlbumCatalog = () => {
             Каталог
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Три понятных варианта — от компактной памяти о группе до большой истории года в детском саду. Все альбомы имеют формат 21×30 см.
+            {isSchool
+              ? "Три понятных уровня — от компактных форматов до большой истории школьных лет. Внутри доступны пять точных комплектаций."
+              : "Три понятных варианта — от компактной памяти о группе до большой истории года в детском саду. Все альбомы имеют формат 21×30 см."}
           </p>
         </div>
 
@@ -64,8 +106,8 @@ const AlbumCatalog = () => {
         >
           <div className="mb-10 grid gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm sm:grid-cols-2 lg:grid-cols-4">
             <p><strong className="block text-foreground">Электронные фотографии</strong><span className="text-muted-foreground">Все удачные кадры — в подарок</span></p>
-            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От 10 альбомов</span></p>
-            <p><strong className="block text-foreground">Для воспитателей</strong><span className="text-muted-foreground">1 альбом бесплатно, второй — со скидкой 50%</span></p>
+            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От {isSchool ? "15" : "10"} альбомов</span></p>
+            <p><strong className="block text-foreground">{isSchool ? "Для учителя" : "Для воспитателей"}</strong><span className="text-muted-foreground">{isSchool ? "1 альбом для учителя — бесплатно" : "1 альбом бесплатно, второй — со скидкой 50%"}</span></p>
             <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
           </div>
 
@@ -95,22 +137,26 @@ const AlbumCatalog = () => {
             <div className="order-2 lg:order-1 flex-1 lg:max-w-[55%]">
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
-                <ResponsiveImage
+                {isSchool ? <div className="flex aspect-square w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/25 bg-primary/5 p-8 text-center">
+                  <Images className="h-12 w-12 text-primary/60" />
+                  <p className="mt-4 font-semibold text-foreground">Пример школьного альбома</p>
+                  <p className="mt-2 text-sm text-muted-foreground">Добавим обложку и развороты этого формата после подготовки фотографий.</p>
+                </div> : <ResponsiveImage
                   basePath={currentAlbum.image.replace(/\.(webp|jpg|jpeg|png)$/, '')}
                   alt={`Разворот альбома ${currentAlbum.title}`}
                   className="w-full aspect-square object-cover rounded-lg shadow-soft"
                   loading="lazy"
                   type="cover"
-                />
+                />}
                 <div className="mt-4 lg:mt-6 text-center">
-                  <Button
+                  {!isSchool && <Button
                     variant="secondary"
                     onClick={handleVideoClick}
                     className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 px-6 py-3"
                   >
                     <Play className="w-5 h-5 mr-2" />
                     Смотреть видео
-                  </Button>
+                  </Button>}
                 </div>
               </div>
             </div>
@@ -142,7 +188,7 @@ const AlbumCatalog = () => {
                     </span>
                     <span className="text-sm text-muted-foreground">за 1 альбом</span>
                   </div>
-                  <p className="mt-2 text-xs text-muted-foreground">При тираже от 10 экземпляров</p>
+                  <p className="mt-2 text-xs text-muted-foreground">При тираже от {isSchool ? "15" : "10"} экземпляров</p>
                 </CardContent>
               </Card>
 
@@ -206,6 +252,7 @@ const AlbumCatalog = () => {
           </div>
 
           <div className="mt-16">
+            {!isSchool && <>
             <div className="mb-7 text-center">
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Сравните форматы</h3>
               <p className="mt-2 text-muted-foreground">Главные различия всех пяти вариантов на одном экране</p>
@@ -223,7 +270,7 @@ const AlbumCatalog = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {albumPackages.map((album) => (
+                  {packages.map((album) => (
                     <tr key={album.id} className={`border-t border-border ${album.popular ? "bg-primary/5" : "bg-background"}`}>
                       <td className="p-4 font-semibold text-foreground">{album.title}{album.popular && <span className="ml-2 text-xs text-primary">Оптимальный выбор</span>}</td>
                       <td className="p-4 text-muted-foreground">{album.comparisonFormat}</td>
@@ -237,7 +284,7 @@ const AlbumCatalog = () => {
             </div>
 
             <div className="grid gap-3 md:hidden">
-              {albumPackages.map((album) => (
+              {packages.map((album) => (
                 <article key={album.id} className={`rounded-xl border p-4 ${album.popular ? "border-primary bg-primary/5" : "border-border bg-background"}`}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -251,8 +298,9 @@ const AlbumCatalog = () => {
                 </article>
               ))}
             </div>
+            </>}
 
-            <div className="mt-8 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
+            <div className={`${isSchool ? "" : "mt-8"} overflow-hidden rounded-2xl border border-primary/20 bg-primary/5`}>
               <div className="border-b border-primary/15 px-5 py-4">
                 <h4 className="font-bold text-foreground">Особые дополнения старших форматов</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
@@ -293,15 +341,17 @@ const AlbumCatalog = () => {
                 ))}
               </div>
               <p className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-                «Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде.
+                {isSchool
+                  ? "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
+                  : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
               </p>
             </div>
           </div>
 
           <div className="mt-10 text-center">
             <Button asChild size="lg">
-              <a href="/kindergarten#cta" onClick={(event) => { event.preventDefault(); document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }); }}>
-                Рассчитать стоимость для группы
+              <a href={`${isSchool ? "/school" : "/kindergarten"}#cta`} onClick={(event) => { event.preventDefault(); document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }); }}>
+                Рассчитать стоимость для {isSchool ? "класса" : "группы"}
               </a>
             </Button>
           </div>

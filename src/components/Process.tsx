@@ -82,9 +82,18 @@ export const albumSteps = [
   },
 ] as const;
 
-const Process = ({ initialType = "photo-day", fixedType }: { initialType?: ProcessType; fixedType?: ProcessType }) => {
+const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten" }: { initialType?: ProcessType; fixedType?: ProcessType; audience?: "kindergarten" | "school" }) => {
   const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
-  const steps = processType === "photo-day" ? photoDaySteps : albumSteps;
+  const baseSteps = processType === "photo-day" ? photoDaySteps : albumSteps;
+  const steps = audience === "school"
+    ? baseSteps.map((step) => ({
+        ...step,
+        description: step.description
+          .replace("в своей группе или классе", "в своём классе")
+          .replace("Выбираем формат и комплектацию. Для группы готовим два полноценных дизайна — отдельно для мальчиков и девочек.", "Выбираем формат, комплектацию и один общий дизайн из 6 школьных вариантов.")
+          .replace("Каждый родитель выбирает портрет на сайте. Ответственный родитель собирает проверку макета; включено до 3 этапов правок.", "Каждый выпускник выбирает портрет на сайте. До печати семья лично подтверждает имя, портрет и персональный разворот; включено до 3 этапов правок."),
+      }))
+    : baseSteps;
 
   return (
     <section id="process" className="bg-secondary/30 py-20">
