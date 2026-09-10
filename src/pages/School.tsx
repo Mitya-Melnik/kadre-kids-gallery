@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
+import SchoolLayouts from "@/components/school/SchoolLayouts";
 
 const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
   <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
@@ -93,7 +94,7 @@ const School = () => (
 
       <Process initialType="album" fixedType="album" audience="school" />
 
-      <section id="layouts" className="bg-background pb-20"><div className="container mx-auto px-4"><PhotoPlaceholder title="Макеты школьных альбомов" text="Здесь появятся обложки, развороты и видео перелистывания после подготовки школьных материалов." className="mx-auto max-w-6xl" /></div></section>
+      <SchoolLayouts />
 
       <section id="gallery" className="py-20">
         <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Реальные съёмки</p><h2 className="text-3xl font-bold md:text-5xl">Школьные истории</h2><p className="mt-4 text-muted-foreground">Покажем портреты, друзей, уроки, перемены, прогулки и важные события класса.</p></header><PhotoPlaceholder title="Школьная фотогалерея" text="Место подготовлено под 10–15 лучших кадров из проведённых школьных съёмок." className="mx-auto max-w-6xl" /></div>
