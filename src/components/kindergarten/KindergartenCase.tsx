@@ -21,6 +21,8 @@ const albumImages = [
 ];
 
 const storyImages = [
+  { src: `${caseRoot}/autumn-play.webp`, mobileSrc: `${caseRoot}/autumn-play-mobile.webp`, alt: "Дети играют на осенней прогулке", label: "Осенняя прогулка" },
+  { src: `${caseRoot}/winter-friends.webp`, mobileSrc: `${caseRoot}/winter-friends-mobile.webp`, alt: "Дети вместе на зимней прогулке", label: "Зимняя съёмка" },
   { src: `${caseRoot}/holiday.webp`, mobileSrc: `${caseRoot}/holiday-mobile.webp`, alt: "Детский праздник в течение учебного года", label: "Праздники группы" },
   { src: `${caseRoot}/graduation.webp`, mobileSrc: `${caseRoot}/graduation-mobile.webp`, alt: "Выпускница детского сада с дипломом", label: "Выпускной" },
 ];
