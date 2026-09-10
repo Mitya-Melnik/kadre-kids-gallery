@@ -8,12 +8,12 @@ type SchoolLayout = {
 };
 
 const schoolLayouts: SchoolLayout[] = [
-  { slug: "antik", title: "Антик", imageCount: 11 },
-  { slug: "belyy", title: "Белый", imageCount: 7 },
-  { slug: "light", title: "Лайт", imageCount: 11 },
-  { slug: "modern", title: "Модерн", imageCount: 11 },
-  { slug: "portrety", title: "Портреты", imageCount: 11 },
-  { slug: "chernyy", title: "Чёрный", imageCount: 7 },
+  { slug: "antik", title: "Вне времени", imageCount: 11 },
+  { slug: "belyy", title: "Воздух", imageCount: 7 },
+  { slug: "light", title: "Свобода", imageCount: 11 },
+  { slug: "modern", title: "Ритм", imageCount: 11 },
+  { slug: "portrety", title: "Характер", imageCount: 11 },
+  { slug: "chernyy", title: "Графит", imageCount: 7 },
 ];
 
 const SchoolLayoutImage = ({
