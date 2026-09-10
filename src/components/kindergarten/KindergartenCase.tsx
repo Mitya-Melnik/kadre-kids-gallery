@@ -13,18 +13,16 @@ const facts = [
 ];
 
 const albumImages = [
-  { src: `${caseRoot}/group-spread.jpg`, alt: "Групповой разворот выпускного альбома с воспитателями" },
-  { src: `${caseRoot}/individual-spread.jpg`, alt: "Индивидуальный разворот выпускного альбома" },
-  { src: `${caseRoot}/graduation-spread.jpg`, alt: "Разворот выпускного альбома с праздника" },
-  { src: `${caseRoot}/winter-spread.jpg`, alt: "Зимняя прогулка в выпускном альбоме" },
-  { src: `${caseRoot}/autumn-spread.jpg`, alt: "Осенняя прогулка в выпускном альбоме" },
+  { src: `${caseRoot}/group-spread.webp`, mobileSrc: `${caseRoot}/group-spread-mobile.webp`, alt: "Групповой разворот выпускного альбома с воспитателями" },
+  { src: `${caseRoot}/graduation-spread.webp`, mobileSrc: `${caseRoot}/graduation-spread-mobile.webp`, alt: "Разворот выпускного альбома с праздника" },
+  { src: `${caseRoot}/friends-spread.webp`, mobileSrc: `${caseRoot}/friends-spread-mobile.webp`, alt: "Разворот выпускного альбома с фотографиями друзей" },
+  { src: `${caseRoot}/winter-spread.webp`, mobileSrc: `${caseRoot}/winter-spread-mobile.webp`, alt: "Зимняя прогулка в выпускном альбоме" },
+  { src: `${caseRoot}/autumn-spread.webp`, mobileSrc: `${caseRoot}/autumn-spread-mobile.webp`, alt: "Осенняя прогулка в выпускном альбоме" },
 ];
 
 const storyImages = [
-  { src: `${caseRoot}/autumn-play.jpg`, alt: "Дети играют на осенней прогулке", label: "Осенняя прогулка" },
-  { src: `${caseRoot}/winter-friends.jpg`, alt: "Дети вместе на зимней прогулке", label: "Зимняя съёмка" },
-  { src: `${caseRoot}/holiday.jpg`, alt: "Детский праздник в течение учебного года", label: "Праздники группы" },
-  { src: `${caseRoot}/graduation.jpg`, alt: "Выпускница детского сада с дипломом", label: "Выпускной" },
+  { src: `${caseRoot}/holiday.webp`, mobileSrc: `${caseRoot}/holiday-mobile.webp`, alt: "Детский праздник в течение учебного года", label: "Праздники группы" },
+  { src: `${caseRoot}/graduation.webp`, mobileSrc: `${caseRoot}/graduation-mobile.webp`, alt: "Выпускница детского сада с дипломом", label: "Выпускной" },
 ];
 
 const scrollToForm = () => {
@@ -57,13 +55,16 @@ const KindergartenCase = () => {
           </div>
 
           <figure className="overflow-hidden rounded-2xl bg-secondary shadow-soft">
-            <img
-              src={`${caseRoot}/cover.jpg`}
-              alt="Обложка выпускного альбома группы Звёздочки"
-              className="aspect-[1.45/1] w-full object-cover"
-              loading="lazy"
-            />
-            <figcaption className="px-5 py-4 text-sm text-muted-foreground">Обложка альбома группы «Звёздочки», выпуск 2025 года</figcaption>
+            <picture>
+              <source media="(max-width: 767px)" srcSet={`${caseRoot}/hero-spread-mobile.webp`} />
+              <img
+                src={`${caseRoot}/hero-spread.webp`}
+                alt="Индивидуальный разворот выпускного альбома группы Звёздочки"
+                className="aspect-[1.45/1] w-full object-cover"
+                loading="lazy"
+              />
+            </picture>
+            <figcaption className="px-5 py-4 text-sm text-muted-foreground">Индивидуальный разворот альбома группы «Звёздочки», выпуск 2025 года</figcaption>
           </figure>
         </div>
 
@@ -84,13 +85,15 @@ const KindergartenCase = () => {
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {visibleAlbumImages.map((image, index) => (
-              <img
-                key={image.src}
-                src={image.src}
-                alt={image.alt}
-                className={`w-full rounded-xl border border-border bg-secondary object-contain shadow-sm ${index === 0 ? "md:col-span-2" : ""}`}
-                loading="lazy"
-              />
+              <picture key={image.src} className={index === 0 ? "md:col-span-2" : undefined}>
+                <source media="(max-width: 767px)" srcSet={image.mobileSrc} />
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full rounded-xl border border-border bg-secondary object-contain shadow-sm"
+                  loading="lazy"
+                />
+              </picture>
             ))}
           </div>
           {!showAllAlbumImages && (
@@ -108,7 +111,10 @@ const KindergartenCase = () => {
           <div className="mt-7 grid grid-cols-2 gap-3 md:gap-5">
             {storyImages.map((image) => (
               <figure key={image.src} className="group overflow-hidden rounded-2xl bg-card shadow-sm">
-                <img src={image.src} alt={image.alt} className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                <picture>
+                  <source media="(max-width: 767px)" srcSet={image.mobileSrc} />
+                  <img src={image.src} alt={image.alt} className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                </picture>
                 <figcaption className="px-4 py-3 text-sm font-medium text-foreground md:text-base">{image.label}</figcaption>
               </figure>
             ))}
