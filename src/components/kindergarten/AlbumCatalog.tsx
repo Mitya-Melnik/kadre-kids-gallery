@@ -20,6 +20,14 @@ const schoolText = (text: string) => text
 
 type AlbumAudience = "kindergarten" | "school" | "grade4";
 
+const seniorSchoolPreviewImages: Record<string, { basePath: string; design: string }> = {
+  folder: { basePath: "/layouts-school/belyy/7", design: "Воздух" },
+  trio: { basePath: "/layouts-school/antik/10", design: "Вне времени" },
+  "six-pages": { basePath: "/layouts-school/portrety/1", design: "Характер" },
+  "ten-pages": { basePath: "/layouts-school/modern/5", design: "Ритм" },
+  "fourteen-pages": { basePath: "/layouts-school/modern/8", design: "Ритм" },
+};
+
 const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
@@ -43,6 +51,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
     items: album.items.map((item) => ({ ...item, note: schoolText(item.note) })),
   } : album);
   const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
+  const seniorSchoolPreview = audience === "school" ? seniorSchoolPreviewImages[currentAlbum.id] : undefined;
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
     { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
@@ -140,7 +149,13 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
             <div className="order-2 lg:order-1 flex-1 lg:max-w-[55%]">
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
-                {isSchool ? <div className="flex aspect-square w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/25 bg-primary/5 p-8 text-center">
+                {seniorSchoolPreview ? <ResponsiveImage
+                  basePath={seniorSchoolPreview.basePath}
+                  alt={`${currentAlbum.title} — пример в дизайне «${seniorSchoolPreview.design}»`}
+                  className="aspect-square w-full rounded-lg object-cover shadow-soft"
+                  loading="lazy"
+                  type="cover"
+                /> : isSchool ? <div className="flex aspect-square w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/25 bg-primary/5 p-8 text-center">
                   <Images className="h-12 w-12 text-primary/60" />
                   <p className="mt-4 font-semibold text-foreground">Пример школьного альбома</p>
                   <p className="mt-2 text-sm text-muted-foreground">Добавим обложку и развороты этого формата после подготовки фотографий.</p>
