@@ -24,8 +24,8 @@ const seniorSchoolPreviewImages: Record<string, { basePath: string; design: stri
   folder: { basePath: "/layouts-school/belyy/7", design: "Воздух" },
   trio: { basePath: "/layouts-school/antik/10", design: "Вне времени" },
   "six-pages": { basePath: "/layouts-school/portrety/1", design: "Характер" },
-  "ten-pages": { basePath: "/layouts-school/modern/5", design: "Ритм" },
-  "fourteen-pages": { basePath: "/layouts-school/modern/8", design: "Ритм" },
+  "ten-pages": { basePath: "/layouts-school/modern/8", design: "Ритм" },
+  "fourteen-pages": { basePath: "/layouts-school/modern/1", design: "Ритм" },
 };
 
 const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
