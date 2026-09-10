@@ -33,7 +33,7 @@ const TopBar = () => {
     { name: "Как создаётся альбом", href: "#process" },
     { name: "Макеты", href: "#layouts" },
     { name: "Примеры съёмки", href: "#gallery" },
-    { name: "Вопросы и ответы", href: "#kindergarten-faq" },
+    { name: "Вопросы и ответы", href: location.pathname.startsWith("/school") ? "#school-faq" : "#kindergarten-faq" },
   ];
   const isSchoolAlbumPage = location.pathname === "/school" || location.pathname.startsWith("/school/");
   const isAlbumPage = location.pathname === "/kindergarten" || isSchoolAlbumPage;

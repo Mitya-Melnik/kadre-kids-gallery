@@ -18,7 +18,9 @@ const schoolText = (text: string) => text
   .replace(/Более 10 дизайнов/g, "6 дизайнов")
   .replace(/История детства/g, "Школьные годы");
 
-const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
+type AlbumAudience = "kindergarten" | "school" | "grade4";
+
+const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
   
@@ -29,7 +31,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
     setIsVideoModalOpen(true);
   };
 
-  const isSchool = audience === "school";
+  const isSchool = audience === "school" || audience === "grade4";
+  const isGrade4 = audience === "grade4";
   const packages = albumPackages.map((album) => isSchool ? {
     ...album,
     title: schoolText(album.title),
@@ -302,7 +305,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
 
             <div className={`${isSchool ? "" : "mt-8"} overflow-hidden rounded-2xl border border-primary/20 bg-primary/5`}>
               <div className="border-b border-primary/15 px-5 py-4">
-                <h4 className="font-bold text-foreground">Особые дополнения старших форматов</h4>
+                <h4 className="font-bold text-foreground">{isGrade4 ? "Дополнения расширенных форматов" : "Особые дополнения старших форматов"}</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
               </div>
               <div className="hidden md:block">
@@ -342,7 +345,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
               </div>
               <p className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
                 {isSchool
-                  ? "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
+                  ? isGrade4
+                    ? "«Письмо в будущее» — персональный разворот с фотографией ребёнка, любимыми воспоминаниями о начальной школе, мечтами и коротким посланием себе будущему."
+                    : "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
                   : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
               </p>
             </div>
@@ -350,7 +355,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: "kindergarten"
 
           <div className="mt-10 text-center">
             <Button asChild size="lg">
-              <a href={`${isSchool ? "/school" : "/kindergarten"}#cta`} onClick={(event) => { event.preventDefault(); document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }); }}>
+              <a href="#cta" onClick={(event) => { event.preventDefault(); document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }); }}>
                 Рассчитать стоимость для {isSchool ? "класса" : "группы"}
               </a>
             </Button>

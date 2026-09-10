@@ -1,7 +1,9 @@
 import { BookOpen, FileCheck2, Heart, ListChecks, UserCheck, UserRoundPlus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const KindergartenAdvantages = ({ audience = "kindergarten" }: { audience?: "kindergarten" | "school" }) => {
+type AlbumAudience = "kindergarten" | "school" | "grade4";
+
+const KindergartenAdvantages = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
 
@@ -71,21 +73,57 @@ const KindergartenAdvantages = ({ audience = "kindergarten" }: { audience?: "kin
     }
   ];
 
-  const advantages = audience === "school" ? schoolAdvantages : kindergartenAdvantages;
+  const grade4Advantages = [
+    {
+      icon: Heart,
+      title: "Живая история начальной школы",
+      description: "Снимаем не только портреты, но и друзей, первую учительницу, уроки, перемены и настоящие моменты жизни класса."
+    },
+    {
+      icon: UserCheck,
+      title: "Портрет выбирают родители",
+      description: "После съёмки вы сами выбираете основной портрет ребёнка, а до печати подтверждаете имя и персональный разворот."
+    },
+    {
+      icon: ListChecks,
+      title: "Организацию берём на себя",
+      description: "Помогаем ответственному за класс пройти весь путь — от выбора формата до согласования макета и получения готового тиража."
+    },
+    {
+      icon: UserRoundPlus,
+      title: "Не пропустим ни одного ребёнка",
+      description: "Если ученик заболел или отсутствовал в день съёмки, бесплатно организуем дополнительную съёмку по договорённости."
+    },
+    {
+      icon: FileCheck2,
+      title: "Стоимость и сроки — в договоре",
+      description: "Заранее фиксируем комплектацию, стоимость, даты съёмок, сроки подготовки макета, печати и доставки."
+    },
+    {
+      icon: BookOpen,
+      title: "Бесплатная перепечатка при нашей ошибке",
+      description: "Если после печати обнаружится допущенная нами ошибка, исправим макет и бесплатно перепечатаем альбом."
+    }
+  ];
+
+  const advantages = audience === "school" ? schoolAdvantages : audience === "grade4" ? grade4Advantages : kindergartenAdvantages;
+  const isSchoolAudience = audience === "school" || audience === "grade4";
 
   return (
-    <section id={audience === "school" ? "advantages" : "kindergarten-advantages"} className="py-20 bg-secondary/30">
+    <section id={isSchoolAudience ? "advantages" : "kindergarten-advantages"} className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div 
           ref={titleRef}
           className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Почему {audience === "school" ? "классы" : "группы"} выбирают «Дети в кадре»
+            Почему {isSchoolAudience ? "классы" : "группы"} выбирают «Дети в кадре»
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             {audience === "school"
               ? "Подросткам комфортно на съёмке, родители контролируют персональный результат, а условия и ответственность заранее зафиксированы."
+              : audience === "grade4"
+              ? "Сохраняем характер класса и первые школьные годы, а родителям даём контроль над персональным результатом до печати."
               : "Детям комфортно, родителям всё понятно, а ответственному родителю не приходится организовывать проект в одиночку."}
           </p>
         </div>

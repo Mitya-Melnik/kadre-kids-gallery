@@ -103,9 +103,9 @@ const School = () => (
 
       <KindergartenFAQ audience="school" />
 
-      <CTA initialDirection="album" initialAudience="school" fixedDirection="album" fixedAudience="school" />
+      <CTA initialDirection="album" initialAudience="school" fixedDirection="album" fixedAudience="school" schoolLevel="grade9_11" />
     </main>
-    <Footer schoolPage />
+    <Footer schoolPage schoolLevel="grade9_11" />
     <FabContact />
     <BackToTop />
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="#cta">Рассчитать стоимость</a></Button></div>

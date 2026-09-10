@@ -8,9 +8,10 @@ interface FooterProps {
   hideSchoolAlbumLink?: boolean;
   kindergartenPage?: boolean;
   schoolPage?: boolean;
+  schoolLevel?: "grade4" | "grade9_11";
 }
 
-const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergartenPage = false, schoolPage = false }: FooterProps) => {
+const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergartenPage = false, schoolPage = false, schoolLevel = "grade9_11" }: FooterProps) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -152,13 +153,23 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergar
                 <>
                   <Link to="/albums" className="text-slate-300 hover:text-primary transition-colors text-sm block">Все направления</Link>
                   <Link to="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для детского сада</Link>
-                  <span className="text-primary text-sm block font-semibold">Для 9–11 классов</span>
+                  {schoolLevel === "grade4" ? (
+                    <span className="text-primary text-sm block font-semibold">Для 4 класса</span>
+                  ) : (
+                    <Link to="/school/4" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 4 класса</Link>
+                  )}
+                  {schoolLevel === "grade9_11" ? (
+                    <span className="text-primary text-sm block font-semibold">Для 9–11 классов</span>
+                  ) : (
+                    <Link to="/school/9-11" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 9–11 классов</Link>
+                  )}
                   <Link to="/" className="text-slate-300 hover:text-primary transition-colors text-sm block">Вернуться на главную</Link>
                 </>
               ) : kindergartenPage ? (
                 <>
                   <Link to="/albums" className="text-slate-300 hover:text-primary transition-colors text-sm block">Все направления</Link>
                   <span className="text-primary text-sm block font-semibold">Для детского сада</span>
+                  <Link to="/school/4" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 4 класса</Link>
                   <Link to="/school/9-11" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 9–11 классов</Link>
                   <Link to="/" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                     Вернуться на главную
@@ -175,7 +186,7 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergar
               {!hideSchoolAlbumLink && !kindergartenPage && !schoolPage && (
                 <>
                   <Link to="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для детского сада</Link>
-                  <span className="text-slate-500 text-sm block">Для 4 класса — готовится</span>
+                  <Link to="/school/4" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 4 класса</Link>
                   <Link to="/school/9-11" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 9–11 классов</Link>
                 </>
               )}

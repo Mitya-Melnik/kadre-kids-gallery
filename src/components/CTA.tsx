@@ -11,6 +11,7 @@ import { reachGoal } from "@/lib/analytics";
 
 type Direction = "photo-day" | "album";
 type Audience = "kindergarten" | "school";
+type SchoolLevel = "grade4" | "grade9_11";
 
 const directions = {
   "photo-day": {
@@ -32,11 +33,13 @@ const CTA = ({
   initialAudience = "kindergarten",
   fixedDirection,
   fixedAudience,
+  schoolLevel,
 }: {
   initialDirection?: Direction;
   initialAudience?: Audience;
   fixedDirection?: Direction;
   fixedAudience?: Audience;
+  schoolLevel?: SchoolLevel;
 }) => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
@@ -112,7 +115,7 @@ const CTA = ({
       });
       if (!response.ok) throw new Error("Lead submission failed");
       setIsSent(true);
-      reachGoal("lead_success", { direction, audience });
+      reachGoal("lead_success", { direction, audience, ...(schoolLevel ? { schoolLevel } : {}) });
       toast({ title: "Заявка отправлена", description: "Менеджер свяжется с вами в течение рабочего дня." });
       setFormData({ name: "", phone: "", institution: "", childrenCount: "", comment: "", website: "", consent: false });
     } catch {
@@ -128,6 +131,7 @@ const CTA = ({
 
   const isKindergartenAlbum = fixedDirection === "album" && fixedAudience === "kindergarten";
   const isSchoolAlbum = fixedDirection === "album" && fixedAudience === "school";
+  const isGrade4Album = isSchoolAlbum && schoolLevel === "grade4";
   const isFixedAlbum = isKindergartenAlbum || isSchoolAlbum;
 
   return (
@@ -137,7 +141,7 @@ const CTA = ({
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <p className="mb-3 font-semibold text-primary">{isFixedAlbum ? "Расчёт без обязательств" : "Обсудим вашу съёмку"}</p>
             <h2 className="mb-5 text-4xl font-bold text-foreground md:text-5xl">
-              {isKindergartenAlbum ? "Рассчитаем выпускные альбомы для вашей группы" : isSchoolAlbum ? "Рассчитаем выпускные альбомы для вашего класса" : "Оставьте заявку — мы предложим подходящий вариант"}
+              {isKindergartenAlbum ? "Рассчитаем выпускные альбомы для вашей группы" : isGrade4Album ? "Рассчитаем выпускные альбомы для вашего 4-го класса" : isSchoolAlbum ? "Рассчитаем выпускные альбомы для вашего класса" : "Оставьте заявку — мы предложим подходящий вариант"}
             </h2>
             <p className="text-lg text-muted-foreground">
               {isFixedAlbum ? "Укажите контакты и примерное количество детей. Рассчитаем стоимость и подскажем свободные даты." : "Для детского сада или школы. Без обязательств и долгих анкет."}
@@ -188,7 +192,7 @@ const CTA = ({
             <form noValidate onSubmit={handleSubmit} onFocus={() => {
               if (!hasStarted) {
                 setHasStarted(true);
-                reachGoal("lead_form_start", { direction, audience });
+                reachGoal("lead_form_start", { direction, audience, ...(schoolLevel ? { schoolLevel } : {}) });
               }
             }} className="p-6 md:p-10">
               {isSent ? (
@@ -243,7 +247,7 @@ const CTA = ({
 
               {isFixedAlbum && (
                 <div className="mt-5">
-                  <Label htmlFor="lead-children-count">{isSchoolAlbum ? "Сколько выпускников в классе?" : "Сколько детей в группе?"}</Label>
+                  <Label htmlFor="lead-children-count">{isGrade4Album ? "Сколько детей в классе?" : isSchoolAlbum ? "Сколько выпускников в классе?" : "Сколько детей в группе?"}</Label>
                   <select id="lead-children-count" className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" value={formData.childrenCount} onChange={(event) => setFormData({ ...formData, childrenCount: event.target.value })}>
                     <option value="">Выберите вариант</option>
                     {isSchoolAlbum ? <>

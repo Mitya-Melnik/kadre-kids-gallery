@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Albums from "./pages/Albums";
 import Kindergarten from "./pages/Kindergarten";
 import School from "./pages/School";
+import SchoolGrade4 from "./pages/SchoolGrade4";
 import NotFound from "./pages/NotFound";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/" element={<Index />} />
           <Route path="/albums" element={<Albums />} />
           <Route path="/kindergarten" element={<Kindergarten />} />
+          <Route path="/school/4" element={<SchoolGrade4 />} />
           <Route path="/school/9-11" element={<School />} />
           <Route path="/school" element={<School />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
