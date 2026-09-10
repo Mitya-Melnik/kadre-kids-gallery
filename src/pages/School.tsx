@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Building2, Check, Images, UserCheck, UsersRound } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
@@ -12,6 +14,7 @@ import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvant
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
 import SchoolLayouts from "@/components/school/SchoolLayouts";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
 const schoolHeroImages = [
   { basePath: "/layouts-school/modern/1", alt: "Школьный альбом в дизайне «Ритм» — обложка" },
@@ -19,6 +22,77 @@ const schoolHeroImages = [
   { basePath: "/layouts-school/modern/8", alt: "Школьный альбом в дизайне «Ритм» — разворот класса" },
   { basePath: "/layouts-school/modern/7", alt: "Школьный альбом в дизайне «Ритм» — разворот с выпускниками" },
 ] as const;
+
+const SchoolHeroGallery = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const updateCurrent = () => setCurrent(api.selectedScrollSnap());
+    updateCurrent();
+    api.on("select", updateCurrent);
+
+    return () => {
+      api.off("select", updateCurrent);
+    };
+  }, [api]);
+
+  return (
+    <>
+      <Carousel
+        setApi={setApi}
+        opts={{ loop: true, align: "start" }}
+        plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
+        className="w-full lg:hidden"
+        aria-label="Примеры школьных выпускных альбомов"
+      >
+        <CarouselContent className="ml-0">
+          {schoolHeroImages.map((image, index) => (
+            <CarouselItem key={image.basePath} className="pl-0">
+              <div className="aspect-square overflow-hidden rounded-2xl bg-secondary/20 shadow-glow">
+                <ResponsiveImage
+                  basePath={image.basePath}
+                  alt={image.alt}
+                  className="h-full w-full object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  type="cover"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 rounded-full bg-black/20 px-3 py-2 backdrop-blur-sm">
+          {schoolHeroImages.map((image, index) => (
+            <button
+              key={image.basePath}
+              type="button"
+              onClick={() => api?.scrollTo(index)}
+              className={`h-2.5 rounded-full transition-all ${current === index ? "w-7 bg-white" : "w-2.5 bg-white/60"}`}
+              aria-label={`Показать фотографию ${index + 1}`}
+              aria-current={current === index ? "true" : undefined}
+            />
+          ))}
+        </div>
+      </Carousel>
+
+      <div className="hidden grid-cols-2 gap-4 rounded-3xl bg-background/70 p-4 shadow-glow lg:grid" aria-label="Примеры школьных выпускных альбомов">
+        {schoolHeroImages.map((image, index) => (
+          <div key={image.basePath} className="overflow-hidden rounded-2xl bg-secondary/20 shadow-soft">
+            <ResponsiveImage
+              basePath={image.basePath}
+              alt={image.alt}
+              className="aspect-square w-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+              type="cover"
+            />
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
 const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
   <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
@@ -70,19 +144,7 @@ const School = () => (
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="#albums">Посмотреть альбомы</a></Button></div>
           </div>
-          <div className="grid grid-cols-2 gap-3 rounded-3xl bg-background/70 p-3 shadow-glow sm:gap-4 sm:p-4" aria-label="Примеры школьных выпускных альбомов">
-            {schoolHeroImages.map((image, index) => (
-              <div key={image.basePath} className="overflow-hidden rounded-2xl bg-secondary/20 shadow-soft">
-                <ResponsiveImage
-                  basePath={image.basePath}
-                  alt={image.alt}
-                  className="aspect-square w-full object-cover"
-                  loading={index === 0 ? "eager" : "lazy"}
-                  type="cover"
-                />
-              </div>
-            ))}
-          </div>
+          <SchoolHeroGallery />
         </div>
       </section>
 
