@@ -42,11 +42,11 @@ const School = () => (
     <Helmet>
       <title>Выпускные альбомы для 9 и 11 классов в СПб | Дети в кадре</title>
       <meta name="description" content="Современные выпускные альбомы для 9 и 11 классов Санкт-Петербурга: личный выбор портрета, бесплатная досъёмка, проверка макетов, договор, печать и доставка СДЭК." />
-      <link rel="canonical" href="https://detivkadre.spb.ru/school" />
+      <link rel="canonical" href="https://detivkadre.spb.ru/school/9-11" />
       <meta property="og:title" content="Выпускные альбомы для 9 и 11 классов — Дети в кадре" />
       <meta property="og:description" content="Живые портреты, друзья и важные события школьной жизни — в современном выпускном альбоме с понятными условиями и сроками." />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://detivkadre.spb.ru/school" />
+      <meta property="og:url" content="https://detivkadre.spb.ru/school/9-11" />
     </Helmet>
     <TopBar />
     <main>

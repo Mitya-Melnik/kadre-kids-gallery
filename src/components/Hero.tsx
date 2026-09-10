@@ -30,7 +30,7 @@ const Hero = () => {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link to="/kindergarten">
+              <Link to="/albums" onClick={() => reachGoal("product_select", { product: "albums", placement: "hero" })}>
                 <Button size="xl" className="w-full gap-2 shadow-glow sm:w-auto">
                   Выпускные альбомы
                   <ArrowRight className="h-5 w-5" />

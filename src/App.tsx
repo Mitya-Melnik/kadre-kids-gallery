@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Albums from "./pages/Albums";
 import Kindergarten from "./pages/Kindergarten";
 import School from "./pages/School";
 import NotFound from "./pages/NotFound";
@@ -25,7 +26,9 @@ const App = () => {
         <ScrollToTopOnRouteChange />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/albums" element={<Albums />} />
           <Route path="/kindergarten" element={<Kindergarten />} />
+          <Route path="/school/9-11" element={<School />} />
           <Route path="/school" element={<School />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/personal-data-consent" element={<PersonalDataConsent />} />

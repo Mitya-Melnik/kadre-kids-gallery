@@ -10,8 +10,8 @@ const directions = [
     image: "/kindergarten/hero-square/slide-2.webp",
     imageAlt: "Пример выпускного альбома",
     features: ["Для детских садов и школ", "Несколько вариантов оформления", "Понятные сроки и согласование"],
-    action: "Альбомы для детского сада",
-    href: "/kindergarten",
+    action: "Выбрать направление",
+    href: "/albums",
     icon: BookOpen,
   },
   {
@@ -82,11 +82,11 @@ const ProductDirections = () => {
                       ) : (
                         <Link to={direction.href} className="w-fit">{button}</Link>
                       )}
-                      <Button asChild variant="outline" size="lg" className="w-full sm:w-fit">
-                        <Link to={direction.title === "Выпускные альбомы" ? "/school" : "/#gallery"}>
-                          {direction.title === "Выпускные альбомы" ? "Альбомы для школы" : "Фотодни для школы"}
-                        </Link>
-                      </Button>
+                      {direction.title !== "Выпускные альбомы" && (
+                        <Button asChild variant="outline" size="lg" className="w-full sm:w-fit">
+                          <Link to="/#gallery">Фотодни для школы</Link>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>

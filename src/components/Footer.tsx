@@ -150,27 +150,35 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergar
             <nav className="space-y-2">
               {schoolPage ? (
                 <>
+                  <Link to="/albums" className="text-slate-300 hover:text-primary transition-colors text-sm block">Все направления</Link>
                   <Link to="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для детского сада</Link>
-                  <span className="text-primary text-sm block font-semibold">Для школы</span>
+                  <span className="text-primary text-sm block font-semibold">Для 9–11 классов</span>
                   <Link to="/" className="text-slate-300 hover:text-primary transition-colors text-sm block">Вернуться на главную</Link>
                 </>
               ) : kindergartenPage ? (
                 <>
+                  <Link to="/albums" className="text-slate-300 hover:text-primary transition-colors text-sm block">Все направления</Link>
                   <span className="text-primary text-sm block font-semibold">Для детского сада</span>
-                  <Link to="/school" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для школы</Link>
+                  <Link to="/school/9-11" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 9–11 классов</Link>
                   <Link to="/" className="text-slate-300 hover:text-primary transition-colors text-sm block">
                     Вернуться на главную
                   </Link>
                 </>
               ) : (
                 <Link
-                  to="/kindergarten"
+                  to="/albums"
                   className="text-primary hover:text-primary-glow transition-colors text-sm block font-semibold"
                 >
-                  Детский сад
+                  Выбрать направление
                 </Link>
               )}
-              {!hideSchoolAlbumLink && !kindergartenPage && !schoolPage && <Link to="/school" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для школы</Link>}
+              {!hideSchoolAlbumLink && !kindergartenPage && !schoolPage && (
+                <>
+                  <Link to="/kindergarten" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для детского сада</Link>
+                  <span className="text-slate-500 text-sm block">Для 4 класса — готовится</span>
+                  <Link to="/school/9-11" className="text-slate-300 hover:text-primary transition-colors text-sm block">Для 9–11 классов</Link>
+                </>
+              )}
             </nav>
           </div>
 

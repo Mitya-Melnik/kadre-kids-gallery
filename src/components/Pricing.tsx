@@ -246,7 +246,7 @@ const Pricing = () => {
         ) : (
           <div className="mt-10 text-center">
             <Button asChild size="lg" className="rounded-xl">
-              <Link to="/kindergarten">Посмотреть альбомы подробнее</Link>
+              <Link to="/albums">Выбрать выпускные альбомы</Link>
             </Button>
           </div>
         )}
