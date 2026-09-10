@@ -11,6 +11,14 @@ import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
 import SchoolLayouts from "@/components/school/SchoolLayouts";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+
+const schoolHeroImages = [
+  { basePath: "/layouts-school/modern/1", alt: "Школьный альбом в дизайне «Ритм» — обложка" },
+  { basePath: "/layouts-school/light/2", alt: "Школьный альбом в дизайне «Свобода» — обложка" },
+  { basePath: "/layouts-school/modern/8", alt: "Школьный альбом в дизайне «Ритм» — разворот класса" },
+  { basePath: "/layouts-school/modern/7", alt: "Школьный альбом в дизайне «Ритм» — разворот с выпускниками" },
+] as const;
 
 const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
   <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
@@ -62,7 +70,19 @@ const School = () => (
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="#albums">Посмотреть альбомы</a></Button></div>
           </div>
-          <PhotoPlaceholder title="Главная школьная фотография" text="Здесь появится сильный кадр выпускников 9 или 11 класса вместе с готовым альбомом." className="min-h-[430px]" />
+          <div className="grid grid-cols-2 gap-3 rounded-3xl bg-background/70 p-3 shadow-glow sm:gap-4 sm:p-4" aria-label="Примеры школьных выпускных альбомов">
+            {schoolHeroImages.map((image, index) => (
+              <div key={image.basePath} className="overflow-hidden rounded-2xl bg-secondary/20 shadow-soft">
+                <ResponsiveImage
+                  basePath={image.basePath}
+                  alt={image.alt}
+                  className="aspect-square w-full object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  type="cover"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
