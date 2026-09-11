@@ -1,5 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 type SchoolStoryImage = {
   slug: string;
@@ -65,10 +73,29 @@ const SwipeRow = ({ images, onOpen }: { images: SchoolStoryImage[]; onOpen: (ima
 );
 
 const SchoolStories = () => {
-  const [selectedImage, setSelectedImage] = useState<SchoolStoryImage | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<SchoolStoryImage[] | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const portraits = schoolStoryImages.filter((image) => image.kind === "portrait");
   const groups = schoolStoryImages.filter((image) => image.kind === "group");
   const schoolLife = schoolStoryImages.filter((image) => image.kind === "life");
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const updateSelectedImage = () => setSelectedImageIndex(carouselApi.selectedScrollSnap());
+    updateSelectedImage();
+    carouselApi.on("select", updateSelectedImage);
+
+    return () => {
+      carouselApi.off("select", updateSelectedImage);
+    };
+  }, [carouselApi]);
+
+  const openGallery = (images: SchoolStoryImage[], image: SchoolStoryImage) => {
+    setSelectedImageIndex(images.findIndex((item) => item.slug === image.slug));
+    setSelectedGallery(images);
+  };
 
   return (
     <section id="gallery" className="py-20">
@@ -87,9 +114,9 @@ const SchoolStories = () => {
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Портреты выпускников</h3>
               <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={portraits} onOpen={setSelectedImage} />
+            <SwipeRow images={portraits} onOpen={(image) => openGallery(portraits, image)} />
             <div className="hidden grid-cols-4 gap-4 md:grid">
-              {portraits.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => setSelectedImage(image)} />)}
+              {portraits.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(portraits, image)} />)}
             </div>
           </div>
 
@@ -98,9 +125,9 @@ const SchoolStories = () => {
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Класс и друзья</h3>
               <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={groups} onOpen={setSelectedImage} />
+            <SwipeRow images={groups} onOpen={(image) => openGallery(groups, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid lg:grid-cols-3">
-              {groups.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => setSelectedImage(image)} />)}
+              {groups.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(groups, image)} />)}
             </div>
           </div>
 
@@ -112,22 +139,46 @@ const SchoolStories = () => {
               </div>
               <span className="shrink-0 text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={schoolLife} onOpen={setSelectedImage} />
+            <SwipeRow images={schoolLife} onOpen={(image) => openGallery(schoolLife, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid">
-              {schoolLife.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => setSelectedImage(image)} />)}
+              {schoolLife.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(schoolLife, image)} />)}
             </div>
           </div>
         </div>
       </div>
 
-      <Dialog open={Boolean(selectedImage)} onOpenChange={(open) => !open && setSelectedImage(null)}>
+      <Dialog open={Boolean(selectedGallery)} onOpenChange={(open) => !open && setSelectedGallery(null)}>
         <DialogContent className="max-w-6xl border-0 bg-black/95 p-2 sm:p-4">
           <DialogHeader>
             <DialogTitle className="sr-only">Школьная фотография</DialogTitle>
-            <DialogDescription className="sr-only">Увеличенный просмотр фотографии со школьной съёмки</DialogDescription>
+            <DialogDescription className="sr-only">Галерея фотографий со школьной съёмки</DialogDescription>
           </DialogHeader>
-          {selectedImage && (
-            <SchoolStoryPicture image={selectedImage} className="max-h-[82vh] w-full rounded-lg object-contain" />
+          {selectedGallery && (
+            <div className="relative">
+              <Carousel
+                key={selectedGallery[0]?.kind}
+                setApi={setCarouselApi}
+                opts={{ startIndex: selectedImageIndex, loop: true }}
+                className="w-full"
+              >
+                <CarouselContent className="ml-0">
+                  {selectedGallery.map((image) => (
+                    <CarouselItem key={image.slug} className="pl-0">
+                      <div className="flex min-h-[55vh] items-center justify-center px-1 pb-9 sm:px-12">
+                        <SchoolStoryPicture image={image} className="max-h-[78vh] w-full rounded-lg object-contain" />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-3 hidden h-12 w-12 border-white/30 bg-black/60 text-white hover:bg-black/80 hover:text-white md:inline-flex" />
+                <CarouselNext className="right-3 hidden h-12 w-12 border-white/30 bg-black/60 text-white hover:bg-black/80 hover:text-white md:inline-flex" />
+              </Carousel>
+
+              <div className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-sm text-white">
+                {selectedImageIndex + 1} из {selectedGallery.length}
+                <span className="ml-2 md:hidden">· листайте</span>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
