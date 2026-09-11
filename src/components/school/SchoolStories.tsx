@@ -7,6 +7,8 @@ type SchoolStoryImage = {
   kind: "portrait" | "group" | "life";
 };
 
+const SCHOOL_STORY_ASSET_VERSION = "2026-09-11-2";
+
 const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
   { slug: "portrait-boy-black", alt: "Современный портрет выпускника", kind: "portrait" },
@@ -24,9 +26,12 @@ const schoolStoryImages: SchoolStoryImage[] = [
 
 const SchoolStoryPicture = ({ image, className }: { image: SchoolStoryImage; className: string }) => (
   <picture>
-    <source media="(max-width: 767px)" srcSet={`/school-stories/${image.slug}-mobile.webp`} />
+    <source
+      media="(max-width: 767px)"
+      srcSet={`/school-stories/${image.slug}-mobile.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
+    />
     <img
-      src={`/school-stories/${image.slug}.webp`}
+      src={`/school-stories/${image.slug}.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
       alt={image.alt}
       className={className}
       loading="lazy"
