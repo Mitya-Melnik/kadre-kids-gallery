@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 type SchoolStoryImage = {
   slug: string;
   alt: string;
-  kind: "portrait" | "group";
+  kind: "portrait" | "group" | "life";
 };
 
 const schoolStoryImages: SchoolStoryImage[] = [
@@ -18,6 +18,8 @@ const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "class-dark-candid", alt: "Живая общая фотография выпускного класса", kind: "group" },
   { slug: "class-light", alt: "Общая фотография выпускного класса в светлых образах", kind: "group" },
   { slug: "friends-boys-black", alt: "Групповой портрет выпускников", kind: "group" },
+  { slug: "school-corridor", alt: "Выпускной класс в школьном коридоре", kind: "life" },
+  { slug: "school-gym", alt: "Выпускной класс в школьном спортивном зале", kind: "life" },
 ];
 
 const SchoolStoryPicture = ({ image, className }: { image: SchoolStoryImage; className: string }) => (
@@ -61,6 +63,7 @@ const SchoolStories = () => {
   const [selectedImage, setSelectedImage] = useState<SchoolStoryImage | null>(null);
   const portraits = schoolStoryImages.filter((image) => image.kind === "portrait");
   const groups = schoolStoryImages.filter((image) => image.kind === "group");
+  const schoolLife = schoolStoryImages.filter((image) => image.kind === "life");
 
   return (
     <section id="gallery" className="py-20">
@@ -93,6 +96,20 @@ const SchoolStories = () => {
             <SwipeRow images={groups} onOpen={setSelectedImage} />
             <div className="hidden grid-cols-2 gap-4 md:grid lg:grid-cols-3">
               {groups.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => setSelectedImage(image)} />)}
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-bold text-foreground md:text-3xl">Жизнь класса</h3>
+                <p className="mt-2 text-muted-foreground">Знакомые школьные пространства становятся частью общей истории выпуска.</p>
+              </div>
+              <span className="shrink-0 text-sm text-muted-foreground md:hidden">Листайте →</span>
+            </div>
+            <SwipeRow images={schoolLife} onOpen={setSelectedImage} />
+            <div className="hidden grid-cols-2 gap-4 md:grid">
+              {schoolLife.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => setSelectedImage(image)} />)}
             </div>
           </div>
         </div>
