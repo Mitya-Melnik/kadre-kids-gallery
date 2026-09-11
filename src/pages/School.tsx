@@ -13,6 +13,7 @@ import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
 import SchoolLayouts from "@/components/school/SchoolLayouts";
+import SchoolStories from "@/components/school/SchoolStories";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
@@ -178,9 +179,7 @@ const School = () => (
 
       <SchoolLayouts />
 
-      <section id="gallery" className="py-20">
-        <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Реальные съёмки</p><h2 className="text-3xl font-bold md:text-5xl">Школьные истории</h2><p className="mt-4 text-muted-foreground">Покажем портреты, друзей, уроки, перемены, прогулки и важные события класса.</p></header><PhotoPlaceholder title="Школьная фотогалерея" text="Место подготовлено под 10–15 лучших кадров из проведённых школьных съёмок." className="mx-auto max-w-6xl" /></div>
-      </section>
+      <SchoolStories />
 
       <KindergartenAdvantages audience="school" />
 
