@@ -10,8 +10,8 @@ type SchoolStoryImage = {
 const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
   { slug: "portrait-boy-black", alt: "Современный портрет выпускника", kind: "portrait" },
-  { slug: "portrait-girl-stool", alt: "Портрет выпускницы в студии", kind: "portrait" },
   { slug: "portrait-boy-smile", alt: "Живой портрет выпускника", kind: "portrait" },
+  { slug: "portrait-girl-stool", alt: "Портрет выпускницы в студии", kind: "portrait" },
   { slug: "friends-girls", alt: "Фотография выпускниц с подругами", kind: "group" },
   { slug: "friends-class", alt: "Выпускники фотографируются вместе", kind: "group" },
   { slug: "friends-boys", alt: "Дружеская фотография выпускников", kind: "group" },
