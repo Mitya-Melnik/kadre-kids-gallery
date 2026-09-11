@@ -9,14 +9,14 @@ type SchoolStoryImage = {
 
 const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
-  { slug: "portrait-girl-waves", alt: "Современный портрет выпускницы", kind: "portrait" },
-  { slug: "portrait-boy-close", alt: "Портрет выпускника в студии", kind: "portrait" },
+  { slug: "portrait-boy-black", alt: "Современный портрет выпускника", kind: "portrait" },
+  { slug: "portrait-girl-stool", alt: "Портрет выпускницы в студии", kind: "portrait" },
   { slug: "portrait-boy-smile", alt: "Живой портрет выпускника", kind: "portrait" },
   { slug: "friends-girls", alt: "Фотография выпускниц с подругами", kind: "group" },
   { slug: "friends-class", alt: "Выпускники фотографируются вместе", kind: "group" },
   { slug: "friends-boys", alt: "Дружеская фотография выпускников", kind: "group" },
-  { slug: "class-light", alt: "Общая фотография выпускного класса в светлых образах", kind: "group" },
   { slug: "class-dark-candid", alt: "Живая общая фотография выпускного класса", kind: "group" },
+  { slug: "class-light", alt: "Общая фотография выпускного класса в светлых образах", kind: "group" },
   { slug: "friends-boys-black", alt: "Групповой портрет выпускников", kind: "group" },
 ];
 
