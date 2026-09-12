@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Building2, Check, Images, UserCheck, UsersRound } from "lucide-react";
+import { Building2, Check, UserCheck, UsersRound } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import Process from "@/components/Process";
@@ -95,14 +95,6 @@ const SchoolHeroGallery = () => {
   );
 };
 
-const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
-  <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
-    <Images className="mb-4 h-10 w-10 text-primary/70" />
-    <p className="font-bold text-foreground">{title}</p>
-    <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">{text}</p>
-  </div>
-);
-
 const participantBenefits = [
   {
     icon: UserCheck,
@@ -172,8 +164,6 @@ const School = () => (
           </div>
         </div>
       </section>
-
-      <section id="case-school" className="bg-primary/5 py-20"><div className="container mx-auto px-4"><PhotoPlaceholder title="Реальный школьный кейс" text="Добавим задачу класса, организацию съёмки, готовый альбом и отзыв родителей." className="mx-auto max-w-6xl" /></div></section>
 
       <Process initialType="album" fixedType="album" audience="school" />
 
