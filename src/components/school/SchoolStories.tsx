@@ -15,7 +15,7 @@ type SchoolStoryImage = {
   kind: "portrait" | "group" | "life";
 };
 
-const SCHOOL_STORY_ASSET_VERSION = "2026-09-11-4";
+const SCHOOL_STORY_ASSET_VERSION = "2026-09-12-1";
 
 const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
