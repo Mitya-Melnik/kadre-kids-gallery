@@ -110,6 +110,7 @@ const createLead = async (lead) => {
   const pipelineId = isFamily ? config.familyPipelineId : lead.direction === "album" ? config.albumPipelineId : config.photoDayPipelineId;
   const product = isFamily ? "Семейная съёмка" : lead.direction === "album" ? "Выпускные альбомы" : "Фотодень";
   const audience = lead.audience === "school" ? "Школа" : "Детский сад";
+  const schoolLevelLabel = lead.schoolLevel === "grade4" ? "4 класс" : lead.schoolLevel === "grade9_11" ? "9–11 классы" : "";
   const contactId = await findOrCreateContact(lead);
   const customFields = [
     ...(!isFamily ? [
@@ -140,7 +141,11 @@ const createLead = async (lead) => {
       custom_fields_values: customFields,
       _embedded: {
         contacts: [{ id: contactId, is_main: true }],
-        tags: [{ name: "Заявка с сайта" }, ...(isFamily ? [{ name: "Семейная съёмка" }] : [])],
+        tags: [
+          { name: "Заявка с сайта" },
+          ...(isFamily ? [{ name: "Семейная съёмка" }] : []),
+          ...(schoolLevelLabel ? [{ name: schoolLevelLabel }] : []),
+        ],
       },
     }]),
   });
@@ -155,6 +160,7 @@ const createLead = async (lead) => {
         ]
       : [
           `Учреждение: ${audience} — ${lead.institution}`,
+          ...(schoolLevelLabel ? [`Уровень школы: ${schoolLevelLabel}`] : []),
           lead.childrenCount ? `Количество детей: ${lead.childrenCount}` : "Количество детей: не указано",
         ]),
     `Имя: ${lead.name}`,
@@ -200,6 +206,7 @@ const server = createServer(async (req, res) => {
       source: clean(body.source, 80) || "detivkadre.spb.ru",
       direction: body.direction === "family" ? "family" : body.direction === "album" ? "album" : "photo-day",
       audience: body.audience === "school" ? "school" : "kindergarten",
+      schoolLevel: body.schoolLevel === "grade4" ? "grade4" : body.schoolLevel === "grade9_11" ? "grade9_11" : "",
       page: clean(body.page, 300),
       tracking: {
         utmSource: clean(body.tracking?.utmSource, 120),

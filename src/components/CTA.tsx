@@ -94,6 +94,7 @@ const CTA = ({
           formElapsedMs: Date.now() - formStartedAt,
           direction,
           audience,
+          schoolLevel: schoolLevel || "",
           source: "detivkadre.spb.ru",
           page: window.location.href,
           tracking: {
@@ -275,7 +276,7 @@ const CTA = ({
                 <Label htmlFor="lead-comment">Комментарий</Label>
                 <Textarea id="lead-comment" className="mt-2 min-h-24" value={formData.comment} onChange={(event) => setFormData({ ...formData, comment: event.target.value })} placeholder={isKindergartenAlbum ? "Желаемые даты или вопрос" : "Количество детей, желаемые даты или вопрос"} />
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Не указывайте здесь ФИО ребёнка, сведения о здоровье и другие чувствительные данные.
+                  Не указывайте здесь ФИО {isSchoolAlbum && !isGrade4Album ? "выпускника" : "ребёнка"}, сведения о здоровье и другие чувствительные данные.
                 </p>
               </div>
 

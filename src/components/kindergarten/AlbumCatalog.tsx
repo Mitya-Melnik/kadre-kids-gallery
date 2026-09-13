@@ -7,16 +7,25 @@ import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { albumPackages } from "@/config/albumPackages";
 
-const schoolText = (text: string) => text
-  .replace(/Наша группа/g, "Наш класс")
-  .replace(/одногруппниками/g, "одноклассниками")
-  .replace(/воспитателей/g, "учителя")
-  .replace(/воспитатели/g, "учитель")
-  .replace(/группы/g, "класса")
-  .replace(/группа/g, "класс")
-  .replace(/детском саде/g, "школе")
-  .replace(/Более 10 дизайнов/g, "6 дизайнов")
-  .replace(/История детства/g, "Школьные годы");
+const schoolText = (text: string, audience: AlbumAudience) => {
+  const adapted = text
+    .replace(/Наша группа/g, "Наш класс")
+    .replace(/одногруппниками/g, "одноклассниками")
+    .replace(/воспитателей/g, "учителя")
+    .replace(/воспитатели/g, "учитель")
+    .replace(/группы/g, "класса")
+    .replace(/группа/g, "класс")
+    .replace(/детском саде/g, "школе")
+    .replace(/Более 10 дизайнов/g, "6 дизайнов")
+    .replace(/История детства/g, "Школьные годы");
+
+  return audience === "school"
+    ? adapted
+      .replace(/ребёнка/g, "выпускника")
+      .replace(/детьми/g, "выпускниками")
+      .replace(/детей/g, "выпускников")
+    : adapted;
+};
 
 type AlbumAudience = "kindergarten" | "school" | "grade4";
 
@@ -43,12 +52,12 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
   const isGrade4 = audience === "grade4";
   const packages = albumPackages.map((album) => isSchool ? {
     ...album,
-    title: schoolText(album.title),
-    shortTitle: schoolText(album.shortTitle),
-    description: schoolText(album.description),
-    suitableFor: schoolText(album.suitableFor),
-    features: ["Формат альбома — 21×30 см", ...album.features.map(schoolText)],
-    items: album.items.map((item) => ({ ...item, note: schoolText(item.note) })),
+    title: schoolText(album.title, audience),
+    shortTitle: schoolText(album.shortTitle, audience),
+    description: schoolText(album.description, audience),
+    suitableFor: schoolText(album.suitableFor, audience),
+    features: ["Формат альбома — 21×30 см", ...album.features.map((feature) => schoolText(feature, audience))],
+    items: album.items.map((item) => ({ ...item, note: schoolText(item.note, audience) })),
   } : album);
   const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
   const seniorSchoolPreview = audience === "school" ? seniorSchoolPreviewImages[currentAlbum.id] : undefined;
@@ -264,7 +273,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
               </div>
               <div>
                 <h4 className="font-bold text-foreground">Без дополнительной оплаты</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Досъёмка отсутствовавших детей по договорённости и до трёх согласованных этапов корректировок макета.</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Досъёмка отсутствовавших {audience === "school" ? "выпускников" : "детей"} по договорённости и до трёх согласованных этапов корректировок макета.</p>
               </div>
             </div>
           </div>

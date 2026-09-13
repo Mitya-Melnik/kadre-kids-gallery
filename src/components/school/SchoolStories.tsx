@@ -101,7 +101,7 @@ const SchoolStories = () => {
     <section id="gallery" className="py-20">
       <div className="container mx-auto px-4">
         <header className="mx-auto mb-10 max-w-3xl text-center">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Реальные съёмки</p>
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Примеры школьной съёмки</p>
           <h2 className="text-3xl font-bold md:text-5xl">Школьные истории</h2>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             Современные портреты и фотографии с друзьями, в которых выпускники остаются собой.
