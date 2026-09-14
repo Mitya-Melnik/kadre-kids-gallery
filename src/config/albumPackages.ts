@@ -44,7 +44,7 @@ export const albumPackages = [
     comparisonFormat: "6 страниц",
     shootingDays: "1 день",
     suitableFor: "Первый полноценный альбом с личными и групповыми кадрами",
-    image: "/albums/images/mini.jpg",
+    image: "/kindergarten/album-cover-star-group.webp",
     video: "/albums/videos/mini.mp4",
     popular: false,
     items: [

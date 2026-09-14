@@ -20,7 +20,7 @@ const KindergartenHero = () => {
   
   const heroImages = [
     {
-      basePath: "/kindergarten/hero-square/slide-1",
+      basePath: "/kindergarten/album-cover-star-group",
       alt: "Макет альбома Цветные Карандаши"
     },
     {
