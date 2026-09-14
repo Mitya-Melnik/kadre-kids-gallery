@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Building2, Check, UserCheck, UsersRound } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -113,6 +113,12 @@ const participantBenefits = [
   },
 ] as const;
 
+const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, target: string) => {
+  event.preventDefault();
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${target}`);
+  document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+};
+
 const School = () => (
   <div className="min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
     <Helmet>
@@ -135,7 +141,7 @@ const School = () => (
             <div className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
               {["Личный выбор портрета и разворота", "Бесплатная досъёмка отсутствующих", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"].map((item) => <p key={item} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{item}</p>)}
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="/school/9-11#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="/school/9-11#albums">Посмотреть альбомы</a></Button></div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="/school/9-11#cta" onClick={(event) => scrollToSection(event, "#cta")}>Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="/school/9-11#albums" onClick={(event) => scrollToSection(event, "#albums")}>Посмотреть альбомы</a></Button></div>
           </div>
           <SchoolHeroGallery />
         </div>
@@ -180,7 +186,7 @@ const School = () => (
     <Footer schoolPage schoolLevel="grade9_11" />
     <FabContact aboveMobileBar />
     <BackToTop />
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="/school/9-11#cta">Рассчитать стоимость</a></Button></div>
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="/school/9-11#cta" onClick={(event) => scrollToSection(event, "#cta")}>Рассчитать стоимость</a></Button></div>
   </div>
 );
 
