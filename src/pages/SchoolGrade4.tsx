@@ -183,10 +183,6 @@ const SchoolGrade4 = () => (
 
       <Grade4Layouts />
 
-      <section id="gallery" className="py-20">
-        <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Реальные съёмки</p><h2 className="text-3xl font-bold md:text-5xl">Первые школьные годы</h2><p className="mt-4 text-muted-foreground">Покажем портреты, друзей, первую учительницу, уроки, перемены и важные события класса.</p></header><PhotoPlaceholder title="Фотогалерея 4 класса" text="Место подготовлено под 10–15 лучших кадров из проведённых съёмок начальной школы." className="mx-auto max-w-6xl" /></div>
-      </section>
-
       <KindergartenAdvantages audience="grade4" />
 
       <KindergartenFAQ audience="grade4" />
