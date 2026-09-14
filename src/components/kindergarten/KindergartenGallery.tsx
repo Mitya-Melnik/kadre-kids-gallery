@@ -17,7 +17,7 @@ type KindergartenStoryImage = {
   kind: "portrait" | "group" | "life";
 };
 
-const KINDERGARTEN_STORY_ASSET_VERSION = "2026-09-14-1";
+const KINDERGARTEN_STORY_ASSET_VERSION = "2026-09-14-2";
 
 const kindergartenStoryImages: KindergartenStoryImage[] = [
   { imageNumber: 1, alt: "Портрет выпускницы детского сада", kind: "portrait" },
@@ -31,9 +31,9 @@ const kindergartenStoryImages: KindergartenStoryImage[] = [
   { imageNumber: 36, alt: "Дружеская фотография выпускников детского сада", kind: "group" },
   { slug: "friends-five", alt: "Друзья из выпускной группы вместе", kind: "group" },
   { imageNumber: 15, alt: "Две подруги на осенней прогулке", kind: "life" },
-  { imageNumber: 11, alt: "Дети играют вместе в группе", kind: "life" },
-  { imageNumber: 21, alt: "Занятие и чтение в детском саду", kind: "life" },
-  { imageNumber: 23, alt: "Подвижная игра детей в детском саду", kind: "life" },
+  { slug: "life-autumn-group", alt: "Выпускная группа с воспитателями на осенней прогулке", kind: "life" },
+  { slug: "life-winter-snow", alt: "Дети играют со снегом на зимней прогулке", kind: "life" },
+  { slug: "life-winter-skis", alt: "Друзья с лыжами на зимней прогулке", kind: "life" },
 ];
 
 const imageKey = (image: KindergartenStoryImage) => image.slug ?? String(image.imageNumber);
