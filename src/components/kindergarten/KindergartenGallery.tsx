@@ -1,173 +1,175 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { getKindergartenGalleryNumbers, analyzeKindergartenGallery, type GalleryAnalysis } from "@/lib/imageUtils";
+import { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import { KindergartenResponsiveImage } from "./KindergartenResponsiveImage";
 
+type KindergartenStoryImage = {
+  imageNumber: number;
+  alt: string;
+  kind: "portrait" | "group" | "life";
+};
+
+const kindergartenStoryImages: KindergartenStoryImage[] = [
+  { imageNumber: 1, alt: "Портрет выпускницы детского сада", kind: "portrait" },
+  { imageNumber: 2, alt: "Портрет выпускника детского сада", kind: "portrait" },
+  { imageNumber: 25, alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
+  { imageNumber: 40, alt: "Живой портрет выпускницы", kind: "portrait" },
+  { imageNumber: 4, alt: "Выпускники детского сада фотографируются вместе", kind: "group" },
+  { imageNumber: 5, alt: "Подруги из выпускной группы", kind: "group" },
+  { imageNumber: 8, alt: "Дети вместе во время игровой съёмки", kind: "group" },
+  { imageNumber: 27, alt: "Друзья из выпускной группы", kind: "group" },
+  { imageNumber: 32, alt: "Фотография выпускниц с подругами", kind: "group" },
+  { imageNumber: 36, alt: "Дружеская фотография выпускников детского сада", kind: "group" },
+  { imageNumber: 15, alt: "Две подруги на осенней прогулке", kind: "life" },
+  { imageNumber: 11, alt: "Дети играют вместе в группе", kind: "life" },
+  { imageNumber: 21, alt: "Занятие и чтение в детском саду", kind: "life" },
+  { imageNumber: 23, alt: "Подвижная игра детей в детском саду", kind: "life" },
+];
+
+const PhotoButton = ({ image, onOpen }: { image: KindergartenStoryImage; onOpen: () => void }) => (
+  <button
+    type="button"
+    onClick={onOpen}
+    className="group block w-full overflow-hidden rounded-2xl bg-secondary/20 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+    aria-label={`Увеличить фотографию: ${image.alt}`}
+  >
+    <KindergartenResponsiveImage
+      imageNumber={image.imageNumber}
+      alt={image.alt}
+      className={`w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] ${image.kind === "portrait" ? "aspect-[2/3]" : "aspect-[3/2]"}`}
+      loading="lazy"
+    />
+  </button>
+);
+
+const SwipeRow = ({ images, onOpen }: { images: KindergartenStoryImage[]; onOpen: (image: KindergartenStoryImage) => void }) => (
+  <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
+    {images.map((image) => (
+      <div key={image.imageNumber} className={`shrink-0 snap-center ${image.kind === "portrait" ? "w-[68vw]" : "w-[88vw]"}`}>
+        <PhotoButton image={image} onOpen={() => onOpen(image)} />
+      </div>
+    ))}
+  </div>
+);
+
 const KindergartenGallery = () => {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
-  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation(0.1);
-  
-  const [imageNumbers, setImageNumbers] = useState<number[]>([]);
-  const [galleryAnalysis, setGalleryAnalysis] = useState<GalleryAnalysis | null>(null);
-  const [visibleCount, setVisibleCount] = useState(8);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [selectedGallery, setSelectedGallery] = useState<KindergartenStoryImage[] | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const portraits = kindergartenStoryImages.filter((image) => image.kind === "portrait");
+  const groups = kindergartenStoryImages.filter((image) => image.kind === "group");
+  const groupLife = kindergartenStoryImages.filter((image) => image.kind === "life");
 
   useEffect(() => {
-    const loadGallery = async () => {
-      try {
-        setLoading(true);
-        const [numbers, analysis] = await Promise.all([
-          getKindergartenGalleryNumbers(),
-          analyzeKindergartenGallery()
-        ]);
-        
-        setImageNumbers(numbers);
-        setGalleryAnalysis(analysis);
-      } catch (error) {
-        console.error('Error loading kindergarten gallery:', error);
-      } finally {
-        setLoading(false);
-      }
+    if (!carouselApi) return;
+
+    const updateSelectedImage = () => setSelectedImageIndex(carouselApi.selectedScrollSnap());
+    updateSelectedImage();
+    carouselApi.on("select", updateSelectedImage);
+
+    return () => {
+      carouselApi.off("select", updateSelectedImage);
     };
+  }, [carouselApi]);
 
-    loadGallery();
-  }, []);
-  
-  const visibleImages = imageNumbers.slice(0, visibleCount);
-  const hasMore = visibleCount < imageNumbers.length;
-  
-  const showMore = () => {
-    setVisibleCount(prev => Math.min(prev + 8, imageNumbers.length));
-  };
-
-  const openImageDialog = (imageIndex: number) => {
-    setSelectedImageIndex(imageIndex);
-    setIsDialogOpen(true);
-  };
-
-  const getGridClasses = () => {
-    if (!galleryAnalysis) return "grid grid-cols-2 md:grid-cols-4 gap-4";
-    
-    return galleryAnalysis.layoutType === 'masonry' 
-      ? "columns-2 md:columns-4 gap-4 space-y-4"
-      : "grid grid-cols-2 md:grid-cols-4 gap-4";
+  const openGallery = (images: KindergartenStoryImage[], image: KindergartenStoryImage) => {
+    setSelectedImageIndex(images.findIndex((item) => item.imageNumber === image.imageNumber));
+    setSelectedGallery(images);
   };
 
   return (
-    <section id="gallery" className="py-20 bg-secondary/50">
+    <section id="gallery" className="bg-secondary/50 py-20">
       <div className="container mx-auto px-4">
-        <div 
-          ref={titleRef}
-          className={`text-center mb-16 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Живые фотографии для выпускных альбомов
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Портреты, фотографии с друзьями и моменты из жизни группы, которые становятся частью общей истории.
+        <header className="mx-auto mb-10 max-w-3xl text-center">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Примеры съёмки для выпускного альбома</p>
+          <h2 className="text-3xl font-bold md:text-5xl">Живые фотографии для выпускных альбомов</h2>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+            Портреты, друзья, игры и знакомые моменты из жизни группы — всё, что делает альбом личной историей детей.
           </p>
-        </div>
+        </header>
 
-        <div 
-          ref={gridRef}
-          className="max-w-6xl mx-auto"
-        >
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <p className="text-muted-foreground mt-4">Загрузка галереи...</p>
+        <div className="mx-auto max-w-6xl">
+          <div>
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <h3 className="text-2xl font-bold text-foreground md:text-3xl">Портреты выпускников</h3>
+              <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-          ) : imageNumbers.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Фотографии пока не загружены</p>
+            <SwipeRow images={portraits} onOpen={(image) => openGallery(portraits, image)} />
+            <div className="hidden grid-cols-4 gap-4 md:grid">
+              {portraits.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(portraits, image)} />)}
             </div>
-          ) : (
-            <>
-              <div className={`${getGridClasses()} mb-8`}>
-                {visibleImages.map((imageNumber, index) => (
-                  <div
-                    key={imageNumber}
-                    onClick={() => openImageDialog(index)}
-                    className={`group cursor-pointer transition-all duration-300 hover:-translate-y-2 ${
-                      galleryAnalysis?.layoutType === 'masonry' ? 'break-inside-avoid mb-4' : ''
-                    } ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                    style={{ 
-                      transitionDelay: gridVisible ? `${index * 50}ms` : '0ms'
-                    }}
-                  >
-                    <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
-                      <KindergartenResponsiveImage
-                        imageNumber={imageNumber}
-                        alt={`Фотография детского сада ${imageNumber}`}
-                        className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${
-                          galleryAnalysis?.layoutType === 'masonry' ? 'h-auto' : 'h-48 md:h-64'
-                        }`}
-                        loading={index < 8 ? "eager" : "lazy"}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                  </div>
-                ))}
+          </div>
+
+          <div className="mt-12">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <h3 className="text-2xl font-bold text-foreground md:text-3xl">Друзья и группа</h3>
+              <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
+            </div>
+            <SwipeRow images={groups} onOpen={(image) => openGallery(groups, image)} />
+            <div className="hidden grid-cols-2 gap-4 md:grid lg:grid-cols-3">
+              {groups.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(groups, image)} />)}
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-bold text-foreground md:text-3xl">Жизнь группы</h3>
+                <p className="mt-2 text-muted-foreground">
+                  Игры, занятия и прогулки сохраняют атмосферу группы, которую дети будут узнавать спустя годы.
+                </p>
               </div>
-
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-6xl h-fit p-2 sm:p-4">
-                  <DialogHeader>
-                    <DialogTitle className="sr-only">
-                      Галерея детского сада
-                    </DialogTitle>
-                    <DialogDescription className="sr-only">
-                      Слайдер с фотографиями из галереи детского сада
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="relative max-h-[90vh]">
-                    <Carousel className="w-full h-fit" opts={{ startIndex: selectedImageIndex, loop: true }}>
-                      <CarouselContent>
-                        {visibleImages.map((imageNumber, index) => (
-                          <CarouselItem key={imageNumber}>
-                            <div className="flex items-center justify-center p-2">
-                              <KindergartenResponsiveImage
-                                imageNumber={imageNumber}
-                                alt={`Фотография детского сада ${imageNumber}`}
-                                className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
-                                loading="eager"
-                              />
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious className="left-2 sm:left-4 h-10 w-10 sm:h-12 sm:w-12" />
-                      <CarouselNext className="right-2 sm:right-4 h-10 w-10 sm:h-12 sm:w-12" />
-                    </Carousel>
-                    
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
-                      {selectedImageIndex + 1} из {visibleImages.length}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              
-              {hasMore && (
-                <div className="text-center">
-                  <Button
-                    onClick={showMore}
-                    variant="outline"
-                    className="px-8 py-3 text-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                  >
-                    Смотреть еще
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
+              <span className="shrink-0 text-sm text-muted-foreground md:hidden">Листайте →</span>
+            </div>
+            <SwipeRow images={groupLife} onOpen={(image) => openGallery(groupLife, image)} />
+            <div className="hidden grid-cols-2 gap-4 md:grid">
+              {groupLife.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(groupLife, image)} />)}
+            </div>
+          </div>
         </div>
       </div>
+
+      <Dialog open={Boolean(selectedGallery)} onOpenChange={(open) => !open && setSelectedGallery(null)}>
+        <DialogContent className="max-w-6xl border-0 bg-black/95 p-2 sm:p-4">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Фотографии выпускников детского сада</DialogTitle>
+            <DialogDescription className="sr-only">Галерея фотографий со съёмки выпускной группы детского сада</DialogDescription>
+          </DialogHeader>
+          {selectedGallery && (
+            <div className="relative">
+              <Carousel key={selectedGallery[0]?.kind} setApi={setCarouselApi} opts={{ startIndex: selectedImageIndex, loop: true }} className="w-full">
+                <CarouselContent className="ml-0">
+                  {selectedGallery.map((image) => (
+                    <CarouselItem key={image.imageNumber} className="pl-0">
+                      <div className="flex min-h-[55vh] items-center justify-center px-1 pb-9 sm:px-12">
+                        <KindergartenResponsiveImage
+                          imageNumber={image.imageNumber}
+                          alt={image.alt}
+                          className="max-h-[78vh] w-full rounded-lg object-contain"
+                          loading="eager"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-3 hidden h-12 w-12 border-white/30 bg-black/60 text-white hover:bg-black/80 hover:text-white md:inline-flex" />
+                <CarouselNext className="right-3 hidden h-12 w-12 border-white/30 bg-black/60 text-white hover:bg-black/80 hover:text-white md:inline-flex" />
+              </Carousel>
+              <div className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-sm text-white">
+                {selectedImageIndex + 1} из {selectedGallery.length}
+                <span className="ml-2 md:hidden">· листайте</span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
