@@ -37,6 +37,14 @@ const seniorSchoolPreviewImages: Record<string, { basePath: string; design: stri
   "fourteen-pages": { basePath: "/layouts-school/modern/1", design: "Ритм" },
 };
 
+const grade4PreviewImages: Record<string, { basePath: string; design: string }> = {
+  folder: { basePath: "/layouts-grade4/calligraphy/9", design: "Каллиграфия" },
+  trio: { basePath: "/layouts-grade4/colored-pencils/11", design: "Цветные карандаши" },
+  "six-pages": { basePath: "/layouts-grade4/colored-pencils/1", design: "Цветные карандаши" },
+  "ten-pages": { basePath: "/layouts-grade4/colored-pencils/4", design: "Цветные карандаши" },
+  "fourteen-pages": { basePath: "/layouts-grade4/doodles/3", design: "Каракули" },
+};
+
 const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: catalogRef, isVisible: catalogVisible } = useScrollAnimation(0.1);
@@ -60,7 +68,11 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
     items: album.items.map((item) => ({ ...item, note: schoolText(item.note, audience) })),
   } : album);
   const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
-  const seniorSchoolPreview = audience === "school" ? seniorSchoolPreviewImages[currentAlbum.id] : undefined;
+  const schoolPreview = audience === "school"
+    ? seniorSchoolPreviewImages[currentAlbum.id]
+    : isGrade4
+      ? grade4PreviewImages[currentAlbum.id]
+      : undefined;
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
     { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
@@ -158,9 +170,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
             <div className="order-2 lg:order-1 flex-1 lg:max-w-[55%]">
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
-                {seniorSchoolPreview ? <ResponsiveImage
-                  basePath={seniorSchoolPreview.basePath}
-                  alt={`${currentAlbum.title} — пример в дизайне «${seniorSchoolPreview.design}»`}
+                {schoolPreview ? <ResponsiveImage
+                  basePath={schoolPreview.basePath}
+                  alt={`${currentAlbum.title} — пример в дизайне «${schoolPreview.design}»`}
                   className="aspect-square w-full rounded-lg object-cover shadow-soft"
                   loading="lazy"
                   type="cover"
