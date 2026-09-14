@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Building2, Check, Images, Smile, UserCheck, UsersRound } from "lucide-react";
+import { Building2, Check, Smile, UserCheck, UsersRound } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import Process from "@/components/Process";
@@ -13,6 +13,7 @@ import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
 import Grade4Layouts from "@/components/school/Grade4Layouts";
+import SchoolStories from "@/components/school/SchoolStories";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
@@ -94,14 +95,6 @@ const Grade4HeroGallery = () => {
   );
 };
 
-const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
-  <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
-    <Images className="mb-4 h-10 w-10 text-primary/70" />
-    <p className="font-bold text-foreground">{title}</p>
-    <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">{text}</p>
-  </div>
-);
-
 const participantBenefits = [
   {
     icon: Smile,
@@ -177,11 +170,11 @@ const SchoolGrade4 = () => (
         </div>
       </section>
 
-      <section id="case-school" className="bg-primary/5 py-20"><div className="container mx-auto px-4"><PhotoPlaceholder title="Реальный проект 4 класса" text="Добавим задачу класса, съёмочные сюжеты, готовый альбом и отзыв родителей после подготовки материалов." className="mx-auto max-w-6xl" /></div></section>
-
       <Process initialType="album" fixedType="album" audience="grade4" />
 
       <Grade4Layouts />
+
+      <SchoolStories audience="grade4" />
 
       <KindergartenAdvantages audience="grade4" />
 

@@ -32,14 +32,29 @@ const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "school-gym", alt: "Выпускной класс в школьном спортивном зале", kind: "life" },
 ];
 
-const SchoolStoryPicture = ({ image, className }: { image: SchoolStoryImage; className: string }) => (
+const grade4StoryImages: SchoolStoryImage[] = [
+  { slug: "portrait-girl-braid", alt: "Портрет выпускницы 4 класса с косой", kind: "portrait" },
+  { slug: "portrait-boy-blue", alt: "Портрет выпускника 4 класса в голубой рубашке", kind: "portrait" },
+  { slug: "portrait-girl-light", alt: "Светлый портрет выпускницы 4 класса", kind: "portrait" },
+  { slug: "portrait-boy-glasses", alt: "Портрет выпускника 4 класса в очках", kind: "portrait" },
+  { slug: "friends-window", alt: "Друзья общаются у окна в классе", kind: "group" },
+  { slug: "friends-stairs", alt: "Одноклассники на школьной лестнице", kind: "group" },
+  { slug: "friends-outdoors", alt: "Друзья после уроков во дворе школы", kind: "group" },
+  { slug: "friends-project", alt: "Одноклассники вместе работают над проектом", kind: "group" },
+  { slug: "friends-reading", alt: "Друзья в школьном уголке для чтения", kind: "group" },
+  { slug: "friends-corridor", alt: "Одноклассники на школьной перемене", kind: "group" },
+  { slug: "class-project", alt: "Ученики 4 класса создают общий проект", kind: "life" },
+  { slug: "class-gym", alt: "Ученики 4 класса на эстафете в спортивном зале", kind: "life" },
+];
+
+const SchoolStoryPicture = ({ image, className, assetFolder }: { image: SchoolStoryImage; className: string; assetFolder: string }) => (
   <picture>
     <source
       media="(max-width: 767px)"
-      srcSet={`/school-stories/${image.slug}-mobile.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
+      srcSet={`/${assetFolder}/${image.slug}-mobile.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
     />
     <img
-      src={`/school-stories/${image.slug}.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
+      src={`/${assetFolder}/${image.slug}.webp?v=${SCHOOL_STORY_ASSET_VERSION}`}
       alt={image.alt}
       className={className}
       loading="lazy"
@@ -48,7 +63,7 @@ const SchoolStoryPicture = ({ image, className }: { image: SchoolStoryImage; cla
   </picture>
 );
 
-const PhotoButton = ({ image, onOpen }: { image: SchoolStoryImage; onOpen: () => void }) => (
+const PhotoButton = ({ image, onOpen, assetFolder }: { image: SchoolStoryImage; onOpen: () => void; assetFolder: string }) => (
   <button
     type="button"
     onClick={onOpen}
@@ -57,28 +72,32 @@ const PhotoButton = ({ image, onOpen }: { image: SchoolStoryImage; onOpen: () =>
   >
     <SchoolStoryPicture
       image={image}
+      assetFolder={assetFolder}
       className={`w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] ${image.kind === "portrait" ? "aspect-[2/3]" : "aspect-[3/2]"}`}
     />
   </button>
 );
 
-const SwipeRow = ({ images, onOpen }: { images: SchoolStoryImage[]; onOpen: (image: SchoolStoryImage) => void }) => (
+const SwipeRow = ({ images, onOpen, assetFolder }: { images: SchoolStoryImage[]; onOpen: (image: SchoolStoryImage) => void; assetFolder: string }) => (
   <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
     {images.map((image) => (
       <div key={image.slug} className={`shrink-0 snap-center ${image.kind === "portrait" ? "w-[68vw]" : "w-[88vw]"}`}>
-        <PhotoButton image={image} onOpen={() => onOpen(image)} />
+        <PhotoButton image={image} assetFolder={assetFolder} onOpen={() => onOpen(image)} />
       </div>
     ))}
   </div>
 );
 
-const SchoolStories = () => {
+const SchoolStories = ({ audience = "school" }: { audience?: "school" | "grade4" }) => {
   const [selectedGallery, setSelectedGallery] = useState<SchoolStoryImage[] | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const portraits = schoolStoryImages.filter((image) => image.kind === "portrait");
-  const groups = schoolStoryImages.filter((image) => image.kind === "group");
-  const schoolLife = schoolStoryImages.filter((image) => image.kind === "life");
+  const isGrade4 = audience === "grade4";
+  const images = isGrade4 ? grade4StoryImages : schoolStoryImages;
+  const assetFolder = isGrade4 ? "grade4-stories" : "school-stories";
+  const portraits = images.filter((image) => image.kind === "portrait");
+  const groups = images.filter((image) => image.kind === "group");
+  const schoolLife = images.filter((image) => image.kind === "life");
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -104,7 +123,9 @@ const SchoolStories = () => {
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Примеры школьной съёмки</p>
           <h2 className="text-3xl font-bold md:text-5xl">Школьные истории</h2>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            Современные портреты и фотографии с друзьями, в которых выпускники остаются собой.
+            {isGrade4
+              ? "Портреты, друзья и знакомые школьные моменты — без одинаковых поз и натянутых улыбок."
+              : "Современные портреты и фотографии с друзьями, в которых выпускники остаются собой."}
           </p>
         </header>
 
@@ -114,9 +135,9 @@ const SchoolStories = () => {
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Портреты выпускников</h3>
               <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={portraits} onOpen={(image) => openGallery(portraits, image)} />
+            <SwipeRow images={portraits} assetFolder={assetFolder} onOpen={(image) => openGallery(portraits, image)} />
             <div className="hidden grid-cols-4 gap-4 md:grid">
-              {portraits.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(portraits, image)} />)}
+              {portraits.map((image) => <PhotoButton key={image.slug} image={image} assetFolder={assetFolder} onOpen={() => openGallery(portraits, image)} />)}
             </div>
           </div>
 
@@ -125,9 +146,9 @@ const SchoolStories = () => {
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Класс и друзья</h3>
               <span className="text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={groups} onOpen={(image) => openGallery(groups, image)} />
+            <SwipeRow images={groups} assetFolder={assetFolder} onOpen={(image) => openGallery(groups, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid lg:grid-cols-3">
-              {groups.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(groups, image)} />)}
+              {groups.map((image) => <PhotoButton key={image.slug} image={image} assetFolder={assetFolder} onOpen={() => openGallery(groups, image)} />)}
             </div>
           </div>
 
@@ -139,9 +160,9 @@ const SchoolStories = () => {
               </div>
               <span className="shrink-0 text-sm text-muted-foreground md:hidden">Листайте →</span>
             </div>
-            <SwipeRow images={schoolLife} onOpen={(image) => openGallery(schoolLife, image)} />
+            <SwipeRow images={schoolLife} assetFolder={assetFolder} onOpen={(image) => openGallery(schoolLife, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid">
-              {schoolLife.map((image) => <PhotoButton key={image.slug} image={image} onOpen={() => openGallery(schoolLife, image)} />)}
+              {schoolLife.map((image) => <PhotoButton key={image.slug} image={image} assetFolder={assetFolder} onOpen={() => openGallery(schoolLife, image)} />)}
             </div>
           </div>
         </div>
@@ -165,7 +186,7 @@ const SchoolStories = () => {
                   {selectedGallery.map((image) => (
                     <CarouselItem key={image.slug} className="pl-0">
                       <div className="flex min-h-[55vh] items-center justify-center px-1 pb-9 sm:px-12">
-                        <SchoolStoryPicture image={image} className="max-h-[78vh] w-full rounded-lg object-contain" />
+                        <SchoolStoryPicture image={image} assetFolder={assetFolder} className="max-h-[78vh] w-full rounded-lg object-contain" />
                       </div>
                     </CarouselItem>
                   ))}
