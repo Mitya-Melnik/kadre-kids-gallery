@@ -140,7 +140,7 @@ const SchoolGrade4 = () => (
             <div className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
               {["Портрет ребёнка выбираете вы", "Бесплатно доснимем отсутствовавших", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"].map((item) => <p key={item} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{item}</p>)}
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="#albums">Посмотреть альбомы</a></Button></div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="/school/4#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="/school/4#albums">Посмотреть альбомы</a></Button></div>
           </div>
           <Grade4HeroGallery />
         </div>
@@ -183,9 +183,9 @@ const SchoolGrade4 = () => (
       <CTA initialDirection="album" initialAudience="school" fixedDirection="album" fixedAudience="school" schoolLevel="grade4" />
     </main>
     <Footer schoolPage schoolLevel="grade4" />
-    <FabContact />
+    <FabContact aboveMobileBar />
     <BackToTop />
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="#cta">Рассчитать стоимость</a></Button></div>
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="/school/4#cta">Рассчитать стоимость</a></Button></div>
   </div>
 );
 
