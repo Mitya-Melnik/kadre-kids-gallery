@@ -11,27 +11,61 @@ import {
 import { KindergartenResponsiveImage } from "./KindergartenResponsiveImage";
 
 type KindergartenStoryImage = {
-  imageNumber: number;
+  imageNumber?: number;
+  slug?: string;
   alt: string;
   kind: "portrait" | "group" | "life";
 };
 
+const KINDERGARTEN_STORY_ASSET_VERSION = "2026-09-14-1";
+
 const kindergartenStoryImages: KindergartenStoryImage[] = [
   { imageNumber: 1, alt: "Портрет выпускницы детского сада", kind: "portrait" },
   { imageNumber: 2, alt: "Портрет выпускника детского сада", kind: "portrait" },
-  { imageNumber: 25, alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
-  { imageNumber: 40, alt: "Живой портрет выпускницы", kind: "portrait" },
+  { slug: "portrait-girl-blue", alt: "Портрет выпускницы в голубом платье", kind: "portrait" },
+  { imageNumber: 26, alt: "Портрет выпускника в светлом образе", kind: "portrait" },
   { imageNumber: 4, alt: "Выпускники детского сада фотографируются вместе", kind: "group" },
   { imageNumber: 5, alt: "Подруги из выпускной группы", kind: "group" },
-  { imageNumber: 8, alt: "Дети вместе во время игровой съёмки", kind: "group" },
+  { slug: "friends-three", alt: "Три подруги из выпускной группы", kind: "group" },
   { imageNumber: 27, alt: "Друзья из выпускной группы", kind: "group" },
-  { imageNumber: 32, alt: "Фотография выпускниц с подругами", kind: "group" },
   { imageNumber: 36, alt: "Дружеская фотография выпускников детского сада", kind: "group" },
+  { slug: "friends-five", alt: "Друзья из выпускной группы вместе", kind: "group" },
   { imageNumber: 15, alt: "Две подруги на осенней прогулке", kind: "life" },
   { imageNumber: 11, alt: "Дети играют вместе в группе", kind: "life" },
   { imageNumber: 21, alt: "Занятие и чтение в детском саду", kind: "life" },
   { imageNumber: 23, alt: "Подвижная игра детей в детском саду", kind: "life" },
 ];
+
+const imageKey = (image: KindergartenStoryImage) => image.slug ?? String(image.imageNumber);
+
+const KindergartenStoryPicture = ({ image, className, loading }: { image: KindergartenStoryImage; className: string; loading: "eager" | "lazy" }) => {
+  if (image.slug) {
+    return (
+      <picture>
+        <source
+          media="(max-width: 767px)"
+          srcSet={`/kindergarten-stories/${image.slug}-mobile.webp?v=${KINDERGARTEN_STORY_ASSET_VERSION}`}
+        />
+        <img
+          src={`/kindergarten-stories/${image.slug}.webp?v=${KINDERGARTEN_STORY_ASSET_VERSION}`}
+          alt={image.alt}
+          className={className}
+          loading={loading}
+          decoding="async"
+        />
+      </picture>
+    );
+  }
+
+  return (
+    <KindergartenResponsiveImage
+      imageNumber={image.imageNumber!}
+      alt={image.alt}
+      className={className}
+      loading={loading}
+    />
+  );
+};
 
 const PhotoButton = ({ image, onOpen }: { image: KindergartenStoryImage; onOpen: () => void }) => (
   <button
@@ -40,9 +74,8 @@ const PhotoButton = ({ image, onOpen }: { image: KindergartenStoryImage; onOpen:
     className="group block w-full overflow-hidden rounded-2xl bg-secondary/20 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
     aria-label={`Увеличить фотографию: ${image.alt}`}
   >
-    <KindergartenResponsiveImage
-      imageNumber={image.imageNumber}
-      alt={image.alt}
+    <KindergartenStoryPicture
+      image={image}
       className={`w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] ${image.kind === "portrait" ? "aspect-[2/3]" : "aspect-[3/2]"}`}
       loading="lazy"
     />
@@ -52,7 +85,7 @@ const PhotoButton = ({ image, onOpen }: { image: KindergartenStoryImage; onOpen:
 const SwipeRow = ({ images, onOpen }: { images: KindergartenStoryImage[]; onOpen: (image: KindergartenStoryImage) => void }) => (
   <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
     {images.map((image) => (
-      <div key={image.imageNumber} className={`shrink-0 snap-center ${image.kind === "portrait" ? "w-[68vw]" : "w-[88vw]"}`}>
+      <div key={imageKey(image)} className={`shrink-0 snap-center ${image.kind === "portrait" ? "w-[68vw]" : "w-[88vw]"}`}>
         <PhotoButton image={image} onOpen={() => onOpen(image)} />
       </div>
     ))}
@@ -80,7 +113,7 @@ const KindergartenGallery = () => {
   }, [carouselApi]);
 
   const openGallery = (images: KindergartenStoryImage[], image: KindergartenStoryImage) => {
-    setSelectedImageIndex(images.findIndex((item) => item.imageNumber === image.imageNumber));
+    setSelectedImageIndex(images.findIndex((item) => imageKey(item) === imageKey(image)));
     setSelectedGallery(images);
   };
 
@@ -103,7 +136,7 @@ const KindergartenGallery = () => {
             </div>
             <SwipeRow images={portraits} onOpen={(image) => openGallery(portraits, image)} />
             <div className="hidden grid-cols-4 gap-4 md:grid">
-              {portraits.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(portraits, image)} />)}
+              {portraits.map((image) => <PhotoButton key={imageKey(image)} image={image} onOpen={() => openGallery(portraits, image)} />)}
             </div>
           </div>
 
@@ -114,7 +147,7 @@ const KindergartenGallery = () => {
             </div>
             <SwipeRow images={groups} onOpen={(image) => openGallery(groups, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid lg:grid-cols-3">
-              {groups.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(groups, image)} />)}
+              {groups.map((image) => <PhotoButton key={imageKey(image)} image={image} onOpen={() => openGallery(groups, image)} />)}
             </div>
           </div>
 
@@ -130,7 +163,7 @@ const KindergartenGallery = () => {
             </div>
             <SwipeRow images={groupLife} onOpen={(image) => openGallery(groupLife, image)} />
             <div className="hidden grid-cols-2 gap-4 md:grid">
-              {groupLife.map((image) => <PhotoButton key={image.imageNumber} image={image} onOpen={() => openGallery(groupLife, image)} />)}
+              {groupLife.map((image) => <PhotoButton key={imageKey(image)} image={image} onOpen={() => openGallery(groupLife, image)} />)}
             </div>
           </div>
         </div>
@@ -147,11 +180,10 @@ const KindergartenGallery = () => {
               <Carousel key={selectedGallery[0]?.kind} setApi={setCarouselApi} opts={{ startIndex: selectedImageIndex, loop: true }} className="w-full">
                 <CarouselContent className="ml-0">
                   {selectedGallery.map((image) => (
-                    <CarouselItem key={image.imageNumber} className="pl-0">
+                    <CarouselItem key={imageKey(image)} className="pl-0">
                       <div className="flex min-h-[55vh] items-center justify-center px-1 pb-9 sm:px-12">
-                        <KindergartenResponsiveImage
-                          imageNumber={image.imageNumber}
-                          alt={image.alt}
+                        <KindergartenStoryPicture
+                          image={image}
                           className="max-h-[78vh] w-full rounded-lg object-contain"
                           loading="eager"
                         />
