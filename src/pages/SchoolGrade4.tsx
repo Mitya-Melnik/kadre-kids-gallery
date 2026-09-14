@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Building2, Check, Images, Smile, UserCheck, UsersRound } from "lucide-react";
+import { Building2, Check, Smile, UserCheck, UsersRound } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
@@ -10,14 +12,88 @@ import { Button } from "@/components/ui/button";
 import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import KindergartenFAQ from "@/components/kindergarten/KindergartenFAQ";
+import Grade4Layouts from "@/components/school/Grade4Layouts";
+import SchoolStories from "@/components/school/SchoolStories";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
-const PhotoPlaceholder = ({ title, text, className = "" }: { title: string; text: string; className?: string }) => (
-  <div className={`flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8 text-center ${className}`}>
-    <Images className="mb-4 h-10 w-10 text-primary/70" />
-    <p className="font-bold text-foreground">{title}</p>
-    <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">{text}</p>
-  </div>
-);
+const grade4HeroImages = [
+  { basePath: "/layouts-grade4/doodles/1", alt: "Альбом для 4 класса в дизайне «Каракули» — обложка" },
+  { basePath: "/layouts-grade4/colored-pencils/2", alt: "Альбом для 4 класса в дизайне «Цветные карандаши» — разворот" },
+  { basePath: "/layouts-grade4/calligraphy/4", alt: "Альбом для 4 класса в дизайне «Каллиграфия» — разворот" },
+  { basePath: "/layouts-grade4/doodles/7", alt: "Альбом для 4 класса в дизайне «Каракули» — разворот" },
+] as const;
+
+const Grade4HeroGallery = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const updateCurrent = () => setCurrent(api.selectedScrollSnap());
+    updateCurrent();
+    api.on("select", updateCurrent);
+
+    return () => {
+      api.off("select", updateCurrent);
+    };
+  }, [api]);
+
+  return (
+    <>
+      <Carousel
+        setApi={setApi}
+        opts={{ loop: true, align: "start" }}
+        plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
+        className="w-full lg:hidden"
+        aria-label="Примеры выпускных альбомов для 4 класса"
+      >
+        <CarouselContent className="ml-0">
+          {grade4HeroImages.map((image, index) => (
+            <CarouselItem key={image.basePath} className="pl-0">
+              <div className="aspect-square overflow-hidden rounded-2xl bg-secondary/20 shadow-glow">
+                <ResponsiveImage
+                  basePath={image.basePath}
+                  alt={image.alt}
+                  className="h-full w-full object-cover"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  type="cover"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 rounded-full bg-black/20 px-3 py-2 backdrop-blur-sm">
+          {grade4HeroImages.map((image, index) => (
+            <button
+              key={image.basePath}
+              type="button"
+              onClick={() => api?.scrollTo(index)}
+              className={`h-2.5 rounded-full transition-all ${current === index ? "w-7 bg-white" : "w-2.5 bg-white/60"}`}
+              aria-label={`Показать фотографию ${index + 1}`}
+              aria-current={current === index ? "true" : undefined}
+            />
+          ))}
+        </div>
+      </Carousel>
+
+      <div className="hidden grid-cols-2 gap-4 rounded-3xl bg-background/70 p-4 shadow-glow lg:grid" aria-label="Примеры выпускных альбомов для 4 класса">
+        {grade4HeroImages.map((image, index) => (
+          <div key={image.basePath} className="overflow-hidden rounded-2xl bg-secondary/20 shadow-soft">
+            <ResponsiveImage
+              basePath={image.basePath}
+              alt={image.alt}
+              className="aspect-square w-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+              type="cover"
+            />
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
 const participantBenefits = [
   {
@@ -66,7 +142,7 @@ const SchoolGrade4 = () => (
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg"><a href="#cta">Рассчитать стоимость</a></Button><Button asChild variant="outline" size="lg"><a href="#albums">Посмотреть альбомы</a></Button></div>
           </div>
-          <PhotoPlaceholder title="Главная фотография 4 класса" text="Здесь появится живой кадр четвероклассников с первой учительницей и готовым альбомом." className="min-h-[430px]" />
+          <Grade4HeroGallery />
         </div>
       </section>
 
@@ -94,15 +170,11 @@ const SchoolGrade4 = () => (
         </div>
       </section>
 
-      <section id="case-school" className="bg-primary/5 py-20"><div className="container mx-auto px-4"><PhotoPlaceholder title="Реальный проект 4 класса" text="Добавим задачу класса, съёмочные сюжеты, готовый альбом и отзыв родителей после подготовки материалов." className="mx-auto max-w-6xl" /></div></section>
-
       <Process initialType="album" fixedType="album" audience="grade4" />
 
-      <section id="layouts" className="bg-background pb-20"><div className="container mx-auto px-4"><PhotoPlaceholder title="Макеты альбомов для 4 класса" text="Здесь появятся обложки, развороты и видео перелистывания после подготовки школьных материалов." className="mx-auto max-w-6xl" /></div></section>
+      <Grade4Layouts />
 
-      <section id="gallery" className="py-20">
-        <div className="container mx-auto px-4"><header className="mx-auto mb-10 max-w-3xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Реальные съёмки</p><h2 className="text-3xl font-bold md:text-5xl">Первые школьные годы</h2><p className="mt-4 text-muted-foreground">Покажем портреты, друзей, первую учительницу, уроки, перемены и важные события класса.</p></header><PhotoPlaceholder title="Фотогалерея 4 класса" text="Место подготовлено под 10–15 лучших кадров из проведённых съёмок начальной школы." className="mx-auto max-w-6xl" /></div>
-      </section>
+      <SchoolStories audience="grade4" />
 
       <KindergartenAdvantages audience="grade4" />
 
