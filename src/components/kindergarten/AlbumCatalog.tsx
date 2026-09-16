@@ -311,7 +311,6 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
           </div>
 
           <div className="mt-16">
-            {!isSchool && <>
             <div className="mb-7 text-center">
               <h3 className="text-2xl font-bold text-foreground md:text-3xl">Сравните форматы</h3>
               <p className="mt-2 text-muted-foreground">Главные различия всех пяти вариантов на одном экране</p>
@@ -357,9 +356,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                 </article>
               ))}
             </div>
-            </>}
 
-            <div className={`${isSchool ? "" : "mt-8"} overflow-hidden rounded-2xl border border-primary/20 bg-primary/5`}>
+            <div className="mt-8 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
               <div className="border-b border-primary/15 px-5 py-4">
                 <h4 className="font-bold text-foreground">{isGrade4 ? "Дополнения расширенных форматов" : "Особые дополнения старших форматов"}</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
