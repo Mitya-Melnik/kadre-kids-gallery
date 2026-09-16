@@ -74,9 +74,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
       ? grade4PreviewImages[currentAlbum.id]
       : undefined;
   const seniorPackageComparison = [
-    { format: "6 страниц", diploma: false, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%", graduationBonusTable: "Фото и видео −10%" },
-    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
-    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%", graduationBonusTable: "Фото — подарок, видео −50%" },
+    { format: "6 страниц", diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Можно добавить · 300 ₽", certificateTable: "+300 ₽", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%", graduationBonusTable: "Фото и видео −10%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: "Включён", diplomaTable: "Включён", certificate: "Можно добавить · 300 ₽", certificateTable: "+300 ₽", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
+    { format: "Большая история — 14 страниц", diploma: "Включён", diplomaTable: "Включён", certificate: "Включена", certificateTable: "Включена", futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%", graduationBonusTable: "Фото — подарок, видео −50%" },
   ];
   const catalogScenarios = isSchool
     ? [
@@ -258,9 +258,14 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                         <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
                         <div>
                           <p className="font-semibold text-foreground text-sm lg:text-base">Можно добавить</p>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            {currentAlbum.additionalInfo}
-                          </p>
+                          <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
+                            {currentAlbum.additionalInfo.map((item) => (
+                              <li key={item} className="flex items-start gap-2">
+                                <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-primary/70" aria-hidden="true" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
                     </div>
@@ -375,8 +380,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                     {seniorPackageComparison.map((item) => (
                       <tr key={item.format} className="border-t border-primary/10 bg-background/50">
                         <td className="p-4 font-semibold text-foreground">{item.format}</td>
-                        <td className="p-4 text-muted-foreground">{item.diploma ? "✓" : "—"}</td>
-                        <td className="p-4 text-muted-foreground">{item.certificate ? "✓" : "—"}</td>
+                        <td className="p-4 text-muted-foreground">{item.diplomaTable}</td>
+                        <td className="p-4 text-muted-foreground">{item.certificateTable}</td>
                         <td className="p-4 text-muted-foreground">{item.futureLetterTable}</td>
                         <td className="p-4 font-medium text-foreground">{item.copy}</td>
                         <td className="p-4 font-medium text-foreground">{item.graduationBonusTable}</td>
@@ -389,9 +394,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                 {seniorPackageComparison.map((item) => (
                   <article key={item.format} className="rounded-xl border border-primary/15 bg-background p-4">
                     <h5 className="font-bold text-foreground">{item.format}</h5>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {[item.diploma && "диплом", item.certificate && "персональная грамота"].filter(Boolean).join(" · ") || "Без диплома и грамоты"}
-                    </p>
+                    <p className="mt-2 text-sm text-foreground">Диплом: {item.diploma.toLowerCase()}</p>
+                    <p className="mt-2 text-sm text-foreground">Персональная грамота: {item.certificate.toLowerCase()}</p>
                     <p className="mt-2 text-sm text-foreground">«Письмо в будущее»: {item.futureLetter.toLowerCase()}</p>
                     <p className="mt-2 text-sm font-medium text-foreground">Копия для близких: {item.copy.toLowerCase()}</p>
                     <p className="mt-2 text-sm font-medium text-primary">Бонус на выпускной: {item.graduationBonus.toLowerCase()}</p>
