@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gift, Images, Play, Plus } from "lucide-react";
+import { Images, Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
@@ -75,7 +75,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
       : undefined;
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Можно добавить · 300 ₽", certificateTable: "+300 ₽", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%", graduationBonusTable: "Фото и видео −10%" },
-    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: "Включён", diplomaTable: "Включён", certificate: "Можно добавить · 300 ₽", certificateTable: "+300 ₽", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Включена", certificateTable: "Включена", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
     { format: "Большая история — 14 страниц", diploma: "Включён", diplomaTable: "Включён", certificate: "Включена", certificateTable: "Включена", futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%", graduationBonusTable: "Фото — подарок, видео −50%" },
   ];
   const catalogScenarios = isSchool
@@ -277,42 +277,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                     </div>
                   )}
 
-                  {"graduationBonus" in currentAlbum && (
-                    <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3 lg:p-4">
-                      <div className="flex items-start gap-2 lg:gap-3">
-                        <Gift className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
-                        <div>
-                          <p className="font-bold text-foreground">Бонус на выпускной</p>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            Для {isSchool ? "класса" : "группы"}: {currentAlbum.graduationBonus}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
-            </div>
-          </div>
-
-          <div className="mt-12 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
-            <div className="border-b border-primary/15 px-5 py-4">
-              <h3 className="text-xl font-bold text-foreground">Цена без сюрпризов</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Заранее показываем, что входит в заказ и какие дополнения можно выбрать.</p>
-            </div>
-            <div className="grid gap-5 p-5 md:grid-cols-3">
-              <div>
-                <h4 className="font-bold text-foreground">Входит в стоимость</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Съёмка, обработка, макет и его проверка, печать альбома 21×30 см, все удачные электронные фотографии и доставка до пункта выдачи СДЭК.</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground">Можно добавить</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Дополнительные развороты. Копию альбома для близких со скидкой до 50%.</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground">Без дополнительной оплаты</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Досъёмка отсутствовавших {audience === "school" ? "выпускников" : "детей"} по договорённости и до трёх согласованных этапов корректировок макета.</p>
-              </div>
             </div>
           </div>
 
@@ -413,9 +379,6 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                       ? "«Письмо в будущее» — персональный разворот с фотографией ребёнка, любимыми воспоминаниями о начальной школе, мечтами и коротким посланием себе будущему."
                       : "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
                     : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
-                </p>
-                <p className="mt-2 font-medium text-foreground">
-                  Бонус распространяется на съёмку одного выпускного мероприятия для {isSchool ? "всего класса" : "всей группы"}.
                 </p>
               </div>
             </div>
