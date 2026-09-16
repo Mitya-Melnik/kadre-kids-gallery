@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import TopBar from "@/components/TopBar";
+import AlbumPromoStrip from "@/components/AlbumPromoStrip";
 import KindergartenHero from "@/components/kindergarten/KindergartenHero";
 import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
 import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
@@ -40,6 +41,7 @@ const Kindergarten = () => {
       
       <main>
         <KindergartenHero />
+        <AlbumPromoStrip />
         <KindergartenAdvantages />
         <AlbumCatalog />
         <KindergartenCase />

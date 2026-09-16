@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { Building2, Check, Smile, UserCheck, UsersRound } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
+import AlbumPromoStrip from "@/components/AlbumPromoStrip";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -151,6 +152,8 @@ const SchoolGrade4 = () => (
           <Grade4HeroGallery />
         </div>
       </section>
+
+      <AlbumPromoStrip />
 
       <AlbumCatalog audience="grade4" />
 
