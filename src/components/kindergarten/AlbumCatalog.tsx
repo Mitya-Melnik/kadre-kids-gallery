@@ -74,9 +74,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
       ? grade4PreviewImages[currentAlbum.id]
       : undefined;
   const seniorPackageComparison = [
-    { format: "6 страниц", diploma: false, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%" },
-    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%" },
-    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%" },
+    { format: "6 страниц", diploma: false, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%", graduationBonusTable: "Фото и видео −10%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
+    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%", graduationBonusTable: "Фото — подарок, видео −50%" },
   ];
   const catalogScenarios = isSchool
     ? [
@@ -359,8 +359,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                 <h4 className="font-bold text-foreground">{isGrade4 ? "Дополнения расширенных форматов" : "Особые дополнения старших форматов"}</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
               </div>
-              <div className="hidden xl:block">
-                <table className="w-full border-collapse text-left text-sm">
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[900px] border-collapse text-left text-sm">
                   <thead className="bg-background/70 text-foreground">
                     <tr>
                       <th className="p-4 font-semibold">Формат</th>
@@ -368,7 +368,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                       <th className="p-4 font-semibold">Персональная грамота</th>
                       <th className="p-4 font-semibold">«Письмо в будущее»</th>
                       <th className="p-4 font-semibold">Копия для близких</th>
-                      <th className="p-4 font-semibold">Бонус на выпускной</th>
+                      <th className="p-4 font-semibold">Выпускной</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -377,15 +377,15 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                         <td className="p-4 font-semibold text-foreground">{item.format}</td>
                         <td className="p-4 text-muted-foreground">{item.diploma ? "✓" : "—"}</td>
                         <td className="p-4 text-muted-foreground">{item.certificate ? "✓" : "—"}</td>
-                        <td className="p-4 text-muted-foreground">{item.futureLetter}</td>
+                        <td className="p-4 text-muted-foreground">{item.futureLetterTable}</td>
                         <td className="p-4 font-medium text-foreground">{item.copy}</td>
-                        <td className="p-4 font-medium text-foreground">{item.graduationBonus}</td>
+                        <td className="p-4 font-medium text-foreground">{item.graduationBonusTable}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div className="grid gap-3 p-4 xl:hidden">
+              <div className="grid gap-3 p-4 md:hidden">
                 {seniorPackageComparison.map((item) => (
                   <article key={item.format} className="rounded-xl border border-primary/15 bg-background p-4">
                     <h5 className="font-bold text-foreground">{item.format}</h5>
