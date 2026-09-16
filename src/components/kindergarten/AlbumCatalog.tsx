@@ -116,6 +116,37 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
         },
       ];
 
+  const isExpandedAlbum = ["six-pages", "ten-pages", "fourteen-pages"].includes(currentAlbum.id);
+  const albumSummary = (
+    <Card className="bg-gradient-card border-primary/20 shadow-glow">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center justify-between text-2xl text-foreground">
+          {currentAlbum.title}
+          {currentAlbum.popular && (
+            <span className="rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary-foreground">
+              Популярный
+            </span>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="mb-4">
+          <p className="text-lg text-muted-foreground">{currentAlbum.description}</p>
+          <p className="mt-3 rounded-lg bg-primary/5 p-3 text-sm leading-relaxed text-foreground">
+            <strong>Подойдёт, если:</strong> {currentAlbum.suitableFor}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-2xl font-bold text-primary lg:text-3xl">
+            {currentAlbum.price}
+          </span>
+          <span className="text-sm text-muted-foreground">за 1 альбом</span>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">При тираже от {isSchool ? "15" : "10"} экземпляров</p>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <section id="albums" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -165,9 +196,11 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
           </div>
 
           {/* Selected Album Display */}
-          <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
-            {/* Left column - Album preview */}
-            <div className="order-2 lg:order-1 flex-1 lg:max-w-[55%]">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+            {/* Left column - Album summary and preview */}
+            <div className="order-1 flex-1 space-y-6 lg:max-w-[55%]">
+              {isExpandedAlbum && albumSummary}
+
               {/* Album preview */}
               <div className="bg-gradient-card p-6 lg:p-8 rounded-xl shadow-glow">
                 {schoolPreview ? <ResponsiveImage
@@ -200,36 +233,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
               </div>
             </div>
 
-            {/* Right column - Price card and features */}
-            <div className="order-1 lg:order-2 flex-1 lg:max-w-[45%] space-y-6">
-              {/* Price Card */}
-              <Card className="bg-gradient-card border-primary/20 shadow-glow">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-2xl text-foreground flex items-center justify-between">
-                    {currentAlbum.title}
-                    {currentAlbum.popular && (
-                      <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                        Популярный
-                      </span>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="mb-4">
-                    <p className="text-lg text-muted-foreground">{currentAlbum.description}</p>
-                    <p className="mt-3 rounded-lg bg-primary/5 p-3 text-sm leading-relaxed text-foreground">
-                      <strong>Подойдёт, если:</strong> {currentAlbum.suitableFor}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-2xl lg:text-3xl font-bold text-primary">
-                      {currentAlbum.price}
-                    </span>
-                    <span className="text-sm text-muted-foreground">за 1 альбом</span>
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">При тираже от {isSchool ? "15" : "10"} экземпляров</p>
-                </CardContent>
-              </Card>
+            {/* Right column - Price card for compact formats and included features */}
+            <div className="order-2 flex-1 space-y-6 lg:max-w-[45%]">
+              {!isExpandedAlbum && albumSummary}
 
               {/* Included features */}
               <Card className="bg-gradient-card shadow-soft">
