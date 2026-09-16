@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Images, Play, Plus } from "lucide-react";
+import { Gift, Images, Play, Plus } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
@@ -74,9 +74,9 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
       ? grade4PreviewImages[currentAlbum.id]
       : undefined;
   const seniorPackageComparison = [
-    { format: "6 страниц", diploma: false, certificate: false, futureLetter: false, copy: "Полная стоимость" },
-    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: false, copy: "Скидка 25%" },
-    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: true, copy: "Скидка 50%" },
+    { format: "6 страниц", diploma: false, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: true, certificate: false, futureLetter: "Можно добавить · 1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%" },
+    { format: "Большая история — 14 страниц", diploma: true, certificate: true, futureLetter: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%" },
   ];
   const catalogScenarios = isSchool
     ? [
@@ -257,8 +257,23 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                       <div className="flex items-start gap-2 lg:gap-3">
                         <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-primary mt-1 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-foreground text-sm lg:text-base">
+                          <p className="font-semibold text-foreground text-sm lg:text-base">Можно добавить</p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                             {currentAlbum.additionalInfo}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {"graduationBonus" in currentAlbum && (
+                    <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3 lg:p-4">
+                      <div className="flex items-start gap-2 lg:gap-3">
+                        <Gift className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
+                        <div>
+                          <p className="font-bold text-foreground">Бонус на выпускной</p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                            Для {isSchool ? "класса" : "группы"}: {currentAlbum.graduationBonus}
                           </p>
                         </div>
                       </div>
@@ -344,7 +359,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                 <h4 className="font-bold text-foreground">{isGrade4 ? "Дополнения расширенных форматов" : "Особые дополнения старших форматов"}</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
               </div>
-              <div className="hidden md:block">
+              <div className="hidden xl:block">
                 <table className="w-full border-collapse text-left text-sm">
                   <thead className="bg-background/70 text-foreground">
                     <tr>
@@ -353,6 +368,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                       <th className="p-4 font-semibold">Персональная грамота</th>
                       <th className="p-4 font-semibold">«Письмо в будущее»</th>
                       <th className="p-4 font-semibold">Копия для близких</th>
+                      <th className="p-4 font-semibold">Бонус на выпускной</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -361,31 +377,39 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                         <td className="p-4 font-semibold text-foreground">{item.format}</td>
                         <td className="p-4 text-muted-foreground">{item.diploma ? "✓" : "—"}</td>
                         <td className="p-4 text-muted-foreground">{item.certificate ? "✓" : "—"}</td>
-                        <td className="p-4 text-muted-foreground">{item.futureLetter ? "✓" : "—"}</td>
+                        <td className="p-4 text-muted-foreground">{item.futureLetter}</td>
                         <td className="p-4 font-medium text-foreground">{item.copy}</td>
+                        <td className="p-4 font-medium text-foreground">{item.graduationBonus}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div className="grid gap-3 p-4 md:hidden">
+              <div className="grid gap-3 p-4 xl:hidden">
                 {seniorPackageComparison.map((item) => (
                   <article key={item.format} className="rounded-xl border border-primary/15 bg-background p-4">
                     <h5 className="font-bold text-foreground">{item.format}</h5>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {[item.diploma && "диплом", item.certificate && "персональная грамота", item.futureLetter && "«Письмо в будущее»"].filter(Boolean).join(" · ") || "Без дополнительных материалов"}
+                      {[item.diploma && "диплом", item.certificate && "персональная грамота"].filter(Boolean).join(" · ") || "Без диплома и грамоты"}
                     </p>
+                    <p className="mt-2 text-sm text-foreground">«Письмо в будущее»: {item.futureLetter.toLowerCase()}</p>
                     <p className="mt-2 text-sm font-medium text-foreground">Копия для близких: {item.copy.toLowerCase()}</p>
+                    <p className="mt-2 text-sm font-medium text-primary">Бонус на выпускной: {item.graduationBonus.toLowerCase()}</p>
                   </article>
                 ))}
               </div>
-              <p className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-                {isSchool
-                  ? isGrade4
-                    ? "«Письмо в будущее» — персональный разворот с фотографией ребёнка, любимыми воспоминаниями о начальной школе, мечтами и коротким посланием себе будущему."
-                    : "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
-                  : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
-              </p>
+              <div className="border-t border-primary/15 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+                <p>
+                  {isSchool
+                    ? isGrade4
+                      ? "«Письмо в будущее» — персональный разворот с фотографией ребёнка, любимыми воспоминаниями о начальной школе, мечтами и коротким посланием себе будущему."
+                      : "«Письмо в будущее» — персональный разворот с фотографией выпускника, важными воспоминаниями о классе, планами после школы и коротким посланием себе через несколько лет."
+                    : "«Письмо в будущее» — персональный разворот с фотографией ребёнка и его ответами на вопросы о мечтах, любимых занятиях и детском саде."}
+                </p>
+                <p className="mt-2 font-medium text-foreground">
+                  Бонус распространяется на съёмку одного выпускного мероприятия для {isSchool ? "всего класса" : "всей группы"}.
+                </p>
+              </div>
             </div>
           </div>
 
