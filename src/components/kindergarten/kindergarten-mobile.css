@@ -5,7 +5,7 @@
   .kindergarten-mobile-v1 #km-selected-album,
   .kindergarten-mobile-v1 #cta { scroll-margin-top: 6rem; }
 
-  .kindergarten-mobile-v1 .kg-hero { min-height: 0; padding-block: 2rem; }
+  .kindergarten-mobile-v1 .kg-hero { min-height: 0; padding-block: 2rem; overflow-wrap: anywhere; }
   .kindergarten-mobile-v1 .kg-hero-grid { gap: 1rem; }
   .kindergarten-mobile-v1 .kg-hero-copy { display: contents; opacity: 1 !important; transform: none !important; }
   .kindergarten-mobile-v1 .kg-hero-copy > p:first-child { order: 1; margin: 0; font-size: .875rem; line-height: 1.5; letter-spacing: .06em; color: var(--km-accent); }
@@ -24,7 +24,7 @@
   .kindergarten-mobile-v1 .kg-hero-dots { gap: 0; bottom: .25rem; }
   .kindergarten-mobile-v1 .kg-hero-dots button { width: 2.75rem; height: 2.75rem; background-clip: content-box; border: 1rem solid transparent; }
 
-  .kindergarten-mobile-v1 .km-catalog { padding-block: 2rem; color: var(--km-ink); font-size: 1rem; line-height: 1.55; }
+  .kindergarten-mobile-v1 .km-catalog { padding-block: 2rem; color: var(--km-ink); font-size: 1rem; line-height: 1.55; overflow-wrap: anywhere; }
   .kindergarten-mobile-v1 .km-catalog h2 { font-size: 1.75rem; line-height: 1.2; font-weight: 700; margin: 0 0 .75rem; }
   .kindergarten-mobile-v1 .km-catalog h3 { font-size: 1.125rem; line-height: 1.35; font-weight: 700; }
   .kindergarten-mobile-v1 .km-catalog-heading > p { color: var(--km-muted); }

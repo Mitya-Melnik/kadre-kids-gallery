@@ -27,12 +27,12 @@ jobs:
         run: |
           npm ci
           npm run build
-          node scripts/check-mobile-types.cjs
-      - name: Build unchanged baseline
+      - name: Build unchanged baseline and compare TypeScript diagnostics
         run: |
           git worktree add /tmp/mobile-baseline 30469af610eea3ebfac226bf3b86e3b407700f4c
           ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/mobile-baseline/node_modules
           npm --prefix /tmp/mobile-baseline run build
+          node scripts/check-mobile-types.cjs /tmp/mobile-baseline
       - name: Browser checks (no deployment, no live leads)
         run: |
           pip install playwright==1.55.0 Pillow==11.3.0
