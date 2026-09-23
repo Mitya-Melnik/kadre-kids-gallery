@@ -4,7 +4,7 @@ import AlbumCatalog from "./AlbumCatalog";
 import { albumPackages } from "@/config/albumPackages";
 import { reachGoal } from "@/lib/analytics";
 
-// Only the kindergarten page opts in. The existing desktop/school catalog stays intact.
+// Only the kindergarten page opts in. The desktop/school catalog stays intact.
 const mobileQuery = "(max-width: 767px)";
 const subscribe = (onChange: () => void) => {
   const query = window.matchMedia(mobileQuery);
@@ -26,6 +26,7 @@ function MobileCatalog() {
   const imagePath = `${imageBase}.webp`;
   const additions = "additionalInfo" in currentAlbum ? currentAlbum.additionalInfo : [];
   const includedGraduation = additions.find((item) => item.startsWith("Фотосъёмка выпускного — в подарок"));
+  const scrollBehavior = (): ScrollBehavior => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 
   const selectAlbum = (id: Album["id"], fromComparison = false) => {
     videoRef.current?.pause();
@@ -36,12 +37,15 @@ function MobileCatalog() {
       if (comparisonRef.current) comparisonRef.current.open = false;
       requestAnimationFrame(() => {
         selectionRef.current?.focus({ preventScroll: true });
-        selectionRef.current?.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-          block: "start",
-        });
+        selectionRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
       });
     }
+  };
+  const scrollToForm = (event: SyntheticEvent<HTMLAnchorElement>) => {
+    // The site has <base href="/">. Avoid navigating to the home page or losing UTM.
+    event.preventDefault();
+    document.getElementById("cta")?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+    reachGoal("consultation_click", { page: "kindergarten", placement: "mobile_catalog", album_id: selectedId });
   };
   const trackDetails = (section: string) => (event: SyntheticEvent<HTMLDetailsElement>) => {
     if (event.currentTarget.open) {
@@ -69,7 +73,6 @@ function MobileCatalog() {
           <p>Пять форматов — выберите, сколько истории сохранить.</p>
           <p className="km-order-terms"><strong>21×30 см · от 10 альбомов</strong><br />Цена указана за один альбом.</p>
         </header>
-
         <div className="km-options" role="group" aria-label="Выберите формат альбома">
           <div className="km-option-group">
             <h3>Память о группе</h3>
@@ -85,7 +88,6 @@ function MobileCatalog() {
             </div>
           ))}
         </div>
-
         <p className="km-status" role="status" aria-live="polite" aria-atomic="true">
           Выбран {currentAlbum.title}, {currentAlbum.price} за альбом.
         </p>
@@ -117,10 +119,7 @@ function MobileCatalog() {
           <ul className="km-highlights">{currentAlbum.features.slice(0, 3).map((feature) => <li key={feature}>{feature}</li>)}</ul>
           {includedGraduation && <p className="km-included">{includedGraduation}</p>}
           <p className="km-included">Все удачные обработанные электронные фотографии — в подарок.</p>
-          <a href="#cta" className="km-action" onClick={() => reachGoal("consultation_click", {
-            page: "kindergarten", placement: "mobile_catalog", album_id: selectedId,
-          })}>Рассчитать для группы</a>
-
+          <a href="/kindergarten#cta" className="km-action" onClick={scrollToForm}>Рассчитать для группы</a>
           <div className="km-details-group" key={`details-${selectedId}`}>
             <details onToggle={trackDetails("contents")}>
               <summary>Что входит в альбом<span aria-hidden="true">⌄</span></summary>
@@ -145,7 +144,6 @@ function MobileCatalog() {
             </details>
           </div>
         </article>
-
         <div className="km-details-group km-catalog-more">
           <details ref={comparisonRef} onToggle={trackDetails("comparison")}>
             <summary>Сравнить все 5 форматов<span aria-hidden="true">⌄</span></summary>
@@ -154,7 +152,7 @@ function MobileCatalog() {
                 <h3>{album.title}</h3><p><strong>{album.price}</strong> · {album.comparisonFormat}</p>
                 <p>Съёмка: {album.shootingDays.toLowerCase()}</p><p>{album.suitableFor}</p>
                 <button type="button" className="km-compare-choice" aria-pressed={album.id === selectedId}
-                  onClick={() => selectAlbum(album.id, true)}>Выбрать {album.shortTitle.toLowerCase()}</button>
+                  onClick={() => selectAlbum(album.id, true)}>Выбрать {album.shortTitle === "Папка" ? "папку" : album.shortTitle.toLowerCase()}</button>
               </article>)}
             </div>
           </details>
