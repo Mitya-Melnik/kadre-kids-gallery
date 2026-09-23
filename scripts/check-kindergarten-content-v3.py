@@ -2,14 +2,14 @@
 from pathlib import Path
 from urllib.parse import urlparse
 import json, subprocess, sys, traceback
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageStat
 from playwright.sync_api import sync_playwright
 
 AFTER, BEFORE = [url.rstrip('/') for url in sys.argv[1:3]]
 OUT = Path(sys.argv[3]); OUT.mkdir(parents=True, exist_ok=True)
 BASE = '99ecb343f68685b2bc0f033e31587c8e7478b77e'
 REPORT = {'base': BASE, 'mobile': [], 'source_preservation': [], 'errors': [], 'forms_submitted': 0,
-          'note': 'Isolated section shots hide fixed/sticky navigation. WebKit is not a physical iPhone. Content is preserved, not independently authenticated.'}
+          'note': 'Isolated shots hide fixed/sticky navigation. Preserved blocks compare exact text/computed styles, relative geometry within 0.05px and raster with max 8/255, mean 0.05/255 tolerance for fractional-position antialiasing. WebKit is not a physical iPhone.'}
 NO_MOTION = '* {animation:none!important;transition:none!important;scroll-behavior:auto!important}'
 SHOT_STYLE = 'header.sticky, .fixed {visibility:hidden!important}'
 
@@ -57,7 +57,19 @@ def shot(page, selector, name):
 
 def same(a,b):
     a,b = Image.open(a).convert('RGB'),Image.open(b).convert('RGB')
-    return a.size==b.size and ImageChops.difference(a,b).getbbox() is None
+    if a.size!=b.size: return False
+    delta=ImageChops.difference(a,b)
+    return max(v[1] for v in delta.getextrema())<=8 and max(ImageStat.Stat(delta).mean)<=0.05
+
+def preserved_layout(a,b):
+    signature='''root=>{const base=root.getBoundingClientRect();return [...root.querySelectorAll('h2,h3,p,article,button,a,img,svg')].map(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {tag:el.tagName,text:el.textContent.trim(),x:r.x-base.x,y:r.y-base.y,w:r.width,h:r.height,font:s.fontFamily,size:s.fontSize,weight:s.fontWeight,line:s.lineHeight,color:s.color,background:s.backgroundColor,padding:s.padding};});}'''
+    before,after=a.evaluate(signature),b.evaluate(signature)
+    assert len(before)==len(after), 'Preserved block element count changed'
+    for left,right in zip(before,after):
+        for key in ('x','y','w','h'): assert abs(left[key]-right[key])<=0.05, f'Preserved geometry: {key} {left} {right}'
+        for key in ('tag','text','font','size','weight','line','color','background','padding'): assert left[key]==right[key], f'Preserved style/content: {key}'
+
+def texts(locator): return [norm(t) for t in locator.evaluate_all('els=>els.map(e=>e.textContent)')]
 
 def fit(root,label):
     errors = root.evaluate('''root => [...root.querySelectorAll('summary,h2,h3,p,blockquote,figcaption,button,.kg3-answer')].filter(el=>{
@@ -103,13 +115,14 @@ with sync_playwright() as pw:
                 assert norm(process.inner_text())==norm(baseline.locator('#process').inner_text()), 'Process text changed'
                 assert process.evaluate('el=>!el.closest("details")'), 'Process collapsed'
                 assert all(process.locator('article').nth(i).is_visible() for i in range(6))
+                preserved_layout(baseline.locator('#process'),process)
 
                 advantages=candidate.locator('.kg3-advantages')
                 assert advantages.get_attribute('open') is None
                 advantages.locator(':scope > summary').click()
                 assert candidate.locator('#kindergarten-advantages h3').count()==6
-                assert candidate.locator('#kindergarten-advantages h3').all_inner_texts()==baseline.locator('#kindergarten-advantages h3').all_inner_texts()
-                assert candidate.locator('#kindergarten-advantages p').all_inner_texts()==baseline.locator('#kindergarten-advantages p').all_inner_texts()
+                assert texts(candidate.locator('#kindergarten-advantages h3'))==texts(baseline.locator('#kindergarten-advantages h3')), 'Advantage titles changed'
+                assert texts(candidate.locator('#kindergarten-advantages p'))==texts(baseline.locator('#kindergarten-advantages p')), 'Advantage descriptions changed'
                 fit(advantages,'advantages')
                 if width==390: shot(candidate,'.kg3-advantages-wrap',f'{engine}-advantages-open.png')
                 advantages.locator(':scope > summary').click()
@@ -150,11 +163,10 @@ with sync_playwright() as pw:
                         candidate.wait_for_function('(n)=>document.querySelectorAll(".kg3-photo-slide img")[n].naturalWidth>0',arg=index)
                         found.append(image.get_attribute('alt'))
                     g.get_by_role('button',name=category,exact=True).click(); settle(candidate)
-                    if width==390:
-                        shot(candidate,'#gallery',f'{engine}-gallery-{kind}-390.png')
+                    assert abs(g.locator('.kg3-photo-strip').evaluate('el=>el.scrollLeft'))<1, 'Category did not reset strip'
+                    if width==390: shot(candidate,'#gallery',f'{engine}-gallery-{kind}-390.png')
                 baseline_images=sorted(set(baseline.locator('#gallery img').evaluate_all('els=>els.map(e=>e.alt)')))
                 assert sorted(found)==baseline_images, 'Missing or invented gallery images'
-                # Exercise actual scroll-snap state, not just arrow buttons.
                 g.get_by_role('button',name='Портреты',exact=True).click()
                 g.locator('.kg3-photo-strip').evaluate('el=>el.scrollTo({left:el.clientWidth,behavior:"instant"})')
                 candidate.wait_for_function('document.querySelector("#gallery .kg3-photo-controls p").textContent.startsWith("2 из")')
@@ -166,10 +178,12 @@ with sync_playwright() as pw:
                 saved=candidate.evaluate('scrollY')
                 candidate.keyboard.press('Tab'); assert modal.evaluate('el=>el.contains(document.activeElement)')
                 if width==390: candidate.screenshot(path=str(OUT/f'{engine}-photo-large-390.png'))
+                modal.get_by_role('button',name='Следующая фотография').click()
+                candidate.wait_for_function('document.querySelector(".kg3-lightbox .kg3-photo-controls p").textContent.startsWith("3 из")')
                 modal.get_by_role('button',name='Закрыть фотографию').click()
                 modal.wait_for(state='detached')
                 assert abs(candidate.evaluate('scrollY')-saved)<=2, 'Photo close changed page position'
-                assert opener.evaluate('el=>el===document.activeElement'), 'Photo opener lost focus'
+                assert opener.evaluate('el=>el===document.activeElement'), 'Current photo lost focus'
                 opener.click();candidate.keyboard.press('Escape');modal.wait_for(state='detached')
                 g.get_by_role('button',name='Портреты',exact=True).click()
 
@@ -183,10 +197,11 @@ with sync_playwright() as pw:
                     shot(candidate,'#kindergarten-faq',f'{engine}-questions-390.png')
                     shot(candidate,'#process',f'{engine}-process-after-390.png')
                     shot(baseline,'#process',f'{engine}-process-before-390.png')
-                    assert same(OUT/f'{engine}-process-after-390.png',OUT/f'{engine}-process-before-390.png'),'Process rendering changed'
+                    assert same(OUT/f'{engine}-process-after-390.png',OUT/f'{engine}-process-before-390.png'),'Process rendering changed beyond antialiasing tolerance'
+                    preserved_layout(baseline.locator('#albums'),cat)
                     shot(candidate,'#albums',f'{engine}-catalog-approved-after-390.png')
                     shot(baseline,'#albums',f'{engine}-catalog-approved-before-390.png')
-                    assert same(OUT/f'{engine}-catalog-approved-after-390.png',OUT/f'{engine}-catalog-approved-before-390.png'),'Approved catalogue changed'
+                    assert same(OUT/f'{engine}-catalog-approved-after-390.png',OUT/f'{engine}-catalog-approved-before-390.png'),'Approved catalogue rendering changed beyond antialiasing tolerance'
                     candidate.locator('#gallery').evaluate('el=>el.scrollIntoView({block:"start"})');settle(candidate)
                     candidate.screenshot(path=str(OUT/f'{engine}-gallery-phone-390.png'))
                     if engine=='chromium':
@@ -196,8 +211,7 @@ with sync_playwright() as pw:
                             page.screenshot(path=str(OUT/f'page-{label}-390.png'),full_page=True,style=SHOT_STYLE)
                 if width in (320,390):
                     candidate.add_style_tag(content='html{font-size:200%!important}')
-                    for selector in ('.kg3-gallery','.kg3-reviews','.kg3-faq'):
-                        fit(candidate.locator(selector),'200% '+selector)
+                    for selector in ('.kg3-gallery','.kg3-reviews','.kg3-faq'): fit(candidate.locator(selector),'200% '+selector)
                     candidate.locator('.kg3-advantages > summary').click();fit(advantages,'200% advantages')
                     candidate.locator('.kg3-advantages > summary').click()
                     first_question.locator('summary').click();fit(candidate.locator('#kindergarten-faq'),'200% answer')
