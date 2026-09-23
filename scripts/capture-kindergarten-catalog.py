@@ -12,6 +12,11 @@ def allow_local(route):
         route.abort()
     else:route.continue_()
 
+def settle(page):
+    # IntersectionObserver can update computed styles before the compositor paints.
+    page.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+    page.wait_for_timeout(400)
+
 with sync_playwright() as p:
     for engine in ('chromium','webkit'):
         browser=getattr(p,engine).launch()
@@ -29,7 +34,9 @@ with sync_playwright() as p:
                 page.locator(f'.km-v2-tab[data-album-id="{album_id}"]').tap()
                 page.wait_for_function('(id)=>document.querySelector(".km-v2-card").dataset.selectedAlbum===id',arg=album_id)
                 page.wait_for_function('document.querySelector(".km-v2-preview img")?.naturalWidth>0')
+                page.locator('.km-v2-preview img').evaluate('el=>el.decode()')
                 page.wait_for_function('document.querySelector(".km-catalog-v2").hasAttribute("data-inline-action-visible")')
+                settle(page)
                 assert abs(page.evaluate('scrollY')-before)<=2,'Switching tabs changed viewport scroll'
                 state=page.locator('.km-catalog-v2').evaluate('el=>{const r=el.getBoundingClientRect();return {top:r.top,height:r.height,bottom:r.bottom}}')
                 assert state['top']>=64 and state['bottom']<=844,'Catalog does not fit reference viewport'
@@ -39,10 +46,14 @@ with sync_playwright() as p:
                 report['frames'].append({'engine':engine,'album':album_id,'bounds':state,'floating_controls_hidden':hidden})
             page.locator('.km-v2-tab[data-album-id="ten-pages"]').tap()
             page.wait_for_function('document.querySelector(".km-v2-preview img")?.naturalWidth>0')
+            page.locator('.km-v2-preview img').evaluate('el=>el.decode()')
             for panel in ('details','comparison','image','video'):
                 page.locator(f'.km-catalog-v2 [data-open="{panel}"]').tap()
                 page.get_by_role('dialog').wait_for()
-                if panel=='image':page.wait_for_function('document.querySelector(".km-v2-large-image")?.naturalWidth>0')
+                if panel=='image':
+                    page.wait_for_function('document.querySelector(".km-v2-large-image")?.naturalWidth>0')
+                    page.locator('.km-v2-large-image').evaluate('el=>el.decode()')
+                settle(page)
                 page.screenshot(path=str(OUT/f'{engine}-sheet-{panel}-390.png'))
                 page.get_by_role('button',name='Закрыть панель',exact=True).tap()
                 page.get_by_role('dialog').wait_for(state='detached')
