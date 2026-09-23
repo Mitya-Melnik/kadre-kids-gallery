@@ -43,7 +43,10 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
             sleep 1
           done
-          python scripts/check-kindergarten-catalog-v2.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results
+          status=0
+          python scripts/check-kindergarten-catalog-v2.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results || status=$?
+          python scripts/capture-kindergarten-catalog.py http://127.0.0.1:4173 mobile-preview-results || status=$?
+          exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
