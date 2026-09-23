@@ -4,7 +4,9 @@ import AlbumPromoStrip from "@/components/AlbumPromoStrip";
 import KindergartenHero from "@/components/kindergarten/KindergartenHero";
 import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
 import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
-import AlbumCatalog from "@/components/kindergarten/AlbumCatalog";
+import AlbumCatalog from "@/components/kindergarten/KindergartenCatalog";
+import CatalogViewportControls from "@/components/kindergarten/CatalogViewportControls";
+import "@/components/kindergarten/kindergarten-mobile.css";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
@@ -20,7 +22,7 @@ import Footer from "@/components/Footer";
 
 const Kindergarten = () => {
   return (
-    <div className="min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
+    <div className="kindergarten-mobile-v1 min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
       <Helmet>
         <title>Выпускные альбомы для детского сада в СПб | Дети в кадре</title>
         <meta 
@@ -44,6 +46,7 @@ const Kindergarten = () => {
         <AlbumPromoStrip />
         <KindergartenAdvantages />
         <AlbumCatalog />
+        <CatalogViewportControls />
         <KindergartenCase />
         <Process initialType="album" fixedType="album" />
         <KindergartenLayouts />
