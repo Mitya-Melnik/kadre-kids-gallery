@@ -28,7 +28,10 @@ def route_safely(route):
 def context_for(browser, mobile=False):
     c=browser.new_context(reduced_motion='reduce', has_touch=mobile, is_mobile=mobile)
     c.route('**/*', route_safely)
-    c.add_init_script('window.__qaGoals=[];window.ym=(...args)=>window.__qaGoals.push(args)')
+    c.add_init_script('''window.__qaGoals=[];window.ym=(...args)=>window.__qaGoals.push(args);
+      document.addEventListener('click',event=>{
+        if(event.target.closest?.('[data-open]')) window.__qaOpenY=scrollY;
+      },true);''')
     return c
 
 def prepare(context, url, width):
@@ -52,9 +55,13 @@ def close_panel(page, opener, scroll, selected):
     page.get_by_role('button',name='Закрыть панель',exact=True).click()
     page.locator('.km-v2-sheet').wait_for(state='detached')
     page.wait_for_timeout(100)
-    assert abs(page.evaluate('scrollY')-scroll)<=2,'Closing panel changed scroll position'
+    actual=page.evaluate('scrollY')
+    assert abs(actual-scroll)<=2,f'Closing {opener.get_attribute("data-open")} changed scroll from {scroll} to {actual}'
     assert page.locator('.km-v2-tab[data-state="active"]').get_attribute('data-album-id')==selected
     assert opener.evaluate('el=>el===document.activeElement'),'Focus did not return to opener'
+
+def wait_selected(page, album_id):
+    page.wait_for_function('(id)=>document.querySelector(`.km-v2-tab[data-album-id="${id}"]`)?.getAttribute("aria-selected")==="true"',arg=album_id)
 
 def metrics(page):
     return page.evaluate('''()=>[...document.querySelectorAll('main > section, main h1, main h2, #albums')].map(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {tag:el.tagName,text:el.tagName==='SECTION'?'':el.textContent.trim(),x:r.x,y:r.y+scrollY,w:r.width,h:r.height,font:s.fontSize,color:s.color};})''')
@@ -73,15 +80,15 @@ with sync_playwright() as p:
                 page=prepare(context,entry,width)
                 catalog=page.locator('.km-catalog-v2')
                 assert page.locator('#albums').count()==1
-                assert page.get_by_role('tab').count()==5
-                assert page.get_by_role('tabpanel').count()==1
+                assert catalog.get_by_role('tab').count()==5
+                assert catalog.get_by_role('tabpanel').count()==1
                 assert page.locator('.km-v2-tab[data-state="active"]').get_attribute('data-album-id')=='ten-pages'
                 catalog.evaluate('el=>el.scrollIntoView({block:"start"})')
                 page.wait_for_timeout(100)
                 heights={};positions=[]
                 for album_id,price in PACKAGES:
                     tab=page.locator(f'.km-v2-tab[data-album-id="{album_id}"]')
-                    tab.click();page.wait_for_timeout(80)
+                    tab.click();wait_selected(page,album_id)
                     assert price in page.locator('.km-v2-price').inner_text()
                     assert page.get_by_role('tabpanel').get_attribute('data-selected-album')==album_id
                     assert tab.get_attribute('aria-controls')==page.get_by_role('tabpanel').get_attribute('id')
@@ -98,12 +105,16 @@ with sync_playwright() as p:
                 page.screenshot(path=str(OUT/f'{engine}-catalog-viewport-{width}.png'))
                 catalog.screenshot(path=str(OUT/f'{engine}-catalog-full-{width}.png'),style=SECTION_SHOT)
                 for kind in ('details','image','video'):
-                    opener=page.locator(f'[data-open="{kind}"]');opener.scroll_into_view_if_needed()
-                    saved=page.evaluate('scrollY');opener.click()
+                    opener=page.locator(f'[data-open="{kind}"]')
+                    # Browser automation may scroll a target away from sticky bars before clicking.
+                    # Measure the real click position, immediately before the React handler.
+                    opener.click();saved=page.evaluate('window.__qaOpenY')
                     panel=page.get_by_role('dialog');panel.wait_for()
                     assert panel.get_attribute('data-panel')==kind
                     assert panel.locator('h2').evaluate('el=>el===document.activeElement'),'Modal heading not focused'
                     assert_fit(panel,f'{kind} {engine} {width}')
+                    page.keyboard.press('Tab')
+                    assert panel.evaluate('el=>el.contains(document.activeElement)'),'Focus escaped modal'
                     if kind=='details':
                         assert 'Персональная печатная грамота' in panel.inner_text(),'Existing contents not retained'
                         assert 'Доставка' in panel.inner_text()
@@ -122,13 +133,11 @@ with sync_playwright() as p:
                 page.locator('.km-v2-sheet').wait_for(state='detached')
                 page.wait_for_timeout(100)
                 tab=page.locator('.km-v2-tab[data-album-id="folder"]')
-                assert tab.get_attribute('aria-selected')=='true'
+                wait_selected(page,'folder')
                 assert tab.evaluate('el=>el===document.activeElement'),'Comparison must focus chosen tab'
                 if engine=='chromium':
-                    tab.press('ArrowRight')
-                    assert page.locator('.km-v2-tab[data-album-id="trio"]').get_attribute('aria-selected')=='true'
-                    page.locator('.km-v2-tab[data-album-id="trio"]').press('End')
-                    assert page.locator('.km-v2-tab[data-album-id="fourteen-pages"]').get_attribute('aria-selected')=='true'
+                    tab.press('ArrowRight');wait_selected(page,'trio')
+                    page.locator('.km-v2-tab[data-album-id="trio"]').press('End');wait_selected(page,'fourteen-pages')
                     page.locator('[data-open="details"]').click();page.keyboard.press('Escape')
                     page.locator('.km-v2-sheet').wait_for(state='detached')
                 page.locator('.km-v2-tab[data-album-id="ten-pages"]').click()
