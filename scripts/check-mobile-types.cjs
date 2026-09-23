@@ -1,0 +1,12 @@
+const ts = require('typescript');
+const path = require('node:path');
+const cfg = ts.readConfigFile('tsconfig.app.json', ts.sys.readFile);
+if (cfg.error) throw new Error(ts.flattenDiagnosticMessageText(cfg.error.messageText, '\n'));
+const options = ts.parseJsonConfigFileContent(cfg.config, ts.sys, process.cwd());
+const program = ts.createProgram(options.fileNames, {...options.options, noEmit: true});
+const changed = new Set(['src/components/kindergarten/KindergartenCatalog.tsx','src/components/kindergarten/KindergartenHero.tsx','src/pages/Kindergarten.tsx'].map(f=>path.resolve(f)));
+const all = ts.getPreEmitDiagnostics(program);
+const errors = all.filter(d=>!d.file || changed.has(path.resolve(d.file.fileName)));
+for (const d of errors) console.error(ts.flattenDiagnosticMessageText(d.messageText,'\n'));
+console.log(JSON.stringify({changedFileDiagnostics:errors.length,otherProjectDiagnostics:all.length-errors.length}));
+process.exitCode=errors.length?1:0;
