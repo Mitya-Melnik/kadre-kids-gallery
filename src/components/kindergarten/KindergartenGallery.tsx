@@ -9,6 +9,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { KindergartenResponsiveImage } from "./KindergartenResponsiveImage";
+import { MobileStoryGallery } from "./KindergartenMobileContent";
 
 type KindergartenStoryImage = {
   imageNumber?: number;
@@ -92,7 +93,7 @@ const SwipeRow = ({ images, onOpen }: { images: KindergartenStoryImage[]; onOpen
   </div>
 );
 
-const KindergartenGallery = () => {
+const KindergartenGallery = ({ compactMobile = false }: { compactMobile?: boolean }) => {
   const [selectedGallery, setSelectedGallery] = useState<KindergartenStoryImage[] | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
@@ -116,6 +117,8 @@ const KindergartenGallery = () => {
     setSelectedImageIndex(images.findIndex((item) => imageKey(item) === imageKey(image)));
     setSelectedGallery(images);
   };
+
+  if (compactMobile) return <MobileStoryGallery images={kindergartenStoryImages} Picture={KindergartenStoryPicture} />;
 
   return (
     <section id="gallery" className="bg-secondary/50 py-20">

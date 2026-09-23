@@ -1,0 +1,68 @@
+/* Opt-in mobile content only; never style #process, the approved hero or catalog. */
+@media (max-width: 767px) {
+  .kindergarten-mobile-content-v3 .kg3-section { padding-block: 2rem; font-size: 1rem; line-height: 1.55; color: var(--km-ink); }
+  .kindergarten-mobile-content-v3 .kg3-section > .container { max-width: 36rem; }
+  .kindergarten-mobile-content-v3 .kg3-section h2 { font-size: 1.625rem; font-weight: 700; line-height: 1.25; margin-bottom: 1rem; text-align: left; }
+  .kindergarten-mobile-content-v3 .kg3-intro { color: var(--km-muted); margin: 0 0 1rem; font-size: 1rem; line-height: 1.55; }
+  .kindergarten-mobile-content-v3 .kg3-disclosure { border-top: 1px solid hsl(var(--border)); }
+  .kindergarten-mobile-content-v3 .kg3-disclosure > summary { display: flex; align-items: center; justify-content: space-between; gap: .75rem; cursor: pointer; list-style: none; padding: .875rem 0; min-height: 3rem; font-size: 1rem; font-weight: 600; line-height: 1.45; }
+  .kindergarten-mobile-content-v3 .kg3-disclosure > summary::-webkit-details-marker { display: none; }
+  .kindergarten-mobile-content-v3 .kg3-disclosure > summary::after { content: "+"; flex: 0 0 1.5rem; color: var(--km-accent); font-size: 1.5rem; line-height: 1; text-align: center; }
+  .kindergarten-mobile-content-v3 .kg3-disclosure[open] > summary::after { content: "−"; }
+  .kindergarten-mobile-content-v3 .kg3-disclosure > summary:focus-visible,
+  .kindergarten-mobile-content-v3 .kg3-section button:focus-visible { outline: 3px solid var(--km-accent); outline-offset: 3px; }
+
+  .kindergarten-mobile-content-v3 .kg3-advantages-wrap { padding: 1rem; max-width: 36rem; margin-inline: auto; }
+  .kindergarten-mobile-content-v3 .kg3-advantages { border: 1px solid hsl(var(--border)); border-radius: .875rem; padding-inline: 1rem; background: #fff; }
+  .kindergarten-mobile-content-v3 .kg3-advantages #kindergarten-advantages { padding: 0 0 .75rem; background: transparent; }
+  .kindergarten-mobile-content-v3 .kg3-advantages .container { padding: 0; }
+  .kindergarten-mobile-content-v3 .kg3-advantages .container > div:first-child { margin-bottom: 1rem; text-align: left; opacity: 1 !important; transform: none !important; }
+  .kindergarten-mobile-content-v3 .kg3-advantages h2 { display: none; }
+  .kindergarten-mobile-content-v3 .kg3-advantages p { font-size: 1rem; line-height: 1.55; color: var(--km-muted); }
+  .kindergarten-mobile-content-v3 .kg3-advantages .grid { gap: .625rem; }
+  .kindergarten-mobile-content-v3 .kg3-advantages .grid > div { padding: .875rem; box-shadow: none; opacity: 1 !important; transform: none !important; transition: none; }
+  .kindergarten-mobile-content-v3 .kg3-advantages .grid > div > div { margin-bottom: .5rem; align-items: flex-start; }
+  .kindergarten-mobile-content-v3 .kg3-advantages .grid > div > div > div { flex-shrink: 0; }
+  .kindergarten-mobile-content-v3 .kg3-advantages h3 { font-size: 1rem; line-height: 1.45; }
+
+  .kindergarten-mobile-content-v3 .kg3-review-list { display: grid; gap: .75rem; }
+  .kindergarten-mobile-content-v3 .kg3-review { margin: 0; border: 1px solid hsl(var(--border)); border-radius: .875rem; padding: 1rem; background: #fff; }
+  .kindergarten-mobile-content-v3 .kg3-review blockquote { font-size: 1rem; line-height: 1.55; }
+  .kindergarten-mobile-content-v3 .kg3-review figcaption { display: flex; flex-direction: column; gap: .125rem; margin-top: .75rem; }
+  .kindergarten-mobile-content-v3 .kg3-review figcaption span { color: var(--km-muted); font-size: .875rem; }
+  .kindergarten-mobile-content-v3 .kg3-more-reviews { margin-top: 1rem; }
+  .kindergarten-mobile-content-v3 .kg3-more-reviews .kg3-review-list { padding-bottom: .75rem; }
+  .kindergarten-mobile-content-v3 .kg3-question-list { border-bottom: 1px solid hsl(var(--border)); }
+  .kindergarten-mobile-content-v3 .kg3-answer { padding: 0 0 1rem; font-size: 1rem; line-height: 1.6; color: var(--km-muted); overflow-wrap: anywhere; }
+  .kindergarten-mobile-content-v3 .kg3-more-questions { margin-top: .75rem; border-top: 0; }
+  .kindergarten-mobile-content-v3 .kg3-more-questions > summary { color: var(--km-accent); }
+
+  .kindergarten-mobile-content-v3 .kg3-photo-filters { display: flex; flex-wrap: wrap; gap: .375rem; margin-bottom: 1rem; }
+  .kindergarten-mobile-content-v3 .kg3-photo-filters button { flex: 1 1 auto; min-height: 2.75rem; padding: .5rem .625rem; font-size: 1rem; font-weight: 600; line-height: 1.4; border: 1px solid hsl(var(--border)); border-radius: .625rem; background: #fff; }
+  .kindergarten-mobile-content-v3 .kg3-photo-filters button[aria-pressed="true"] { background: #fff3ef; border-color: var(--km-accent); color: var(--km-accent); box-shadow: inset 0 0 0 1px var(--km-accent); }
+  .kindergarten-mobile-content-v3 .kg3-photo-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; border-radius: .875rem; }
+  .kindergarten-mobile-content-v3 .kg3-photo-strip::-webkit-scrollbar { display: none; }
+  .kindergarten-mobile-content-v3 .kg3-photo-slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+  .kindergarten-mobile-content-v3 .kg3-photo-slide > button { position: relative; display: block; width: 100%; border-radius: .875rem; overflow: hidden; background: #f6f4f1; }
+  .kindergarten-mobile-content-v3 .kg3-photo-image { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
+  .kindergarten-mobile-content-v3 .kg3-photo-strip[data-kind="portrait"] .kg3-photo-image { aspect-ratio: auto; height: clamp(20rem, 49svh, 27rem); }
+  .kindergarten-mobile-content-v3 .kg3-photo-expand { position: absolute; bottom: .5rem; right: .5rem; width: 2.75rem; height: 2.75rem; display: flex; align-items: center; justify-content: center; border-radius: .5rem; background: #fff; color: var(--km-ink); border: 1px solid hsl(var(--border)); }
+  .kg3-photo-controls { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .75rem; }
+  .kg3-photo-controls button { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; background: #fff; color: #262c34; }
+  .kg3-photo-controls button:disabled { opacity: .4; }
+  .kg3-photo-controls p { text-align: center; font-size: 1rem; line-height: 1.4; min-width: 0; }
+  .kg3-photo-controls p span { display: block; margin-top: .125rem; font-size: .8125rem; color: #505963; }
+  .kindergarten-mobile-content-v3 .kg3-life-caption { margin: 1rem 0 0; }
+
+  /* Self-contained portal: no changes to the catalog's approved modal styles. */
+  .kg3-lightbox-overlay { position: fixed; inset: 0; background: rgb(0 0 0 / .8); z-index: 120; }
+  .kg3-lightbox { position: fixed; inset: .5rem; z-index: 121; display: flex; flex-direction: column; min-width: 0; max-height: calc(100dvh - 1rem); padding: .75rem; padding-bottom: max(.75rem, env(safe-area-inset-bottom)); border-radius: 1rem; background: #17191c; color: #fff; }
+  .kg3-lightbox > header { display: flex; align-items: flex-start; gap: .5rem; flex-shrink: 0; }
+  .kg3-lightbox h2 { flex: 1; min-width: 0; font-size: 1.125rem; line-height: 1.4; font-weight: 600; }
+  .kg3-lightbox > header > button { display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border: 1px solid #777; border-radius: .625rem; background: #fff; color: #262c34; }
+  .kg3-lightbox-photo { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; margin-top: .5rem; overflow: hidden; }
+  .kg3-lightbox-photo picture { display: contents; }
+  .kg3-lightbox-image { display: block; max-height: 100%; height: 100%; width: 100%; object-fit: contain; }
+  .kg3-lightbox .kg3-photo-controls { flex-shrink: 0; }
+  .kg3-lightbox :focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+}

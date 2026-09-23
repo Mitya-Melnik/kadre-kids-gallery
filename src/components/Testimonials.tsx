@@ -2,8 +2,9 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import { type CarouselApi } from "@/components/ui/carousel";
+import { MobileReviews } from "./kindergarten/KindergartenMobileContent";
 
-const Testimonials = ({ variant = "default" }: { variant?: "default" | "albums" }) => {
+const Testimonials = ({ variant = "default", compactMobile = false }: { variant?: "default" | "albums"; compactMobile?: boolean }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -31,7 +32,7 @@ const Testimonials = ({ variant = "default" }: { variant?: "default" | "albums" 
       initials: "МА"
     },
     {
-      id: 2, 
+      id: 2,
       name: "Елена, воспитатель",
       role: "Группа «Солнышко»",
       text: "Работали с фотографами очень профессионально. Дети были спокойны, организация на высшем уровне.",
@@ -104,6 +105,8 @@ const Testimonials = ({ variant = "default" }: { variant?: "default" | "albums" 
   const visibleTestimonials = variant === "albums"
     ? testimonials.filter((testimonial) => [2, 6, 11].includes(testimonial.id))
     : testimonials;
+
+  if (compactMobile) return <MobileReviews testimonials={visibleTestimonials} />;
 
   return (
     <section className="py-20 bg-gradient-card">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { albumFaqs } from "@/components/FAQ";
+import { MobileQuestions } from "./KindergartenMobileContent";
 
 type AlbumFaqItem = {
   question: string;
@@ -91,7 +92,7 @@ const albumAnswer = (faq: AlbumFaqItem, audience: AlbumAudience) => {
   }
 };
 
-const KindergartenFAQ = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
+const KindergartenFAQ = ({ audience = "kindergarten", compactMobile = false }: { audience?: AlbumAudience; compactMobile?: boolean }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: accordionRef, isVisible: accordionVisible } = useScrollAnimation(0.1);
   
@@ -119,6 +120,8 @@ const KindergartenFAQ = ({ audience = "kindergarten" }: { audience?: AlbumAudien
   ];
   const faqs: AlbumFaqItem[] = audience === "school" || audience === "grade4" ? schoolFaqs : kindergartenFaqs;
   const isSchoolAudience = audience === "school" || audience === "grade4";
+
+  if (compactMobile && !isSchoolAudience) return <MobileQuestions items={faqs.map((faq) => ({ question: albumQuestion(faq.question, audience), answer: albumAnswer(faq, audience) }))} />;
 
   return (
     <section id={isSchoolAudience ? "school-faq" : "kindergarten-faq"} className="py-20 bg-accent-soft">
