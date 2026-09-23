@@ -42,7 +42,7 @@ jobs:
             sleep 1
           done
           status=0
-          python scripts/check-kindergarten-catalog-v2.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results || status=$?
+          python scripts/check-catalog-regression-tolerance.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results || status=$?
           python scripts/check-kindergarten-content-v3.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results || status=$?
           exit "$status"
       - uses: actions/upload-artifact@v4
