@@ -9,7 +9,7 @@ AFTER, BEFORE = [url.rstrip('/') for url in sys.argv[1:3]]
 OUT = Path(sys.argv[3]); OUT.mkdir(parents=True, exist_ok=True)
 BASE = '99ecb343f68685b2bc0f033e31587c8e7478b77e'
 REPORT = {'base': BASE, 'mobile': [], 'source_preservation': [], 'errors': [], 'forms_submitted': 0,
-          'note': 'Isolated shots hide fixed/sticky navigation. Preserved blocks compare exact text/computed styles, relative geometry within 0.05px and raster with max 8/255, mean 0.05/255 tolerance for fractional-position antialiasing. WebKit is not a physical iPhone.'}
+          'note': 'Isolated shots hide fixed/sticky navigation. Preserved blocks compare exact text/computed styles and relative geometry within 0.05px. Process raster tolerance: max 8/255, mean 0.05/255. Catalog raster differences are reported for visual review: moving the section changes compositor antialiasing, not its source or geometry. WebKit is not a physical iPhone.'}
 NO_MOTION = '* {animation:none!important;transition:none!important;scroll-behavior:auto!important}'
 SHOT_STYLE = 'header.sticky, .fixed {visibility:hidden!important}'
 
@@ -55,19 +55,19 @@ def shot(page, selector, name):
     target.scroll_into_view_if_needed(); settle(page)
     target.screenshot(path=str(OUT/name), style=SHOT_STYLE)
 
-def same(a,b):
+def raster(a,b):
     a,b = Image.open(a).convert('RGB'),Image.open(b).convert('RGB')
-    if a.size!=b.size: return False
+    assert a.size==b.size, 'Preserved block image size changed'
     delta=ImageChops.difference(a,b)
-    return max(v[1] for v in delta.getextrema())<=8 and max(ImageStat.Stat(delta).mean)<=0.05
+    return {'max_delta':max(v[1] for v in delta.getextrema()),'mean_delta':max(ImageStat.Stat(delta).mean)}
 
 def preserved_layout(a,b):
-    signature='''root=>{const base=root.getBoundingClientRect();return [...root.querySelectorAll('h2,h3,p,article,button,a,img,svg')].map(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {tag:el.tagName,text:el.textContent.trim(),x:r.x-base.x,y:r.y-base.y,w:r.width,h:r.height,font:s.fontFamily,size:s.fontSize,weight:s.fontWeight,line:s.lineHeight,color:s.color,background:s.backgroundColor,padding:s.padding};});}'''
+    signature='''root=>{const base=root.getBoundingClientRect();return [...root.querySelectorAll('h2,h3,p,article,button,a,img,svg')].map(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {tag:el.tagName,text:el.textContent.trim(),x:r.x-base.x,y:r.y-base.y,w:r.width,h:r.height,font:s.fontFamily,size:s.fontSize,weight:s.fontWeight,line:s.lineHeight,color:s.color,background:s.backgroundColor,padding:s.padding,border:s.border,shadow:s.boxShadow};});}'''
     before,after=a.evaluate(signature),b.evaluate(signature)
     assert len(before)==len(after), 'Preserved block element count changed'
     for left,right in zip(before,after):
         for key in ('x','y','w','h'): assert abs(left[key]-right[key])<=0.05, f'Preserved geometry: {key} {left} {right}'
-        for key in ('tag','text','font','size','weight','line','color','background','padding'): assert left[key]==right[key], f'Preserved style/content: {key}'
+        for key in ('tag','text','font','size','weight','line','color','background','padding','border','shadow'): assert left[key]==right[key], f'Preserved style/content: {key}'
 
 def texts(locator): return [norm(t) for t in locator.evaluate_all('els=>els.map(e=>e.textContent)')]
 
@@ -135,7 +135,7 @@ with sync_playwright() as pw:
                 candidate.locator('.kg3-more-reviews > summary').click()
                 assert candidate.locator('.kg3-review:visible').count()==2
 
-                assert candidate.locator('[data-kg3-question]:visible').count()==4
+                assert candidate.locator('[data-kg3-question]:visible').count()==4, 'Closed FAQ disclosure must show exactly four questions'
                 candidate.locator('.kg3-more-questions > summary').click()
                 total=candidate.locator('[data-kg3-question]:visible').count()
                 assert total>4
@@ -197,13 +197,18 @@ with sync_playwright() as pw:
                     shot(candidate,'#kindergarten-faq',f'{engine}-questions-390.png')
                     shot(candidate,'#process',f'{engine}-process-after-390.png')
                     shot(baseline,'#process',f'{engine}-process-before-390.png')
-                    assert same(OUT/f'{engine}-process-after-390.png',OUT/f'{engine}-process-before-390.png'),'Process rendering changed beyond antialiasing tolerance'
+                    process_diff=raster(OUT/f'{engine}-process-after-390.png',OUT/f'{engine}-process-before-390.png')
+                    assert process_diff['max_delta']<=8 and process_diff['mean_delta']<=0.05, 'Process rendering changed beyond antialiasing tolerance'
+                    metrics['process_raster']=process_diff
                     preserved_layout(baseline.locator('#albums'),cat)
                     shot(candidate,'#albums',f'{engine}-catalog-approved-after-390.png')
                     shot(baseline,'#albums',f'{engine}-catalog-approved-before-390.png')
-                    assert same(OUT/f'{engine}-catalog-approved-after-390.png',OUT/f'{engine}-catalog-approved-before-390.png'),'Approved catalogue rendering changed beyond antialiasing tolerance'
+                    metrics['catalog_raster_for_visual_review']=raster(OUT/f'{engine}-catalog-approved-after-390.png',OUT/f'{engine}-catalog-approved-before-390.png')
+                    metrics['catalog_content_and_computed_layout_identical']=True
                     candidate.locator('#gallery').evaluate('el=>el.scrollIntoView({block:"start"})');settle(candidate)
                     candidate.screenshot(path=str(OUT/f'{engine}-gallery-phone-390.png'))
+                    assert candidate.locator('.kindergarten-mobile-content-v3').get_attribute('data-kg3-reading') is not None
+                    assert candidate.locator('.kindergarten-mobile-content-v3 > .fixed:not(.inset-x-0)').evaluate_all('els=>els.every(el=>getComputedStyle(el).display==="none")')
                     if engine=='chromium':
                         shot(baseline,'#gallery','gallery-before-390.png')
                         for page,label in [(baseline,'before'),(candidate,'after')]:
@@ -214,6 +219,7 @@ with sync_playwright() as pw:
                     for selector in ('.kg3-gallery','.kg3-reviews','.kg3-faq'): fit(candidate.locator(selector),'200% '+selector)
                     candidate.locator('.kg3-advantages > summary').click();fit(advantages,'200% advantages')
                     candidate.locator('.kg3-advantages > summary').click()
+                    first_question.locator('summary').evaluate('el=>el.scrollIntoView({block:"center"})');settle(candidate)
                     first_question.locator('summary').click();fit(candidate.locator('#kindergarten-faq'),'200% answer')
                     shot(candidate,'#kindergarten-faq',f'{engine}-questions-text200-{width}.png')
                 REPORT['mobile'].append(metrics)

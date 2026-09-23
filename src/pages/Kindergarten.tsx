@@ -7,6 +7,7 @@ import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
 import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
 import AlbumCatalog from "@/components/kindergarten/KindergartenCatalog";
 import CatalogViewportControls from "@/components/kindergarten/CatalogViewportControls";
+import MobileContentViewportControls from "@/components/kindergarten/MobileContentViewportControls";
 import { MobileAdvantages, useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
 import "@/components/kindergarten/kindergarten-mobile.css";
 import "@/components/kindergarten/kindergarten-content-v3.css";
@@ -58,6 +59,7 @@ const Kindergarten = () => {
       </Helmet>
       <TopBar />
       <main>{order.map((name) => <Fragment key={name}>{sections[name]}</Fragment>)}</main>
+      {mobile && <MobileContentViewportControls />}
       <Footer kindergartenPage />
       <FabContact aboveMobileBar />
       <BackToTop aboveMobileBar />
