@@ -80,6 +80,12 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
   const closeButton = useRef<HTMLButtonElement>(null);
   const photos = images.filter((image) => image.kind === kind);
   const selected = photos[current] ?? photos[0];
+  const selectKind = (next: StoryImage["kind"]) => {
+    // Also reset the native strip when the already-active category is tapped.
+    rail.current?.scrollTo({ left: 0, behavior: "auto" });
+    setKind(next);
+    setCurrent(0);
+  };
   const goTo = (index: number) => {
     const next = Math.max(0, Math.min(index, photos.length - 1));
     setCurrent(next);
@@ -98,7 +104,7 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
       </header>
       <div className="kg3-photo-filters" role="group" aria-label="Какие фотографии показать">
         {categories.map((category) => <button type="button" key={category.kind} aria-pressed={kind === category.kind} aria-controls="kg3-photo-strip"
-          onClick={() => { setKind(category.kind); setCurrent(0); }}>{category.label}</button>)}
+          onClick={() => selectKind(category.kind)}>{category.label}</button>)}
       </div>
       <div id="kg3-photo-strip" key={kind} ref={rail} className="kg3-photo-strip" data-kind={kind} role="region" aria-label="Фотографии выпускной группы"
         onScroll={(event) => {
@@ -121,7 +127,11 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
         <Dialog.Overlay className="kg3-lightbox-overlay" />
         <Dialog.Content className="kg3-lightbox"
           onOpenAutoFocus={(event) => { event.preventDefault(); closeButton.current?.focus({ preventScroll: true }); }}
-          onCloseAutoFocus={(event) => { event.preventDefault(); if (opener.current?.isConnected) opener.current.focus({ preventScroll: true }); }}>
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            const target = rail.current?.querySelector<HTMLButtonElement>('button[tabindex="0"]') ?? opener.current;
+            if (target?.isConnected) target.focus({ preventScroll: true });
+          }}>
           <header><Dialog.Title>Фотографии выпускной группы</Dialog.Title>
             <Dialog.Close asChild><button ref={closeButton} type="button" aria-label="Закрыть фотографию"><X size={24} aria-hidden="true" /></button></Dialog.Close>
           </header>
