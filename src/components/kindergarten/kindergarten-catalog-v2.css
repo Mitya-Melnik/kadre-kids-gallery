@@ -65,7 +65,8 @@
 @media (max-width: 359px) {
   .km-v2-tabs { grid-template-columns: repeat(auto-fit, minmax(min(100%, 5rem), 1fr)); }
   .km-v2-card-heading { grid-template-columns: minmax(0, 1fr); }
-  .km-v2-price { flex-direction: row; align-items: baseline; gap: .375rem; }
+  .km-v2-price { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .375rem; }
+  .km-v2-price strong { white-space: normal; }
 }
 @media (prefers-reduced-motion: reduce) {
   .km-v2-sheet[data-state="open"] { animation: none; }
