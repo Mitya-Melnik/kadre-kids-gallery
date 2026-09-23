@@ -31,8 +31,8 @@
   .km-v2-secondary { display: flex; flex-wrap: wrap; column-gap: .75rem; justify-content: space-between; margin-top: .125rem; }
   .km-v2-secondary button { min-height: 2.75rem; padding: .375rem 0; color: var(--km-accent); font-size: .875rem; line-height: 1.4; text-decoration: underline; text-underline-offset: .2em; text-align: left; }
   .km-catalog-v2 :focus-visible { outline: 3px solid var(--km-accent); outline-offset: 3px; }
-  /* The inline catalog CTA replaces, rather than competes with, floating controls. */
-  .kindergarten-mobile-v1:has(.km-catalog-v2[data-inline-action-visible]) > .fixed { visibility: hidden; pointer-events: none; }
+  /* Hide the entire subtree, not just inherited visibility of the wrapper. */
+  .kindergarten-mobile-v1:has(.km-catalog-v2[data-inline-action-visible]) > .fixed { display: none; visibility: hidden; pointer-events: none; }
   /* Portal classes are deliberately self-contained; never alter shared dialogs. */
   .km-v2-overlay { position: fixed; inset: 0; z-index: 110; background: rgb(0 0 0 / .5); }
   .km-v2-sheet { --km-ink: #262c34; --km-muted: #505963; --km-accent: #b33930; position: fixed; inset: auto 0 0; z-index: 111; width: 100%; max-width: 40rem; max-height: 92vh; max-height: 92dvh; margin-inline: auto; display: flex; flex-direction: column; border: 1px solid hsl(var(--border)); border-radius: 1.25rem 1.25rem 0 0; background: #fff; color: var(--km-ink); box-shadow: 0 -8px 32px rgb(0 0 0 / .15); font-family: inherit; font-size: 1rem; line-height: 1.55; overflow-wrap: anywhere; }
