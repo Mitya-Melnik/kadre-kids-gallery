@@ -27,26 +27,26 @@ jobs:
         run: |
           npm ci
           npm run build
-      - name: Build unchanged baseline and compare TypeScript diagnostics
+      - name: Build approved v1 baseline and compare TypeScript diagnostics
         run: |
-          git worktree add /tmp/mobile-baseline 30469af610eea3ebfac226bf3b86e3b407700f4c
+          git worktree add /tmp/mobile-baseline 1dcc98f1c02b74ce9f8e2fcd86b4edb9c9c8f202
           ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/mobile-baseline/node_modules
           npm --prefix /tmp/mobile-baseline run build
           node scripts/check-mobile-types.cjs /tmp/mobile-baseline
       - name: Browser checks (no deployment, no live leads)
         run: |
           pip install playwright==1.55.0 Pillow==11.3.0
-          playwright install --with-deps chromium
+          playwright install --with-deps chromium webkit
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/candidate-preview.log 2>&1 &
           npm --prefix /tmp/mobile-baseline run preview -- --host 127.0.0.1 --port 4174 > /tmp/baseline-preview.log 2>&1 &
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
             sleep 1
           done
-          python scripts/check-kindergarten-mobile.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results
+          python scripts/check-kindergarten-catalog-v2.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-preview-results
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: kindergarten-mobile-before-after
+          name: kindergarten-catalog-v2-review
           path: mobile-preview-results/
           retention-days: 14
