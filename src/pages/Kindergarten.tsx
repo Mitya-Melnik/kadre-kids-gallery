@@ -5,6 +5,7 @@ import KindergartenHero from "@/components/kindergarten/KindergartenHero";
 import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
 import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
 import AlbumCatalog from "@/components/kindergarten/KindergartenCatalog";
+import CatalogViewportControls from "@/components/kindergarten/CatalogViewportControls";
 import "@/components/kindergarten/kindergarten-mobile.css";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Process from "@/components/Process";
@@ -45,6 +46,7 @@ const Kindergarten = () => {
         <AlbumPromoStrip />
         <KindergartenAdvantages />
         <AlbumCatalog />
+        <CatalogViewportControls />
         <KindergartenCase />
         <Process initialType="album" fixedType="album" />
         <KindergartenLayouts />
