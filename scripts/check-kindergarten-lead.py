@@ -22,7 +22,8 @@ def setup(browser,width,url):
         if req.request.method not in ('GET','HEAD') or hostname not in ('127.0.0.1','localhost','fonts.googleapis.com','fonts.gstatic.com'):req.abort()
         else:req.continue_()
     ctx.route('**/*',route)
-    ctx.add_init_script('window.__qaGoals=[]; window.ym=(...args)=>window.__qaGoals.push(args)')
+    ctx.add_init_script('''window.__qaGoals=[]; window.ym=(...args)=>window.__qaGoals.push(args);
+      document.addEventListener('click', e=>{if(e.target.closest('a[href],button[data-enquiry-open]'))window.__qaClickY=scrollY;},true);''')
     page=ctx.new_page();page.set_default_timeout(12000)
     page.goto(url,wait_until='networkidle');page.evaluate('document.fonts.ready')
     page.add_style_tag(content='*{animation:none!important;transition:none!important;scroll-behavior:auto!important}')
@@ -41,13 +42,15 @@ def fit(page):
 
 def click_open(page,selector):
     target=page.locator(selector).first;target.scroll_into_view_if_needed();page.wait_for_timeout(100)
-    before=page.evaluate('scrollY');url=page.url;target.click();page.get_by_role('dialog').wait_for();fit(page)
+    # Playwright may move the target away from a sticky bar immediately before dispatch.
+    # Measure at the actual click, not before that automatic positioning.
+    url=page.url;target.click();before=page.evaluate('window.__qaClickY');page.get_by_role('dialog').wait_for();fit(page)
     assert page.url==url,'Attribution URL changed'
     return before,target
 
 def close(page,before,target):
     page.get_by_role('button',name='Закрыть заявку').click();page.get_by_role('dialog').wait_for(state='detached');page.wait_for_timeout(100)
-    assert abs(page.evaluate('scrollY')-before)<3,'Scroll changed on return'
+    assert abs(page.evaluate('scrollY')-before)<3,f"Scroll changed on return: {before} -> {page.evaluate('scrollY')}"
     assert target.evaluate('el=>el===document.activeElement'),'Focus not returned'
 
 def fill(page):
