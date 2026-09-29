@@ -1,3 +1,5 @@
+import { albumCommercial } from "./albumCommercial";
+
 export const albumPackages = [
   {
     id: "folder",
@@ -84,10 +86,13 @@ export const albumPackages = [
       "Печатный диплом 15×21 см — 500 ₽",
       "Дополнительный разворот «Письмо в будущее» — 1 000 ₽",
       "Копия альбома для близких — скидка 25%",
-      "Фотосъёмка выпускного — скидка 20%",
-      "Видеосъёмка выпускного — скидка 20%",
+      albumCommercial.historyPhoto,
+      albumCommercial.historyVideo,
+      albumCommercial.historyPackage,
+      albumCommercial.historyEligibility,
+      albumCommercial.historyScope,
     ],
-    graduationBonus: "скидка 20% на фото- и видеосъёмку выпускного",
+    graduationBonus: albumCommercial.historySummary,
   },
   {
     id: "fourteen-pages",
@@ -109,9 +114,9 @@ export const albumPackages = [
     additionalInfo: [
       "Дополнительные развороты — 350 ₽ за разворот",
       "Копия альбома для близких — скидка 50%",
-      "Фотосъёмка выпускного — в подарок в рамках трёх съёмочных дней",
-      "Видеосъёмка выпускного — скидка 50%",
+      albumCommercial.bigPhoto,
+      albumCommercial.bigVideo,
     ],
-    graduationBonus: "фотосъёмка выпускного — в подарок в рамках трёх съёмочных дней. Видеосъёмка выпускного — со скидкой 50%",
+    graduationBonus: albumCommercial.bigSummary,
   },
 ] as const;

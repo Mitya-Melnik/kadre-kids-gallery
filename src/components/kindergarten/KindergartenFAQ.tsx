@@ -84,6 +84,7 @@ const albumAnswer = (faq: AlbumFaqItem, audience: AlbumAudience) => {
       if (faq.answerContent) return faq.answerContent;
       if (!isSchool) return faq.answer;
       return faq.answer
+        .replace(/История детства/g, "Школьные годы")
         .replace(/группы или класса/g, "класса")
         .replace(/воспитателя или учителя/g, "учителя")
         .replace(/второго воспитателя/g, "учителя")
