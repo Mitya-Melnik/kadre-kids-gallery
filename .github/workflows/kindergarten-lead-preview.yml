@@ -16,26 +16,17 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Export tracked text sources for offline review
-        run: |
-          git ls-files '*.tsx' '*.ts' '*.css' '*.json' '*.mjs' '*.cjs' '*.js' '*.html' '*.md' '*.py' > /tmp/source-files.txt
-          tar -czf /tmp/enquiry-sources.tar.gz -T /tmp/source-files.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: enquiry-source-snapshot
-          path: /tmp/enquiry-sources.tar.gz
-          retention-days: 7
       - uses: actions/setup-node@v4
-        if: hashFiles('scripts/check-kindergarten-lead.py') != ''
+        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         with:
           node-version: '22'
           cache: npm
       - uses: actions/setup-python@v5
-        if: hashFiles('scripts/check-kindergarten-lead.py') != ''
+        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         with:
           python-version: '3.12'
       - name: Build and test without deployment or live leads
-        if: hashFiles('scripts/check-kindergarten-lead.py') != ''
+        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         run: |
           npm ci
           npm run build
@@ -54,7 +45,7 @@ jobs:
           done
           python scripts/check-kindergarten-lead.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-lead-results
       - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('scripts/check-kindergarten-lead.py') != ''
+        if: always() && hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         with:
           name: kindergarten-lead-v4-review
           path: |

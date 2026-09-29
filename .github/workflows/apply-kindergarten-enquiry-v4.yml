@@ -1,0 +1,71 @@
+name: Apply and validate kindergarten enquiry v4
+on:
+  push:
+    branches: [feature/kindergarten-mobile-lead-v4]
+permissions:
+  contents: write
+concurrency:
+  group: apply-kindergarten-enquiry-v4
+  cancel-in-progress: true
+jobs:
+  reviewed-preview:
+    if: github.repository == 'Mitya-Melnik/kadre-kids-gallery' && github.ref == 'refs/heads/feature/kindergarten-mobile-lead-v4'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply literal reviewed changes to six known files
+        run: python scripts/stage-kindergarten-enquiry-v4.py
+      - name: Build and unit-test (mock CRM only)
+        run: |
+          npm ci
+          npm run build
+          git worktree add /tmp/approved-content 67da4ff038bda1280ecc88864bdc69c552c55149
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/approved-content/node_modules
+          npm --prefix /tmp/approved-content run build
+          node scripts/check-mobile-types.cjs /tmp/approved-content
+          node --test scripts/test-album-enquiry.mjs
+      - name: Browser tests (no deployment)
+        run: |
+          pip install playwright==1.55.0 Pillow==11.3.0
+          playwright install --with-deps chromium webkit
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/lead-preview.log 2>&1 &
+          npm --prefix /tmp/approved-content run preview -- --host 127.0.0.1 --port 4174 > /tmp/baseline-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/check-kindergarten-lead.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-lead-results
+      - name: Save tested source to this feature branch only and remove one-time write workflow
+        run: |
+          test "$GITHUB_REF" = refs/heads/feature/kindergarten-mobile-lead-v4
+          git fetch origin feature/kindergarten-mobile-lead-v4
+          test "$(git rev-parse origin/feature/kindergarten-mobile-lead-v4)" = "$GITHUB_SHA"
+          git add src/pages/Kindergarten.tsx src/config/albumPackages.ts src/components/kindergarten/AlbumCatalog.tsx src/components/FAQ.tsx src/components/kindergarten/KindergartenFAQ.tsx src/components/AlbumPromoStrip.tsx
+          git rm scripts/stage-kindergarten-enquiry-v4.py .github/workflows/apply-kindergarten-enquiry-v4.yml
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Apply verified short enquiry and synchronized album terms (preview only)'
+          git push origin HEAD:refs/heads/feature/kindergarten-mobile-lead-v4
+          git rev-parse HEAD > mobile-lead-results/tested-source-commit.txt
+      - name: Export actual reviewed text sources
+        if: always()
+        run: |
+          mkdir -p mobile-lead-results
+          git ls-files '*.tsx' '*.ts' '*.css' '*.json' '*.mjs' '*.cjs' '*.js' '*.html' '*.md' '*.py' | while IFS= read -r path; do test ! -f "$path" || printf '%s\n' "$path"; done > /tmp/reviewed-source-files.txt
+          tar -czf mobile-lead-results/reviewed-sources.tar.gz -T /tmp/reviewed-source-files.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kindergarten-enquiry-reviewed
+          path: |
+            mobile-lead-results/
+            mobile-preview-results/types.json
+          retention-days: 14
