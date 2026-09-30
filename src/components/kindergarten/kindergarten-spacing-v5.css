@@ -1,9 +1,10 @@
 /* Finishing pass: mobile whitespace only. No text, image sizing or product changes. */
 @media (max-width: 767px) {
-  .kindergarten-mobile-content-v3 > main > section:not(.kg-hero):not(#albums):not([aria-label="Акция на выпускные альбомы"]) {
+  .kindergarten-mobile-content-v3 > main > section:not(.kg-hero):not(#albums):not(.pb-20):not([aria-label="Акция на выпускные альбомы"]) {
     padding-block: 1.5rem;
   }
-  /* Keep the already compact 16px promotion and 12px catalog padding.
+  .kindergarten-mobile-content-v3 > main > section.pb-20 { padding-bottom: 1.5rem; }
+  /* Keep the already compact promotion/catalog and the CTA's existing zero top gap.
      The process keeps every card, full text, timing and internal spacing.
      Only the space outside its content is reduced by the section rule above. */
   .kindergarten-mobile-content-v3 #case-kindergarten-108 > .container > div > .mb-10,
