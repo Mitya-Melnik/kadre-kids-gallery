@@ -2,7 +2,7 @@
 @media (max-width: 767px) {
   .albums-mobile-v5 { --ad5-ink: #262c34; --ad5-muted: #505963; --ad5-accent: #b33930; }
   .albums-mobile-v5 > main > section { padding-block: 1.5rem; }
-  .albums-mobile-v5 .ad5-header { text-align: left; }
+  .albums-mobile-v5 .ad5-header { text-align: left; overflow-wrap: anywhere; }
   .albums-mobile-v5 .ad5-header > span { display: none; }
   .albums-mobile-v5 .ad5-header h1 { margin-top: 0; font-size: 1.875rem; line-height: 1.2; }
   .albums-mobile-v5 .ad5-header > p { margin-top: .75rem; font-size: 1rem; line-height: 1.5; color: var(--ad5-muted); }
@@ -26,12 +26,12 @@
   .ad5-navigation { display: flex; justify-content: space-between; align-items: center; gap: .625rem; margin-top: .625rem; }
   .ad5-navigation button { display: flex; align-items: center; justify-content: center; flex: 0 0 2.75rem; min-height: 2.75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; background: #fff; color: var(--ad5-ink); }
   .ad5-navigation button:disabled { opacity: .4; }
-  .ad5-navigation p { text-align: center; font-size: .875rem; line-height: 1.45; color: var(--ad5-muted); }
+  .ad5-navigation p { min-width: 0; overflow-wrap: anywhere; text-align: center; font-size: .875rem; line-height: 1.45; color: var(--ad5-muted); }
   .ad5-navigation p > span { display: block; }
-  .albums-mobile-v5 .ad5-help { margin-top: 1.5rem; padding: 1rem; gap: .75rem; }
+  .albums-mobile-v5 .ad5-help { margin-top: 1.5rem; padding: 1rem; gap: .75rem; flex-direction: column; align-items: stretch; text-align: left; overflow-wrap: anywhere; }
   .albums-mobile-v5 .ad5-help h2 { font-size: 1.125rem; line-height: 1.35; }
   .albums-mobile-v5 .ad5-help p { font-size: 1rem; line-height: 1.5; color: var(--ad5-muted); }
-  .albums-mobile-v5 .ad5-help a { white-space: normal; height: auto; min-height: 3rem; font-size: 1rem; line-height: 1.4; text-align: center; }
+  .albums-mobile-v5 .ad5-help a { width: 100%; min-width: 0; padding-inline: .75rem; overflow-wrap: anywhere; white-space: normal; height: auto; min-height: 3rem; font-size: 1rem; line-height: 1.4; text-align: center; }
   .albums-mobile-v5 > footer { padding-block: 2rem; }
   /* Contacts remain in the shared header/footer. No floating shortcut over the cards. */
   .albums-mobile-v5 > .fixed { display: none; }

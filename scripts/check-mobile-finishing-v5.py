@@ -14,10 +14,8 @@ for name in ['Process.tsx','CTA.tsx','kindergarten/KindergartenHero.tsx','kinder
 for path in ['src/config/albumPackages.ts','src/config/albumCommercial.ts','server/index.mjs']:
     assert Path(path).read_bytes()==subprocess.check_output(['git','show',f'{BASE}:{path}']), path
     report['protected_sources'].append(path)
-# Existing business descriptions must stay verbatim even on the new selector.
 a=Path('src/pages/Albums.tsx').read_text(); b=subprocess.check_output(['git','show',f'{BASE}:src/pages/Albums.tsx']).decode()
 assert a.split('const directions = [')[1].split('] as const;')[0]==b.split('const directions = [')[1].split('] as const;')[0]
-
 SHOT = '.kindergarten-mobile-v1 > .fixed, .albums-mobile-v5 > .fixed {visibility:hidden!important}'
 
 def setup(browser,width,url):
@@ -84,7 +82,10 @@ with sync_playwright() as pw:
                 assert page.locator('#process').evaluate('e=>getComputedStyle(e).paddingTop')=='24px'
                 before_height=old.evaluate('document.documentElement.scrollHeight');after_height=page.evaluate('document.documentElement.scrollHeight')
                 assert after_height<before_height
-                item={'engine':engine,'width':width,'kg_before_height':before_height,'kg_after_height':after_height,'all_six_process_steps_unchanged':True,'before_sections':sections(old),'after_sections':sections(page)}
+                old_sections,new_sections=sections(old),sections(page)
+                for x,y in zip(old_sections,new_sections):
+                    for edge in ['paddingTop','paddingBottom']:assert float(y[edge][:-2])<=float(x[edge][:-2]),(x,y)
+                item={'engine':engine,'width':width,'kg_before_height':before_height,'kg_after_height':after_height,'all_six_process_steps_unchanged':True,'before_sections':old_sections,'after_sections':new_sections}
                 if width==390 and engine=='chromium':
                     old.screenshot(path=str(OUT/'kg-before-full.png'),full_page=True,style=SHOT)
                     page.screenshot(path=str(OUT/'kg-after-full.png'),full_page=True,style=SHOT)
@@ -100,9 +101,12 @@ with sync_playwright() as pw:
                 fit(page.locator('main'))
                 assert page.locator('.ad5-switch button').count()==3
                 assert page.locator('.ad5-slide:not([inert])').count()==1
-                start_y=page.evaluate('scrollY')
                 paths={'kindergarten':'/kindergarten','grade4':'/school/4','grade9_11':'/school/9-11'}
                 for segment,path in paths.items():
+                    # A locator screenshot may have scrolled the page. Restore the review
+                    # position before measuring a switch, not before the previous screenshot.
+                    page.evaluate('scrollTo(0,0)');page.wait_for_timeout(50)
+                    start_y=page.evaluate('scrollY')
                     page.locator(f'[data-direction="{segment}"]').click()
                     page.wait_for_function('(s)=>document.querySelector(".ad5-slide:not([inert])").dataset.slide===s',arg=segment)
                     page.wait_for_timeout(100)
@@ -113,7 +117,7 @@ with sync_playwright() as pw:
                     assert parsed.path==path and q['utm_source']==['qa'] and q['yclid']==['42']
                     assert 'unrelated' not in q
                     if width==390 and engine=='chromium':
-                        page.evaluate('scrollTo(0,0)');page.screenshot(path=str(OUT/f'albums-{segment}-phone.png'))
+                        page.screenshot(path=str(OUT/f'albums-{segment}-phone.png'))
                         page.locator('main').screenshot(path=str(OUT/f'albums-{segment}-full.png'),style=SHOT)
                 page.locator('[data-direction="grade9_11"]').press('Home')
                 page.wait_for_function('document.querySelector(".ad5-switch button[aria-pressed=true]").dataset.direction==="kindergarten"')
@@ -124,7 +128,6 @@ with sync_playwright() as pw:
                 assert page.get_by_role('button',name='Следующее направление',exact=True).is_disabled()
                 page.locator('[data-direction="grade9_11"]').press('ArrowLeft')
                 page.wait_for_function('document.querySelector(".ad5-switch button[aria-pressed=true]").dataset.direction==="grade4"')
-                await_path=paths['grade4']
                 page.locator('.ad5-slide:not([inert]) a').click();page.wait_for_url('**/school/4?**')
                 assert parse_qs(urlparse(page.url).query)['utm_campaign']==['selector_v5']
                 page.go_back(wait_until='networkidle');page.locator('.ad5-picker').wait_for()
@@ -147,7 +150,9 @@ with sync_playwright() as pw:
                     pages=[]
                     for url in (BEFORE,AFTER):
                         ctx,page,errs=setup(browser,width,url+path);contexts.append(ctx);reveal(page);pages.append(page);assert not errs,errs
-                    same(metrics(pages[0].locator('main')),metrics(pages[1].locator('main')))
+                    # The existing home page has no main landmark; do not invent one.
+                    roots=[p.locator('main') if p.locator('main').count() else p.locator('#root') for p in pages]
+                    same(metrics(roots[0]),metrics(roots[1]))
                     same(metrics(pages[0].locator('footer')),metrics(pages[1].locator('footer')))
                     report['regression'].append({'path':path,'width':width,'text_geometry_styles':'unchanged'})
                 except Exception as exc:fail(name,exc,page)
