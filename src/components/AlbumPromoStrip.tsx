@@ -16,10 +16,10 @@ const AlbumPromoStrip = () => {
         </span>
         <div className="text-left sm:flex sm:items-baseline sm:gap-3">
           <p className="text-base font-bold leading-tight sm:text-xl">
-            Скидка 10% при оплате до 1 октября
+            Скидка 10% при полной оплате
           </p>
           <p className="mt-1 text-sm leading-tight text-primary-foreground/85 sm:mt-0">
-            на все выпускные альбомы
+            подтверждённого заказа до 1 октября 2026 включительно
           </p>
         </div>
       </div>

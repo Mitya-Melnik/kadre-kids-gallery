@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { albumPackages } from "@/config/albumPackages";
+import { albumCommercial } from "@/config/albumCommercial";
 
 const schoolText = (text: string, audience: AlbumAudience) => {
   const adapted = text
@@ -75,8 +76,8 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
       : undefined;
   const seniorPackageComparison = [
     { format: "6 страниц", diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Можно добавить · 300 ₽", certificateTable: "+300 ₽", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Полная стоимость", graduationBonus: "Фото и видео — скидка 10%", graduationBonusTable: "Фото и видео −10%" },
-    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Включена", certificateTable: "Включена", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: "Фото и видео — скидка 20%", graduationBonusTable: "Фото и видео −20%" },
-    { format: "Большая история — 14 страниц", diploma: "Включён", diplomaTable: "Включён", certificate: "Включена", certificateTable: "Включена", futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: "Фотосъёмка — в подарок, видео — скидка 50%", graduationBonusTable: "Фото — подарок, видео −50%" },
+    { format: `${isSchool ? "Школьные годы" : "История детства"} — 10 страниц`, diploma: "Можно добавить · 500 ₽", diplomaTable: "+500 ₽", certificate: "Включена", certificateTable: "Включена", futureLetter: "Можно добавить · 1 000 ₽", futureLetterTable: "+1 000 ₽", copy: "Скидка 25%", graduationBonus: albumCommercial.historySummary, graduationBonusTable: albumCommercial.historySummary },
+    { format: "Большая история — 14 страниц", diploma: "Включён", diplomaTable: "Включён", certificate: "Включена", certificateTable: "Включена", futureLetter: "Включено", futureLetterTable: "Включено", copy: "Скидка 50%", graduationBonus: albumCommercial.bigSummary, graduationBonusTable: albumCommercial.bigSummary },
   ];
   const catalogScenarios = isSchool
     ? [
@@ -333,6 +334,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
               <div className="border-b border-primary/15 px-5 py-4">
                 <h4 className="font-bold text-foreground">{isGrade4 ? "Дополнения расширенных форматов" : "Особые дополнения старших форматов"}</h4>
                 <p className="mt-1 text-sm text-muted-foreground">Коротко о том, чем отличаются три полноценных альбома.</p>
+                <p className="mt-2 text-sm text-muted-foreground">{isSchool ? schoolText(`${albumCommercial.historyEligibility}. ${albumCommercial.historyScope}`, audience) : `${albumCommercial.historyEligibility}. ${albumCommercial.historyScope}`}</p>
               </div>
               <div className="hidden overflow-x-auto md:block">
                 <table className="w-full min-w-[900px] border-collapse text-left text-sm">
@@ -354,7 +356,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                         <td className="p-4 text-muted-foreground">{item.certificateTable}</td>
                         <td className="p-4 text-muted-foreground">{item.futureLetterTable}</td>
                         <td className="p-4 font-medium text-foreground">{item.copy}</td>
-                        <td className="p-4 font-medium text-foreground">{item.graduationBonusTable}</td>
+                        <td className="p-4 font-medium text-foreground">{isSchool ? schoolText(item.graduationBonusTable, audience) : item.graduationBonusTable}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -368,7 +370,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
                     <p className="mt-2 text-sm text-foreground">Персональная грамота: {item.certificate.toLowerCase()}</p>
                     <p className="mt-2 text-sm text-foreground">«Письмо в будущее»: {item.futureLetter.toLowerCase()}</p>
                     <p className="mt-2 text-sm font-medium text-foreground">Копия для близких: {item.copy.toLowerCase()}</p>
-                    <p className="mt-2 text-sm font-medium text-primary">Бонус на выпускной: {item.graduationBonus.toLowerCase()}</p>
+                    <p className="mt-2 text-sm font-medium text-primary">Бонус на выпускной: {(isSchool ? schoolText(item.graduationBonus, audience) : item.graduationBonus).toLowerCase()}</p>
                   </article>
                 ))}
               </div>

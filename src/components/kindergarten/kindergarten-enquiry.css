@@ -1,0 +1,36 @@
+/* Only the opt-in kindergarten mobile flow uses these selectors. */
+.kg-lead-overlay { position: fixed; inset: 0; z-index: 120; background: rgb(0 0 0 / .5); }
+.kg-lead-dialog { position: fixed; inset: auto 0 0; z-index: 121; display: flex; flex-direction: column; width: 100%; max-width: 40rem; margin-inline: auto; max-height: 92vh; max-height: 92dvh; background: #fff; color: #262c34; border-radius: 1.25rem 1.25rem 0 0; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
+.kg-lead-heading { display: flex; align-items: flex-start; gap: .5rem; flex: 0 0 auto; padding: 1rem; border-bottom: 1px solid #e1deda; }
+.kg-lead-heading > div { flex: 1; min-width: 0; }
+.kg-lead-heading h2 { margin: 0; font-size: 1.25rem; line-height: 1.3; font-weight: 700; }
+.kg-lead-heading p { margin-top: .375rem; font-size: .875rem; color: #505963; }
+.kg-lead-close { display: flex; align-items: center; justify-content: center; flex: 0 0 2.75rem; width: 2.75rem; height: 2.75rem; border: 1px solid #e1deda; border-radius: .5rem; }
+.kg-lead-body { overflow-y: auto; min-height: 0; padding: .875rem 1rem max(1rem, env(safe-area-inset-bottom)); overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.kg-lead-choice { display: flex; flex-wrap: wrap; align-items: baseline; gap: .125rem .5rem; font-size: .875rem; margin-bottom: .5rem; color: #505963; }
+.kg-lead-choice button { min-height: 2.75rem; color: #b33930; text-decoration: underline; }
+.kg-lead-field { margin-bottom: .75rem; }
+.kg-lead-field > label { display: block; margin-bottom: .25rem; font-weight: 600; font-size: .875rem; }
+.kg-lead-field input, .kg-lead-field select, .kg-lead-field textarea { display: block; width: 100%; max-width: 100%; min-height: 2.875rem; padding: .625rem .75rem; font: inherit; background: #fff; color: #262c34; border: 1px solid #858a91; border-radius: .5rem; }
+.kg-lead-field input::placeholder { color: #626970; opacity: 1; }
+.kg-lead-field [aria-invalid="true"] { border: 2px solid #a42824; }
+.kg-lead-extras-toggle { display: block; min-height: 2.75rem; padding-block: .375rem; color: #b33930; font-size: .875rem; line-height: 1.5; text-align: left; text-decoration: underline; }
+.kg-lead-consent { display: flex; align-items: flex-start; gap: .625rem; margin-block: .75rem .375rem; font-size: .875rem; cursor: pointer; }
+.kg-lead-consent input { flex: 0 0 1.375rem; width: 1.375rem; height: 1.375rem; margin-top: .125rem; accent-color: #b33930; }
+.kg-lead-dialog a { color: #a3332b; text-decoration: underline; text-underline-offset: .125em; }
+.kg-lead-note { margin-top: .375rem; font-size: .8125rem; line-height: 1.5; color: #505963; }
+.kg-lead-submit { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 3rem; margin-top: .875rem; padding: .75rem; border-radius: .625rem; background: #b33930; color: #fff; font-size: 1rem; font-weight: 600; line-height: 1.4; text-align: center; }
+.kg-lead-submit:disabled { opacity: .7; cursor: wait; }
+.kg-lead-error, .kg-lead-failure { color: #a42824; font-size: .875rem; line-height: 1.5; margin-top: .375rem; }
+.kg-lead-failure { background: #fff3ef; padding: .75rem; border-radius: .5rem; }
+.kg-lead-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.kg-lead-phone, .kg-lead-link { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .5rem 0; font-size: .875rem; text-align: center; color: #a3332b; }
+.kg-lead-success { padding-block: 1rem; text-align: center; }
+.kg-lead-success > svg { color: #b33930; margin: 0 auto 1rem; }
+.kg-lead-success p { margin-block: .5rem; }
+.kg-lead-dialog :focus-visible, .kg-lead-section :focus-visible { outline: 3px solid #b33930; outline-offset: 3px; }
+@media (max-width: 767px) {
+  .kg-lead-section { padding: 2rem 1rem; background: hsl(var(--accent-soft)); scroll-margin-top: 5rem; }
+  .kg-lead-section h2 { font-size: 1.625rem; font-weight: 700; line-height: 1.3; margin-bottom: .75rem; }
+  .kg-lead-section p { color: #505963; font-size: 1rem; line-height: 1.55; }
+}

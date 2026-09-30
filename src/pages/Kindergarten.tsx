@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { KindergartenEnquiryShell, KindergartenEnquirySection } from "@/components/kindergarten/KindergartenEnquiry";
 import { Helmet } from "react-helmet";
 import TopBar from "@/components/TopBar";
 import AlbumPromoStrip from "@/components/AlbumPromoStrip";
@@ -39,14 +40,14 @@ const Kindergarten = () => {
     gallery: <KindergartenGallery compactMobile={mobile} />,
     reviews: <Testimonials compactMobile={mobile} />,
     questions: <KindergartenFAQ compactMobile={mobile} />,
-    form: <CTA initialDirection="album" initialAudience="kindergarten" fixedDirection="album" fixedAudience="kindergarten" />,
+    form: mobile ? <KindergartenEnquirySection /> : <CTA initialDirection="album" initialAudience="kindergarten" fixedDirection="album" fixedAudience="kindergarten" />,
   };
   const order: (keyof typeof sections)[] = mobile
     ? ["hero", "promotion", "catalog", "controls", "gallery", "story", "advantages", "process", "layouts", "inline", "reviews", "questions", "form"]
     : ["hero", "promotion", "advantages", "catalog", "controls", "story", "process", "layouts", "inline", "gallery", "reviews", "questions", "form"];
 
   return (
-    <div className="kindergarten-mobile-v1 kindergarten-mobile-content-v3 min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
+    <KindergartenEnquiryShell enabled={mobile} className="kindergarten-mobile-v1 kindergarten-mobile-content-v3 min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
       <Helmet>
         <title>Выпускные альбомы для детского сада в СПб | Дети в кадре</title>
         <meta name="description" content="Выпускные альбомы для детских садов Санкт-Петербурга: договор, до 3 съёмочных дней, выбор портрета, электронные фотографии и доставка СДЭК." />
@@ -64,7 +65,7 @@ const Kindergarten = () => {
       <FabContact aboveMobileBar />
       <BackToTop aboveMobileBar />
       <KindergartenMobileCTA />
-    </div>
+    </KindergartenEnquiryShell>
   );
 };
 
