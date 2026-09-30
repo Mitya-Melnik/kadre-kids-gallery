@@ -1,0 +1,9 @@
+# Mobile finishing v5 — preview, not deployment
+
+Base: approved `c4b7bfa6538d754fdbca3fee22f864cf1f8fb359`. Scope: mobile `/kindergarten` whitespace and `/albums` direction cards. The 4th-grade and 9–11-grade pages are the next separate task, not redesigned here. No merge or publication without a separate owner instruction.
+
+Kindergarten: section top/bottom padding is 24 px instead of legacy 80 px where applicable; the already compact catalog and approved hero are excluded. Large gaps between case groups and layout examples are reduced. The six process cards, their descriptions, timings, fonts and internal spacing stay identical; only the padding outside the process content changes. Footer outer padding is 32 px. No commercial configuration, images, forms or backend changes.
+
+Albums: one native horizontal scroll-snap row on phones; three labeled buttons stay visible, with previous/next, counter and keyboard navigation. No autoplay. The original directions data and desktop grid are reused. Inactive slides are inert and hidden from assistive navigation. Card height remains natural and grows with text. Mobile links preserve only existing UTM/yclid attribution; viewing a card is not recorded as a conversion. Header is shorter only on mobile. No invented prices or new product promises. The desktop markup retains the same layout and wording.
+
+Check real production builds against the above baseline. Reports distinguish intended outer spacing changes from protected process card/text geometry. Test 320/360/390/430/767, increased text, swipe-like horizontal scroll, keyboard, destination links, and unaffected desktop/school views. Analytics and real lead POSTs are blocked. Browser emulation is not a physical iPhone test. Old release checks (video assets, actual device/keyboard and authorized end-to-end CRM submission) remain.
