@@ -16,7 +16,7 @@ export default function MobileContentViewportControls() {
       }
       root.toggleAttribute("data-kg3-reading", visible.size > 0);
     }, { rootMargin: "-96px 0px -180px 0px", threshold: 0 });
-    root.querySelectorAll(".kg3-gallery, .kg3-reviews, .kg3-faq, .kg3-advantages-wrap").forEach((section) => observer.observe(section));
+    root.querySelectorAll(".kg3-gallery, .kg3-reviews, .kg3-faq, .kg3-advantages-wrap, .kgp6").forEach((section) => observer.observe(section));
     return () => {
       observer.disconnect();
       root.removeAttribute("data-kg3-reading");

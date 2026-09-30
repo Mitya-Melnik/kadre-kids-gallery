@@ -15,6 +15,7 @@ import "@/components/kindergarten/kindergarten-content-v3.css";
 import "@/components/kindergarten/kindergarten-spacing-v5.css";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Process from "@/components/Process";
+import KindergartenProcessMobile from "@/components/kindergarten/KindergartenProcessMobile";
 import CTA from "@/components/CTA";
 import KindergartenInlineCTA from "@/components/kindergarten/KindergartenInlineCTA";
 import KindergartenMobileCTA from "@/components/kindergarten/KindergartenMobileCTA";
@@ -34,8 +35,8 @@ const Kindergarten = () => {
     catalog: <AlbumCatalog />,
     controls: <CatalogViewportControls />,
     story: <KindergartenCase />,
-    // Keep all six existing steps, descriptions and timings, with no disclosure.
-    process: <Process initialType="album" fixedType="album" />,
+    // All six complete steps; the owner requested a mobile carousel, not shorter content.
+    process: mobile ? <KindergartenProcessMobile /> : <Process initialType="album" fixedType="album" />,
     layouts: <KindergartenLayouts />,
     inline: <KindergartenInlineCTA />,
     gallery: <KindergartenGallery compactMobile={mobile} />,

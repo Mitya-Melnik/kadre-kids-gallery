@@ -1,0 +1,26 @@
+/* Only mounted on mobile /kindergarten. No shared Process or school selectors. */
+@media (max-width: 767px) {
+  .kgp6 { --kp-ink: #262c34; --kp-muted: #505963; --kp-accent: #b33930; overflow-anchor: none; scroll-margin-top: 4.5rem; }
+  .kgp6-browser { max-width: 36rem; margin: 1.25rem auto 0; min-width: 0; }
+  .kgp6-navigation { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 6rem), 1fr)); gap: .375rem; max-width: 24rem; list-style: none; margin: 0 auto 1rem; padding: 0; }
+  .kgp6-navigation li { min-width: 0; }
+  .kgp6-navigation button { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .25rem; width: 100%; height: 100%; min-height: 3.5rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; padding: .5rem .25rem; background: #fff; color: var(--kp-ink); font-size: .875rem; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere; }
+  .kgp6-navigation button[aria-current="step"] { border-color: var(--kp-accent); box-shadow: inset 0 0 0 1px var(--kp-accent); background: #fff3ef; color: var(--kp-accent); }
+  .kgp6-number { display: flex; width: 1.375rem; height: 1.375rem; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f5; color: var(--kp-ink); font-size: .8125rem; }
+  .kgp6-navigation button[aria-current="step"] .kgp6-number { background: var(--kp-accent); color: #fff; }
+  .kgp6-strip { display: flex; align-items: stretch; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; border-radius: 1rem; }
+  .kgp6-strip::-webkit-scrollbar { display: none; }
+  .kgp6-slide { flex: 0 0 100%; min-width: 0; display: flex; scroll-snap-align: start; scroll-snap-stop: always; }
+  .kgp6-card { display: flex; flex-direction: column; width: 100%; min-width: 0; padding: 1.25rem; border: 1px solid hsl(var(--border)); border-radius: 1rem; background: #fff; color: var(--kp-ink); overflow-wrap: anywhere; }
+  .kgp6-card-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: 1rem; color: var(--kp-accent); font-size: .875rem; font-weight: 700; }
+  .kgp6-icon { display: flex; width: 2.75rem; height: 2.75rem; align-items: center; justify-content: center; border-radius: .75rem; background: #fff3ef; }
+  .kgp6-card h3 { font-size: 1.125rem; line-height: 1.4; font-weight: 700; }
+  .kgp6-description { margin-top: .5rem; margin-bottom: 1rem; font-size: 1rem; line-height: 1.55; color: var(--kp-muted); }
+  .kgp6-timing { align-self: flex-start; margin-top: auto; padding: .5rem .75rem; border-radius: .625rem; background: #fff3ef; color: var(--kp-accent); font-size: .875rem; font-weight: 600; line-height: 1.45; }
+  .kgp6-controls { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: .75rem; }
+  .kgp6-controls button { display: flex; flex: 0 0 2.75rem; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; background: #fff; color: var(--kp-ink); }
+  .kgp6-controls button:disabled { opacity: .4; cursor: default; }
+  .kgp6-controls p { text-align: center; font-size: .875rem; font-weight: 600; color: var(--kp-ink); }
+  .kgp6-hint { margin-top: .375rem; text-align: center; font-size: .875rem; line-height: 1.5; color: var(--kp-muted); }
+  .kgp6 :focus-visible { outline: 3px solid var(--kp-accent); outline-offset: 3px; }
+}
