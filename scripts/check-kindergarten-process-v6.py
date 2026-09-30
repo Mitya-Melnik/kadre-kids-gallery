@@ -25,7 +25,15 @@ def setup(browser, width, url):
     page.add_style_tag(content='*{animation:none!important;transition:none!important;scroll-behavior:auto!important}')
     for y in range(0, int(page.evaluate('document.documentElement.scrollHeight'))+850, 650):
         page.evaluate('(y)=>scrollTo(0,y)', y); page.wait_for_timeout(45)
-    page.wait_for_timeout(250); page.evaluate('scrollTo(0,0)'); page.wait_for_timeout(100)
+    page.wait_for_timeout(250)
+    # WebKit can deliver IntersectionObserver notifications after a fast scan.
+    # Actually view any still-unrevealed elements and await their real React state;
+    # do not mask transforms or force CSS classes to manufacture a comparison.
+    for node in page.locator('.translate-y-8.opacity-0').element_handles():
+        if node.evaluate("e=>e.classList.contains('opacity-0')"):
+            node.evaluate('(e)=>scrollTo(0,e.getBoundingClientRect().top+scrollY-96)')
+            page.wait_for_function("e=>!e.classList.contains('opacity-0')", arg=node)
+    page.evaluate('scrollTo(0,0)'); page.wait_for_timeout(100)
     return ctx, page, errors
 
 def metrics(root):
