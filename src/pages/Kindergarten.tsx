@@ -12,6 +12,7 @@ import MobileContentViewportControls from "@/components/kindergarten/MobileConte
 import { MobileAdvantages, useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
 import "@/components/kindergarten/kindergarten-mobile.css";
 import "@/components/kindergarten/kindergarten-content-v3.css";
+import "@/components/kindergarten/kindergarten-spacing-v5.css";
 import KindergartenAdvantages from "@/components/kindergarten/KindergartenAdvantages";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
