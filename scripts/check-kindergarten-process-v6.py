@@ -30,7 +30,7 @@ def setup(browser, width, url):
     # Actually view any still-unrevealed elements and await their real React state;
     # do not mask transforms or force CSS classes to manufacture a comparison.
     for node in page.locator('.translate-y-8.opacity-0').element_handles():
-        if node.evaluate("e=>e.classList.contains('opacity-0')"):
+        if node.evaluate("e=>e.getClientRects().length>0&&e.classList.contains('opacity-0')"):
             node.evaluate('(e)=>scrollTo(0,e.getBoundingClientRect().top+scrollY-96)')
             page.wait_for_function("e=>!e.classList.contains('opacity-0')", arg=node)
     page.evaluate('scrollTo(0,0)'); page.wait_for_timeout(100)
