@@ -1,15 +1,14 @@
-/** Owner clarification 2026-09-29. The previous 15-album threshold is retained,
- * not silently waived; changing it needs a separate owner decision.
- * These constants only explain offers. A consultation request does not grant a discount.
+/** Owner decision 2026-09-30: no separate album-count threshold for the 20% offer.
+ * A confirmed History album order and its contractual prepayment are still required.
+ * General minimum album orders are unchanged. An enquiry does not grant a discount.
  */
 export const albumCommercial = {
-  historyMinimum: 15,
-  historyEligibility: "При заказе от 15 альбомов «История детства» и внесении предусмотренной договором предоплаты за них",
+  historyEligibility: "При заказе альбомов «История детства» и внесении предусмотренной договором предоплаты за них",
   historyPhoto: "Фотосъёмка выпускного — 8 000 ₽ вместо 10 000 ₽ (−20%)",
   historyVideo: "Видеосъёмка выпускного — 12 000 ₽ вместо 15 000 ₽ (−20%)",
   historyPackage: "Пакет «Фото + Видео» — 20 000 ₽ вместо 25 000 ₽ (−20%)",
-  historySummary: "Фото и видео −20% при заказе от 15 альбомов с предоплатой",
-  historyScope: "Для той же группы или класса на выпускной соответствующего года. Можно заказать фото и видео отдельно или вместе. Reels не входит; скидка не обменивается на деньги и не переносится. Совместима со скидкой на альбомы. На пакет применяется один раз.",
+  historySummary: "Фото и видео −20% при заказе альбомов с предоплатой",
+  historyScope: "Для той же группы или класса на выпускной соответствующего года. Можно заказать фото и видео отдельно или вместе. Отдельного порога количества альбомов для этой скидки нет; общий минимальный заказ альбомов сохраняется. Reels не входит; скидка не обменивается на деньги и не переносится. Совместима со скидкой на альбомы. На пакет применяется один раз.",
   bigPhoto: "Фотосъёмка выпускного уже включена в стоимость в рамках до трёх съёмочных дней",
   bigVideo: "Видеосъёмка выпускного — 15 000 ₽",
   bigSummary: "Фото включено; видео — 15 000 ₽",

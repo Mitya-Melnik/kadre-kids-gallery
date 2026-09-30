@@ -17,16 +17,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
-        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         with:
           node-version: '22'
           cache: npm
       - uses: actions/setup-python@v5
-        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         with:
           python-version: '3.12'
       - name: Build and test without deployment or live leads
-        if: hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
         run: |
           npm ci
           npm run build
@@ -34,7 +31,7 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/approved-content/node_modules
           npm --prefix /tmp/approved-content run build
           node scripts/check-mobile-types.cjs /tmp/approved-content
-          node --test scripts/test-album-enquiry.mjs
+          node --test scripts/test-album-enquiry.mjs scripts/test-album-commercial.mjs
           pip install playwright==1.55.0 Pillow==11.3.0
           playwright install --with-deps chromium webkit
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/enquiry-preview.log 2>&1 &
@@ -43,12 +40,16 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
             sleep 1
           done
-          python scripts/check-kindergarten-lead.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-lead-results
+          status=0
+          python scripts/check-kindergarten-lead.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-lead-results || status=$?
+          python scripts/capture-mobile-site.py http://127.0.0.1:4173 mobile-site-results || status=$?
+          exit "$status"
       - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('scripts/stage-kindergarten-enquiry-v4.py') == ''
+        if: always()
         with:
           name: kindergarten-lead-v4-review
           path: |
             mobile-lead-results/
+            mobile-site-results/
             mobile-preview-results/types.json
           retention-days: 14
