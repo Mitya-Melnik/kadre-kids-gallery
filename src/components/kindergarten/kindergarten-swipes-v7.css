@@ -1,0 +1,22 @@
+/* Opt-in sections on mobile /kindergarten; no global carousel overrides. */
+@media (max-width: 767px) {
+  .kindergarten-mobile-content-v3 .kg7-swipe { min-width: 0; max-width: 36rem; margin-inline: auto; color: var(--km-ink); }
+  .kindergarten-mobile-content-v3 .kg7-rail { display: flex; align-items: stretch; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; border-radius: .875rem; }
+  .kindergarten-mobile-content-v3 .kg7-rail::-webkit-scrollbar { display: none; }
+  .kindergarten-mobile-content-v3 .kg7-slide { display: flex; flex-direction: column; flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; padding: 1px; }
+  .kindergarten-mobile-content-v3 .kg7-slide > .kg3-review { flex: 1; display: flex; flex-direction: column; }
+  .kindergarten-mobile-content-v3 .kg7-slide > .kg3-review figcaption { margin-top: auto; padding-top: .75rem; }
+  .kindergarten-mobile-content-v3 .kg7-spread-button { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid hsl(var(--border)); border-radius: .875rem; background: #f6f4f1; }
+  .kindergarten-mobile-content-v3 .kg7-spread-button picture { display: block; width: 100%; }
+  .kindergarten-mobile-content-v3 .kg7-spread-button img { display: block; width: 100%; height: auto; aspect-ratio: 1.45 / 1; object-fit: contain; }
+  .kindergarten-mobile-content-v3 .kg7-expand { position: absolute; right: .5rem; bottom: .5rem; display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border: 1px solid hsl(var(--border)); border-radius: .5rem; background: #fff; }
+  .kindergarten-mobile-content-v3 .kg7-controls { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .75rem; }
+  .kindergarten-mobile-content-v3 .kg7-controls button { display: flex; flex: 0 0 2.75rem; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; background: #fff; }
+  .kindergarten-mobile-content-v3 .kg7-controls button:disabled { opacity: .4; }
+  .kindergarten-mobile-content-v3 .kg7-controls > div { min-width: 0; text-align: center; overflow-wrap: anywhere; }
+  .kindergarten-mobile-content-v3 .kg7-controls p { font-size: 1rem; line-height: 1.4; }
+  .kindergarten-mobile-content-v3 .kg7-controls span { display: block; margin-top: .125rem; font-size: .8125rem; line-height: 1.4; color: var(--km-muted); }
+  .kindergarten-mobile-content-v3 .kg7-swipe :focus-visible { outline: 3px solid var(--km-accent); outline-offset: -3px; }
+  .kindergarten-mobile-content-v3[data-kg7-reading] > .fixed:not(.inset-x-0) { display: none; }
+  .kg7-original { flex-shrink: 0; display: block; min-height: 2.75rem; margin-top: .5rem; padding: .5rem; text-align: center; font-size: 1rem; line-height: 1.4; color: #fff; text-decoration: underline; }
+}
