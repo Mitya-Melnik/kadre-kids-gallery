@@ -3,25 +3,30 @@ on:
   push:
     branches: [feature/senior-mobile-v9]
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: senior-mobile-v9
   cancel-in-progress: true
 jobs:
   preview:
+    if: github.ref == 'refs/heads/feature/senior-mobile-v9'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v6
         with:
-          persist-credentials: false
-      - name: Export tracked source for isolated local editing
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Apply verified source update to this feature branch only
+        if: hashFiles('scripts/prepare-senior-v9.py') != ''
+        run: python scripts/prepare-senior-v9.py
+      - name: Record the resulting source version
         run: |
           mkdir -p review-workspace
-          git archive --format=tar HEAD src server scripts docs .github package.json package-lock.json index.html components.json eslint.config.js postcss.config.js tailwind.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts > review-workspace/source.tar
           git rev-parse HEAD > review-workspace/commit.txt
+          git diff --name-only e587ecb3d7828522ec9957d11e83d1ef296b0425 HEAD > review-workspace/changed-files.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: senior-mobile-v9-workspace
+          name: senior-mobile-v9-source-applied
           path: review-workspace/
           retention-days: 7
