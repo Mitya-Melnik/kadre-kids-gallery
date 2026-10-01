@@ -1,0 +1,69 @@
+name: Mobile release audit and rollback snapshots
+on:
+  push:
+    branches: [release/kindergarten-mobile-2026-10-01]
+permissions:
+  contents: read
+concurrency:
+  group: mobile-release-audit-2026-10-01
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Preserve source and build both frozen versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-audit
+          git archive --format=zip --output=release-audit/source-before-30469af.zip 30469af610eea3ebfac226bf3b86e3b407700f4c
+          git archive --format=zip --output=release-audit/source-approved-a3be327.zip a3be32716edb16db77a09a059025cd0c00492d46
+          git diff 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 > release-audit/cumulative.patch
+          git diff --name-status 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 > release-audit/changed-files.txt
+          git worktree add /tmp/desktop-before 30469af610eea3ebfac226bf3b86e3b407700f4c
+          npm ci
+          npm run build
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/desktop-before/node_modules
+          npm --prefix /tmp/desktop-before run build
+          node scripts/check-mobile-types.cjs /tmp/desktop-before
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs > release-audit/node-tests.txt
+          tar -czf release-audit/build-before-30469af.tar.gz -C /tmp/desktop-before dist
+          tar -czf release-audit/build-approved-a3be327.tar.gz dist
+          cp mobile-preview-results/types.json release-audit/types.json
+          printf '%s\n' 'Frozen original main: 30469af610eea3ebfac226bf3b86e3b407700f4c' 'Approved mobile app source: a3be32716edb16db77a09a059025cd0c00492d46' 'This run does NOT deploy or submit live leads. Builds have no production secrets; they are not a server/disk backup.' > release-audit/README.txt
+      - name: Read-only public availability check
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, socket, urllib.request, urllib.error, datetime
+          from pathlib import Path
+          result={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'requests':[]}
+          try: result['addresses']=sorted({i[4][0] for i in socket.getaddrinfo('detivkadre.spb.ru',443)})
+          except Exception as e: result['dns_error']=str(e)
+          for path in ['/', '/kindergarten']:
+              url='https://detivkadre.spb.ru'+path
+              entry={'url':url}
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Deti-v-kadre-release-check/1.0'}),timeout=15) as response:
+                      body=response.read(100000).decode('utf-8','replace')
+                      entry.update(status=response.status,final_url=response.url,headers=dict(response.headers))
+                      Path('release-audit/live-'+('home' if path=='/' else 'kindergarten')+'.html').write_text(body)
+              except Exception as e: entry['error']=str(e)
+              result['requests'].append(entry)
+          Path('release-audit/availability.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-release-snapshots-2026-10-01
+          path: release-audit/
+          retention-days: 30
