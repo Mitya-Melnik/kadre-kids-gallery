@@ -32,7 +32,7 @@ jobs:
           npm --prefix /tmp/grade4-base run build
           node scripts/check-mobile-types.cjs /tmp/grade4-base
           node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs scripts/test-grade4-enquiry.mjs
-          python -m py_compile scripts/check-grade4-mobile-v8.py scripts/check-grade4-regression.py
+          python -m py_compile scripts/check-grade4-mobile-v8.py scripts/check-grade4-regression.py scripts/check-grade4-consent.py
           pip install playwright==1.55.0 Pillow==11.3.0 numpy==2.3.3
           playwright install --with-deps chromium webkit
       - name: Read-only browser checks and review captures
@@ -44,13 +44,15 @@ jobs:
             sleep 1
           done
           set +e
+          python scripts/check-grade4-consent.py http://127.0.0.1:4173 grade4-results
+          consent_status=$?
           python scripts/check-grade4-mobile-v8.py http://127.0.0.1:4173 http://127.0.0.1:4174 grade4-results
           mobile_status=$?
           python scripts/check-grade4-regression.py 4173 4174 grade4-regression
           regression_status=$?
           python scripts/capture-mobile-site.py http://127.0.0.1:4173 mobile-site-results
           capture_status=$?
-          test "$mobile_status" -eq 0 && test "$regression_status" -eq 0 && test "$capture_status" -eq 0
+          test "$consent_status" -eq 0 && test "$mobile_status" -eq 0 && test "$regression_status" -eq 0 && test "$capture_status" -eq 0
       - uses: actions/upload-artifact@v4
         if: always()
         with:
