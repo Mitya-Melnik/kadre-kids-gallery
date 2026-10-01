@@ -1,0 +1,33 @@
+name: Grade 4 mobile preview
+on:
+  push:
+    branches: [feature/grade4-mobile-v8]
+permissions:
+  contents: read
+concurrency:
+  group: grade4-mobile-v8
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Prepare offline review workspace
+        run: |
+          npm ci
+          mkdir -p review-workspace
+          git archive HEAD -- src scripts docs package.json package-lock.json index.html components.json vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tailwind.config.ts postcss.config.js eslint.config.js server > review-workspace/source.tar
+          tar -czf review-workspace/dependencies.tar.gz node_modules
+      - uses: actions/upload-artifact@v4
+        with:
+          name: grade4-review-workspace
+          path: review-workspace/
+          retention-days: 2
