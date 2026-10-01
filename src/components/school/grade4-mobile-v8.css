@@ -22,6 +22,10 @@
   .grade4-mobile-v8 .g4-section header { margin-bottom: 1rem; }
   .grade4-mobile-v8 .kgp6, .grade4-mobile-v8 .kg3-section { padding-block: 1.5rem; }
   .grade4-mobile-v8 .kgp6 > .container { max-width: 36rem; }
+  /* Let title and price wrap into separate rows when text is enlarged. */
+  .grade4-mobile-v8 .km-v2-card-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+  .grade4-mobile-v8 .km-v2-name { flex: 1 1 9rem; }
+  .grade4-mobile-v8 .km-v2-price { margin-left: auto; }
   .grade4-mobile-v8 .g4-layout-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5rem), 1fr)); gap: .375rem; margin-bottom: .75rem; }
   .grade4-mobile-v8 .g4-layout-tabs button { min-height: 2.875rem; padding: .5rem .375rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; font-size: .875rem; line-height: 1.4; background: #fff; }
   .grade4-mobile-v8 .g4-layout-tabs button[aria-pressed="true"] { border-color: var(--km-accent); box-shadow: inset 0 0 0 1px var(--km-accent); background: #fff3ef; color: var(--km-accent); font-weight: 600; }

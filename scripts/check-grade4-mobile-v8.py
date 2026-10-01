@@ -55,6 +55,10 @@ with sync_playwright() as pw:
     base_steps=b.locator('#process article').evaluate_all('es=>es.map(e=>({title:e.querySelector("h3").textContent,text:e.querySelector("h3 + p").textContent,timing:e.querySelector(".mt-auto p")?.textContent||""}))')
     base_roles=b.locator('#participants article').evaluate_all('es=>es.map(e=>e.textContent)')
     base_height=b.evaluate('document.documentElement.scrollHeight')
+    more=b.locator('#school-faq').get_by_role('button',name='Смотреть ещё',exact=True)
+    while more.count():more.click()
+    base_questions=b.locator('#school-faq button[aria-expanded]').all_text_contents()
+    assert len(base_questions)>4 and len(set(base_questions))==len(base_questions)
     ac,a,posts,response,ae=setup(browser,width,AFTER);ctxs.append(ac)
     phase='catalog';assert a.locator('.grade4-mobile-v8').count()==1
     assert a.locator('.km-v2-tab').count()==5
@@ -63,7 +67,8 @@ with sync_playwright() as pw:
      a.locator('.km-v2-tab').nth(i).click();expect(a.locator('.km-v2-price strong')).to_have_text(price)
      image=a.locator('.km-v2-preview img');a.wait_for_function('e=>e.complete&&e.naturalWidth>0',arg=image.element_handle())
      assert '/layouts-grade4/' in image.get_attribute('src');assert a.locator('[data-open="video"]').count()==0
-     if engine=='chromium' and width==390:a.locator('#albums').screenshot(path=str(OUT/f'catalog-{i+1}.png'))
+     if engine=='chromium' and width==390:
+      pos(a,'#albums');a.wait_for_timeout(150);a.locator('#albums').screenshot(path=str(OUT/f'catalog-{i+1}.png'))
     a.locator('.km-v2-tab').nth(3).click();pos(a,'#albums');a.locator('[data-open="details"]').click()
     text=a.locator('.km-v2-sheet').inner_text();assert 'Школьные годы' in text and '15 альбомов' in text
     assert 'воспитател' not in text.lower() and 'История детства' not in text
@@ -100,14 +105,15 @@ with sync_playwright() as pw:
     assert total==61;a.locator('.g4-layout-tabs button').first.click()
     phase='faq';assert a.locator('#school-faq .kg3-question-list').first.locator('>details').count()==4
     a.locator('#school-faq .kg3-more-questions > summary').click()
-    assert a.locator('#school-faq .kg3-question').count()==21
+    new_questions=a.locator('#school-faq .kg3-question > summary').all_text_contents()
+    assert sorted(new_questions)==sorted(base_questions),(new_questions,base_questions)
     a.locator('#school-faq .kg3-more-questions > summary').click()
     phase='form';pos(a,'#albums');a.locator('.km-v2-action').click();expect(a.locator('.kg-lead-dialog')).to_be_visible()
     assert 'Школьные годы' in a.locator('.kg-lead-choice').inner_text()
     a.locator('.kg-lead-submit[type="submit"]').click();assert a.locator('.kg-lead-error').count()==4;assert len(posts)==0
     a.locator('#kg-lead-name').fill('Тест родитель');a.locator('#kg-lead-phone').fill('+7 999 0000000');a.locator('#kg-lead-institution').fill('Школа 129');a.locator('input#kg-lead-consent').check()
     if engine=='chromium' and width==390:a.screenshot(path=str(OUT/'form-filled.png'))
-    a.get_by_role('button',name='Закрыть заявку').click();a.locator('.g4-sticky a').click();expect(a.locator('#kg-lead-institution')).to_have_value('Школа 129')
+    a.get_by_role('button',name='Закрыть заявку').click();pos(a,'#hero');a.locator('.g4-sticky a').click();expect(a.locator('#kg-lead-institution')).to_have_value('Школа 129')
     response['fail']=True;a.locator('.kg-lead-submit[type="submit"]').click();expect(a.locator('.kg-lead-failure')).to_be_visible()
     assert posts[-1]['audience']=='school' and posts[-1]['schoolLevel']=='grade4';assert 'Школьные годы' in posts[-1]['comment']
     assert posts[-1]['tracking']['utmSource']=='qa' and posts[-1]['tracking']['yclid']=='456'
@@ -119,16 +125,20 @@ with sync_playwright() as pw:
      phase='text200';a.add_style_tag(content='html{font-size:200%!important}');a.wait_for_timeout(300)
      for sel in ['#albums','#process','#layouts','#participants']:
       pos(a,sel);fit(a,sel)
+     # Long school titles must not be squeezed to one or two characters per line.
+     assert a.locator('.km-v2-name h3').evaluate('e=>e.getBoundingClientRect().width/parseFloat(getComputedStyle(e).fontSize)')>=5
+     if engine=='chromium':
+      pos(a,'#albums');a.screenshot(path=str(OUT/f'text200-{width}.png'))
      a.add_style_tag(content='html{font-size:100%!important}');a.wait_for_timeout(300)
     if engine=='chromium' and width==390:
      phase='touch';swipe(ac,a,'#participants .kg7-rail');swipe(ac,a,'#process .kgp6-strip')
      a.locator('.kgp6-navigation button').first.click()
-    phase='capture';
+    phase='capture'
     if engine=='chromium' and width==390:
      for name,sel in [('hero','#hero'),('catalog','#albums'),('gallery','#gallery'),('participants','#participants'),('process','#process'),('layouts','#layouts'),('faq','#school-faq')]:
       pos(a,sel);a.screenshot(path=str(OUT/(name+'-phone.png')));a.locator(sel).screenshot(path=str(OUT/(name+'-block.png')))
     assert not ae and not be,ae+be
-    report['mobile'].append({'engine':engine,'width':width,'passed':True,'process_steps':6,'photos':12,'designs':6,'layout_pages':61,'baseline_height':base_height,'height':a.evaluate('document.documentElement.scrollHeight')})
+    report['mobile'].append({'engine':engine,'width':width,'passed':True,'process_steps':6,'photos':12,'designs':6,'layout_pages':61,'faq_count':len(base_questions),'baseline_height':base_height,'height':a.evaluate('document.documentElement.scrollHeight')})
    except Exception:
     err=traceback.format_exc();report['errors'].append({'engine':engine,'width':width,'phase':phase,'error':err});print(err,flush=True)
     if a:a.screenshot(path=str(OUT/f'failure-{engine}-{width}.png'))
