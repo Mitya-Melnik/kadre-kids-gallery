@@ -1,6 +1,9 @@
 import { type MouseEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Building2, Check, UserCheck, UsersRound } from "lucide-react";
+import { Check } from "lucide-react";
+import { schoolHeroImages, seniorParticipantBenefits as participantBenefits } from "@/config/seniorContent";
+import { useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
+import SchoolMobilePage from "@/components/school/SchoolMobilePage";
 import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import AlbumPromoStrip from "@/components/AlbumPromoStrip";
@@ -17,13 +20,6 @@ import SchoolLayouts from "@/components/school/SchoolLayouts";
 import SchoolStories from "@/components/school/SchoolStories";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-
-const schoolHeroImages = [
-  { basePath: "/layouts-school/modern/1", alt: "Школьный альбом в дизайне «Ритм» — обложка" },
-  { basePath: "/layouts-school/light/2", alt: "Школьный альбом в дизайне «Свобода» — обложка" },
-  { basePath: "/layouts-school/modern/8", alt: "Школьный альбом в дизайне «Ритм» — разворот класса" },
-  { basePath: "/layouts-school/modern/7", alt: "Школьный альбом в дизайне «Ритм» — разворот с выпускниками" },
-] as const;
 
 const SchoolHeroGallery = () => {
   const [api, setApi] = useState<CarouselApi>();
@@ -96,31 +92,16 @@ const SchoolHeroGallery = () => {
   );
 };
 
-const participantBenefits = [
-  {
-    icon: UserCheck,
-    title: "Выпускнику",
-    text: "Современная съёмка без неловких поз. Свой портрет, имя и персональный разворот каждый выпускник подтверждает до печати.",
-  },
-  {
-    icon: UsersRound,
-    title: "Ответственному за класс",
-    text: "Помогаем выбрать формат и пройти все этапы. Родители подтверждают персональные страницы, а замечания передаются нам одним общим списком.",
-  },
-  {
-    icon: Building2,
-    title: "Школе",
-    text: "Заранее согласуем даты и график съёмок. Комплектацию, сроки и ответственность сторон фиксируем в договоре.",
-  },
-] as const;
-
 const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, target: string) => {
   event.preventDefault();
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${target}`);
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
 };
 
-const School = () => (
+const School = () => {
+  const mobile = useKindergartenMobile();
+  if (mobile) return <SchoolMobilePage audience="school" />;
+  return (
   <div className="min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
     <Helmet>
       <title>Выпускные альбомы для 9 и 11 классов в СПб | Дети в кадре</title>
@@ -191,6 +172,7 @@ const School = () => (
     <BackToTop />
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="/school/9-11#cta" onClick={(event) => scrollToSection(event, "#cta")}>Рассчитать стоимость</a></Button></div>
   </div>
-);
+  );
+};
 
 export default School;

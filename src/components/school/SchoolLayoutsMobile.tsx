@@ -3,27 +3,30 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { MobileSwipeRail } from "@/components/kindergarten/MobileSwipeRail";
 import { grade4Layouts } from "./Grade4Layouts";
+import { schoolLayouts } from "./SchoolLayouts";
 
 /** Uses the same six designs and all pages as the desktop, without a second asset list. */
-export default function SchoolLayoutsMobile() {
+export default function SchoolLayoutsMobile({ audience = "grade4" }: { audience?: "grade4" | "school" }) {
+  const senior = audience === "school";
+  const layouts = senior ? schoolLayouts : grade4Layouts;
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
   const close = useRef<HTMLButtonElement>(null);
-  const layout = grade4Layouts[selected];
-  const source = (page: number) => `/layouts-grade4/${layout.slug}/${page}`;
+  const layout = layouts[selected];
+  const source = (page: number) => `/${senior ? "layouts-school" : "layouts-grade4"}/${layout.slug}/${page}`;
   const picture = (page: number, full = false) => <picture>
     {!full && <source media="(max-width: 767px)" srcSet={`${source(page)}-mobile.webp`} />}
-    <img src={`${source(page)}.webp`} alt={`${layout.title} — пример оформления выпускного альбома для 4 класса, страница ${page}`}
+    <img src={`${source(page)}.webp`} alt={`${layout.title} — пример оформления выпускного альбома для ${senior ? "9–11 классов" : "4 класса"}, страница ${page}`}
       loading={page === 1 ? "eager" : "lazy"} decoding="async" />
   </picture>;
   return <section id="layouts" className="g4-section g4-layouts" aria-labelledby="g4-layouts-title">
     <header><p className="g4-eyebrow">6 вариантов оформления</p>
-      <h2 id="g4-layouts-title">Макеты альбомов для 4 класса</h2>
+      <h2 id="g4-layouts-title">{senior ? "Макеты школьных альбомов" : "Макеты альбомов для 4 класса"}</h2>
       <p>Выберите стиль, который подходит вашему классу. Нажмите на обложку, чтобы посмотреть альбом целиком.</p>
     </header>
     <div className="g4-layout-tabs" role="group" aria-label="Дизайн альбома">
-      {grade4Layouts.map((item, index) => <button key={item.slug} type="button" aria-pressed={index === selected}
+      {layouts.map((item, index) => <button key={item.slug} type="button" aria-pressed={index === selected}
         aria-controls="g4-layout-preview" onClick={() => setSelected(index)}>{item.title}</button>)}
     </div>
     <button ref={opener} type="button" id="g4-layout-preview" className="g4-layout-cover"
