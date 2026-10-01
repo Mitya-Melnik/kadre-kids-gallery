@@ -3,6 +3,7 @@ import type { FormEvent, MouseEvent, ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CheckCircle2, X } from "lucide-react";
 import { albumPackages } from "@/config/albumPackages";
+import { schoolText, type AlbumAudience } from "@/config/albumAudience";
 import { business } from "@/config/business";
 import { contacts } from "@/config/contacts";
 import { reachGoal } from "@/lib/analytics";
@@ -11,9 +12,13 @@ import type { KindergartenLeadValues } from "@/lib/kindergartenLead";
 import "./kindergarten-enquiry.css";
 
 /** Same root element as the approved page. Only mobile enquiry links opt into the dialog. */
-export function KindergartenEnquiryShell({ children, className, enabled }: {
-  children: ReactNode; className: string; enabled: boolean;
+export function KindergartenEnquiryShell({ children, className, enabled, audience = "kindergarten" }: {
+  children: ReactNode; className: string; enabled: boolean; audience?: AlbumAudience;
 }) {
+  const isSchool = audience !== "kindergarten";
+  const pagePath = audience === "grade4" ? "/school/4" : audience === "school" ? "/school/9-11" : "/kindergarten";
+  const leadAudience = isSchool ? "school" : "kindergarten";
+  const packages = isSchool ? albumPackages.map((album) => ({ ...album, title: schoolText(album.title, audience) })) : albumPackages;
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState<KindergartenLeadValues>({ ...emptyKindergartenLead });
   const [errors, setErrors] = useState<ReturnType<typeof validateKindergartenLead>>({});
@@ -31,7 +36,7 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
   const inFlight = useRef(false);
   const controller = useRef<AbortController | null>(null);
   const placement = useRef("mobile_enquiry");
-  const selectedAlbum = albumPackages.find((album) => album.id === values.albumId);
+  const selectedAlbum = packages.find((album) => album.id === values.albumId);
 
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => { if (!enabled) setOpen(false); }, [enabled]);
@@ -54,7 +59,7 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
     if (trigger instanceof HTMLAnchorElement) {
       if (trigger.target === "_blank" || trigger.hasAttribute("download")) return;
       const url = new URL(trigger.getAttribute("href") || "", location.href);
-      if (url.origin !== location.origin || url.hash !== "#cta" || !["/kindergarten", "/kindergarten/"].includes(url.pathname)) return;
+      if (url.origin !== location.origin || url.hash !== "#cta" || ![pagePath, `${pagePath}/`].includes(url.pathname)) return;
     }
     event.preventDefault(); event.stopPropagation();
     opener.current = trigger;
@@ -65,20 +70,20 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
       if (albumPackages.some((album) => album.id === id)) setValues((previous) => ({ ...previous, albumId: id! }));
     }
     setOpen(true);
-    reachGoal("consultation_click", { page: "kindergarten", placement: placement.current });
+    reachGoal("consultation_click", { page: isSchool ? audience : "kindergarten", placement: placement.current });
   };
   const update = (key: keyof KindergartenLeadValues, value: string | boolean) => {
     setValues((previous) => ({ ...previous, [key]: value }));
     setErrors((previous) => ({ ...previous, [key]: undefined }));
     if (!started.current) {
       started.current = true;
-      reachGoal("lead_form_start", { direction: "album", audience: "kindergarten", placement: "mobile_enquiry" });
+      reachGoal("lead_form_start", { direction: "album", audience: leadAudience, placement: "mobile_enquiry" });
     }
   };
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inFlight.current || sent) return;
-    const invalid = validateKindergartenLead(values);
+    const invalid = validateKindergartenLead(values, isSchool ? "школы" : "детского сада");
     setErrors(invalid); setFailure("");
     if (Object.keys(invalid).length) {
       requestAnimationFrame(() => document.getElementById(`kg-lead-${Object.keys(invalid)[0]}`)?.focus());
@@ -91,7 +96,7 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
       const payload = buildKindergartenLead(values, {
         page: location.href, referrer: document.referrer, startedAt: startedAt.current, now: Date.now(),
         consentVersion: business.consentVersion, privacyPolicyVersion: business.privacyPolicyVersion,
-        albumTitle: selectedAlbum?.title,
+        albumTitle: selectedAlbum?.title, audience: leadAudience, schoolLevel: isSchool ? audience === "grade4" ? "grade4" : "grade9_11" : undefined,
       });
       const response = await fetch(import.meta.env.VITE_LEAD_WEBHOOK_URL || "/api/leads", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: abort.signal,
@@ -101,7 +106,7 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
         throw new Error(response.status === 429 ? "rate_limit" : "delivery");
       }
       setSent(true); setValues({ ...emptyKindergartenLead }); setExtras(false);
-      reachGoal("lead_success", { direction: "album", audience: "kindergarten", placement: "mobile_enquiry", ...(selectedAlbum ? { album_id: selectedAlbum.id } : {}) });
+      reachGoal("lead_success", { direction: "album", audience: leadAudience, placement: "mobile_enquiry", ...(selectedAlbum ? { album_id: selectedAlbum.id } : {}) });
       requestAnimationFrame(() => title.current?.focus({ preventScroll: true }));
     } catch (error) {
       setFailure(error instanceof Error && error.message === "rate_limit"
@@ -136,7 +141,7 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
             onCloseAutoFocus={(event) => { event.preventDefault(); if (opener.current?.isConnected) opener.current.focus({ preventScroll: true }); }}>
             <header className="kg-lead-heading">
               <div>
-                <Dialog.Title ref={title} tabIndex={-1}>{sent ? "Заявка принята" : "Рассчитаем для вашей группы"}</Dialog.Title>
+                <Dialog.Title ref={title} tabIndex={-1}>{sent ? "Заявка принята" : isSchool ? "Рассчитаем для вашего класса" : "Рассчитаем для вашей группы"}</Dialog.Title>
                 <Dialog.Description>{sent ? "Спасибо за обращение в «Дети в кадре»." : "Оставьте контакты — уточним детали и подготовим расчёт."}</Dialog.Description>
               </div>
               <Dialog.Close className="kg-lead-close" aria-label="Закрыть заявку"><X size={22} aria-hidden="true" /></Dialog.Close>
@@ -154,17 +159,17 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
                 </div>
                 {field("name", "Ваше имя", "Как к вам обращаться")}
                 {field("phone", "Телефон", "+7 999 000-00-00")}
-                {field("institution", "Номер или название детского сада", "Например, № 108, Приморский район")}
+                {field("institution", isSchool ? "Номер или название школы" : "Номер или название детского сада", isSchool ? "Например, школа № 129" : "Например, № 108, Приморский район")}
                 <button type="button" className="kg-lead-extras-toggle" aria-expanded={extras} aria-controls="kg-lead-extras" onClick={() => setExtras((previous) => !previous)}>
                   {extras ? "Скрыть дополнительные поля" : "Количество детей и пожелания — необязательно"}
                 </button>
                 <div id="kg-lead-extras" hidden={!extras}>
                   <div className="kg-lead-field"><label htmlFor="kg-lead-album">Формат для расчёта</label>
                     <select id="kg-lead-album" value={values.albumId} disabled={sending} onChange={(event) => update("albumId", event.target.value)}>
-                      <option value="">Помогите выбрать</option>{albumPackages.map((album) => <option key={album.id} value={album.id}>{album.title}</option>)}
+                      <option value="">Помогите выбрать</option>{packages.map((album) => <option key={album.id} value={album.id}>{album.title}</option>)}
                     </select>
                   </div>
-                  <div className="kg-lead-field"><label htmlFor="kg-lead-count">Сколько детей в группе?</label>
+                  <div className="kg-lead-field"><label htmlFor="kg-lead-count">{isSchool ? "Сколько детей в классе?" : "Сколько детей в группе?"}</label>
                     <select id="kg-lead-count" value={values.childrenCount} disabled={sending} onChange={(event) => update("childrenCount", event.target.value)}>
                       <option value="">Пока не знаю</option>{["10–15", "16–20", "21–25", "Больше 25"].map((count) => <option key={count}>{count}</option>)}
                     </select>
@@ -196,9 +201,9 @@ export function KindergartenEnquiryShell({ children, className, enabled }: {
   );
 }
 
-export function KindergartenEnquirySection() {
+export function KindergartenEnquirySection({ audience = "kindergarten" }: { audience?: AlbumAudience }) {
   return <section id="cta" className="kg-lead-section">
-    <h2>Рассчитаем альбомы для вашей группы</h2>
+    <h2>{audience === "kindergarten" ? "Рассчитаем альбомы для вашей группы" : "Рассчитаем альбомы для вашего класса"}</h2>
     <p>Поможем выбрать формат, уточним количество детей и свободные даты.</p>
     <button type="button" className="kg-lead-submit" data-enquiry-open>Оставить заявку на расчёт</button>
   </section>;

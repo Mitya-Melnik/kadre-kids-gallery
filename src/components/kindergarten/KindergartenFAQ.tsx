@@ -122,7 +122,7 @@ const KindergartenFAQ = ({ audience = "kindergarten", compactMobile = false }: {
   const faqs: AlbumFaqItem[] = audience === "school" || audience === "grade4" ? schoolFaqs : kindergartenFaqs;
   const isSchoolAudience = audience === "school" || audience === "grade4";
 
-  if (compactMobile && !isSchoolAudience) return <MobileQuestions items={faqs.map((faq) => ({ question: albumQuestion(faq.question, audience), answer: albumAnswer(faq, audience) }))} />;
+  if (compactMobile) return <MobileQuestions school={isSchoolAudience} items={faqs.map((faq) => ({ question: albumQuestion(faq.question, audience), answer: albumAnswer(faq, audience) }))} />;
 
   return (
     <section id={isSchoolAudience ? "school-faq" : "kindergarten-faq"} className="py-20 bg-accent-soft">

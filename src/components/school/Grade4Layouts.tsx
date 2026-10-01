@@ -7,7 +7,7 @@ type Grade4Layout = {
   imageCount: number;
 };
 
-const grade4Layouts: Grade4Layout[] = [
+export const grade4Layouts: Grade4Layout[] = [
   { slug: "doodles", title: "Каракули", imageCount: 9 },
   { slug: "colored-pencils", title: "Цветные карандаши", imageCount: 11 },
   { slug: "calligraphy", title: "Каллиграфия", imageCount: 10 },
