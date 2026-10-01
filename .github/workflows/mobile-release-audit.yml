@@ -20,12 +20,14 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - name: Preserve frozen sources and build original, candidate and commerce-only reference
+      - name: Build original, approved candidate and explicit commerce-only reference
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p release-audit backup-source
-          git archive --format=zip --output=backup-source/source-before-30469af.zip 30469af610eea3ebfac226bf3b86e3b407700f4c
+          mkdir -p release-audit
+          git diff --exit-code 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 -- public src/assets server nginx.conf Dockerfile package-lock.json
+          git diff --exit-code a3be32716edb16db77a09a059025cd0c00492d46 HEAD -- src public server package-lock.json
+          git archive --format=zip --output=/tmp/source-before.zip 30469af610eea3ebfac226bf3b86e3b407700f4c
           git archive --format=zip --output=/tmp/source-approved.zip a3be32716edb16db77a09a059025cd0c00492d46
           git diff 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 > release-audit/cumulative.patch
           git diff --name-status 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 > release-audit/changed-files.txt
@@ -54,23 +56,22 @@ jobs:
           python - <<'PY'
           import zipfile
           from pathlib import Path
-          # Code snapshots for inspection. Complete source rollback stays separately in GitHub/backup-source.
-          for src,name in [('backup-source/source-before-30469af.zip','before-code.zip'),('/tmp/source-approved.zip','approved-code.zip')]:
+          for src,name in [('/tmp/source-before.zip','before-code.zip'),('/tmp/source-approved.zip','approved-code.zip')]:
               with zipfile.ZipFile(src) as source,zipfile.ZipFile('release-audit/'+name,'w',zipfile.ZIP_DEFLATED) as out:
                   for item in source.infolist():
                       if not item.is_dir() and not item.filename.startswith(('public/','src/assets/')): out.writestr(item.filename,source.read(item))
-          excluded={'.mp4','.mov','.webm','.avi'}
           for root,name in [(Path('dist'),'approved-build.zip'),(Path('/tmp/desktop-before/dist'),'before-build.zip'),(Path('/tmp/desktop-reference/dist'),'reference-build.zip')]:
               with zipfile.ZipFile('release-audit/'+name,'w',zipfile.ZIP_DEFLATED) as out:
                   for p in root.rglob('*'):
-                      if p.is_file() and p.suffix.lower() not in excluded: out.write(p,p.relative_to(root))
-          Path('release-audit/README.txt').write_text('Original main: 30469af610eea3ebfac226bf3b86e3b407700f4c\nApproved app: a3be32716edb16db77a09a059025cd0c00492d46\nDesktop reference = original main plus six explicitly listed approved commercial-text files/edits, not mobile UI.\nLightweight review builds omit videos; code inspection archives omit public and src/assets. Full original tracked source separately in backup-source artifact and persistent backup branch.\nNo deployment, production secrets, server disk backup or live lead submission.\n')
+                      rel=p.relative_to(root)
+                      if p.is_file() and (rel.parts[0]=='assets' or str(rel)=='index.html'): out.write(p,rel)
+          Path('release-audit/README.txt').write_text('Original main: 30469af610eea3ebfac226bf3b86e3b407700f4c\nApproved app: a3be32716edb16db77a09a059025cd0c00492d46\nDesktop reference = original main plus five commercial files and one name replacement; no mobile UI.\nCOMPACT BUILDS: index.html and compiled assets ONLY. Restore identical public files from original source backup before rendering. Public/src-assets/server/lockfile unchanged is asserted by git diff.\nNo deployment, production secrets, server disk backup or live lead submission. Full original source already saved in persistent backup branch and source-backup-before-mobile-30469af artifact from run 36896464248.\n')
           PY
       - name: Read-only public availability check
         shell: bash
         run: |
           python - <<'PY'
-          import json, socket, urllib.request, datetime
+          import json,socket,urllib.request,datetime
           from pathlib import Path
           result={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'requests':[]}
           try: result['addresses']=sorted({i[4][0] for i in socket.getaddrinfo('detivkadre.spb.ru',443)})
@@ -79,8 +80,7 @@ jobs:
               url='https://detivkadre.spb.ru'+path; entry={'url':url}
               try:
                   with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Deti-v-kadre-release-check/1.0'}),timeout=15) as response:
-                      body=response.read(100000).decode('utf-8','replace')
-                      entry.update(status=response.status,final_url=response.url,headers=dict(response.headers))
+                      body=response.read(100000).decode('utf-8','replace');entry.update(status=response.status,final_url=response.url,headers=dict(response.headers))
                       Path('release-audit/live-'+('home' if path=='/' else 'kindergarten')+'.html').write_text(body)
               except Exception as e: entry['error']=str(e)
               result['requests'].append(entry)
@@ -89,12 +89,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mobile-release-review-small
+          name: mobile-release-review-compact
           path: release-audit/
           retention-days: 30
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: source-backup-before-mobile-30469af
-          path: backup-source/
-          retention-days: 90
