@@ -7,7 +7,7 @@ type SchoolLayout = {
   imageCount: number;
 };
 
-const schoolLayouts: SchoolLayout[] = [
+export const schoolLayouts: SchoolLayout[] = [
   { slug: "antik", title: "Вне времени", imageCount: 11 },
   { slug: "belyy", title: "Воздух", imageCount: 7 },
   { slug: "light", title: "Свобода", imageCount: 11 },

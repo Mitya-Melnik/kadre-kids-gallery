@@ -17,7 +17,7 @@ type SchoolStoryImage = {
 
 export const SCHOOL_STORY_ASSET_VERSION = "2026-09-14-1";
 
-const schoolStoryImages: SchoolStoryImage[] = [
+export const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
   { slug: "portrait-boy-black", alt: "Современный портрет выпускника", kind: "portrait" },
   { slug: "portrait-boy-smile", alt: "Живой портрет выпускника", kind: "portrait" },

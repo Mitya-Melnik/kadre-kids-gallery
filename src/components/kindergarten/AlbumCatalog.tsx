@@ -7,6 +7,7 @@ import VideoModal from "./VideoModal";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { albumPackages } from "@/config/albumPackages";
 import { albumCommercial } from "@/config/albumCommercial";
+import { albumOrderRules } from "@/config/albumOrderRules";
 
 import { schoolText, grade4PreviewImages, seniorSchoolPreviewImages, type AlbumAudience } from "@/config/albumAudience";
 
@@ -107,7 +108,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
           </span>
           <span className="text-sm text-muted-foreground">за 1 альбом</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">При тираже от {isSchool ? "15" : "10"} экземпляров</p>
+        <p className="mt-2 text-xs text-muted-foreground">При тираже от {albumOrderRules.minimum} экземпляров</p>
       </CardContent>
     </Card>
   );
@@ -135,7 +136,7 @@ const AlbumCatalog = ({ audience = "kindergarten" }: { audience?: AlbumAudience 
         >
           <div className="mb-10 grid gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm sm:grid-cols-2 lg:grid-cols-4">
             <p><strong className="block text-foreground">Электронные фотографии</strong><span className="text-muted-foreground">Все удачные кадры — в подарок</span></p>
-            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От {isSchool ? "15" : "10"} альбомов</span></p>
+            <p><strong className="block text-foreground">Минимальный тираж</strong><span className="text-muted-foreground">От {albumOrderRules.minimum} альбомов</span></p>
             <p><strong className="block text-foreground">{isSchool ? "Для учителя" : "Для воспитателей"}</strong><span className="text-muted-foreground">{isSchool ? "1 альбом для учителя — бесплатно" : "1 альбом бесплатно, второй — со скидкой 50%"}</span></p>
             <p><strong className="block text-foreground">Доставка</strong><span className="text-muted-foreground">До пункта выдачи СДЭК включена</span></p>
           </div>

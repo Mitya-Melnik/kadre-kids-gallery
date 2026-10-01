@@ -5,6 +5,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { Check, Expand, Play, X } from "lucide-react";
 import AlbumCatalog from "./AlbumCatalog";
 import { albumPackages } from "@/config/albumPackages";
+import { albumOrderRules } from "@/config/albumOrderRules";
 import { schoolText, grade4PreviewImages, seniorSchoolPreviewImages, type AlbumAudience } from "@/config/albumAudience";
 import { reachGoal } from "@/lib/analytics";
 import "./kindergarten-catalog-v2.css";
@@ -40,8 +41,8 @@ const scrollBehavior = (): ScrollBehavior => window.matchMedia("(prefers-reduced
 export function MobileAlbumCatalog({ audience = "kindergarten" }: { audience?: AlbumAudience }) {
   const isSchool = audience !== "kindergarten";
   const pagePath = audience === "grade4" ? "/school/4" : audience === "school" ? "/school/9-11" : "/kindergarten";
-  // Preserve the current school minimum. The removed discount threshold is a different rule.
-  const minimum = isSchool ? 15 : 10;
+  // Total order minimum; independent of the graduation shooting discount.
+  const minimum = albumOrderRules.minimum;
   const text = (value: string) => isSchool ? schoolText(value, audience).replace(/Воспитатели/g, "Учитель").replace(/одногруппники/g, "одноклассники") : value;
   const packages = isSchool ? albumPackages.map((album) => ({ ...album, title: text(album.title), description: text(album.description), suitableFor: text(album.suitableFor), features: album.features.map(text), items: album.items.map((item) => ({ ...item, note: text(item.note) })), additionalInfo: "additionalInfo" in album ? album.additionalInfo.map(text) : [] })) : albumPackages;
   const [selectedId, setSelectedId] = useState<Album["id"]>("ten-pages");
@@ -95,6 +96,7 @@ export function MobileAlbumCatalog({ audience = "kindergarten" }: { audience?: A
         <header className="km-v2-heading">
           <h2 id="km-catalog-title">Альбомы и цены</h2>
           <p>21×30 см · заказ от {minimum} альбомов</p>
+          {isSchool && <p>{albumOrderRules.schoolMixedSummary}</p>}
         </header>
         <Tabs.Root value={selectedId} onValueChange={selectAlbum} className="km-v2-browser">
           <Tabs.List className="km-v2-tabs" aria-label="Формат альбома">
@@ -169,6 +171,7 @@ export function MobileAlbumCatalog({ audience = "kindergarten" }: { audience?: A
                 <h3>Общие условия</h3>
                 <ul>
                   <li>Формат — 21×30 см. Минимальный тираж — от {minimum} альбомов.</li>
+                  {isSchool && <><li>{albumOrderRules.schoolMixedDetails}</li><li>{albumOrderRules.otherFormats}</li></>}
                   <li>Все удачные обработанные электронные фотографии — в подарок.</li>
                   <li>{isSchool ? "Один альбом для учителя — бесплатно." : "Для воспитателей: один альбом бесплатно, второй — со скидкой 50%."}</li>
                   <li>Доставка до пункта выдачи СДЭК включена.</li>

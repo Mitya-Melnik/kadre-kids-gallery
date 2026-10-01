@@ -45,8 +45,8 @@ export function MobileReviews({ testimonials }: { testimonials: Review[] }) {
 }
 
 type Question = { question: string; answer: ReactNode };
-export function MobileQuestions({ items, school = false }: { items: Question[]; school?: boolean }) {
-  const priority = ["Что входит в стоимость?", "Как родители выбирают портрет ребёнка?", "Что делать, если ребёнок пропустил съёмку?", "Когда будут готовы альбомы?"];
+export function MobileQuestions({ items, school = false, senior = false }: { items: Question[]; school?: boolean; senior?: boolean }) {
+  const priority = ["Что входит в стоимость?", senior ? "Как выпускник выбирает портрет для альбома?" : "Как родители выбирают портрет ребёнка?", senior ? "Что делать, если выпускник пропустил съёмку?" : "Что делать, если ребёнок пропустил съёмку?", "Когда будут готовы альбомы?"];
   const first = priority.flatMap((question) => items.filter((item) => item.question === question));
   const rest = items.filter((item) => !priority.includes(item.question));
   const render = (item: Question) => <details className="kg3-question kg3-disclosure" key={item.question} data-kg3-question>
@@ -70,7 +70,7 @@ export type PictureProps = { image: StoryImage; className: string; loading: "eag
 const categories: { kind: StoryImage["kind"]; label: string }[] = [
   { kind: "portrait", label: "Портреты" }, { kind: "group", label: "Друзья" }, { kind: "life", label: "Жизнь группы" },
 ];
-export function MobileStoryGallery({ images, Picture, school = false }: { images: StoryImage[]; Picture: ComponentType<PictureProps>; school?: boolean }) {
+export function MobileStoryGallery({ images, Picture, school = false, senior = false }: { images: StoryImage[]; Picture: ComponentType<PictureProps>; school?: boolean; senior?: boolean }) {
   const [kind, setKind] = useState<StoryImage["kind"]>("portrait");
   const [current, setCurrent] = useState(0);
   const [zoomed, setZoomed] = useState(false);
@@ -105,7 +105,7 @@ export function MobileStoryGallery({ images, Picture, school = false }: { images
         {categories.map((category) => <button type="button" key={category.kind} aria-pressed={kind === category.kind} aria-controls="kg3-photo-strip"
           onClick={() => selectKind(category.kind)}>{school && category.kind === "life" ? "Жизнь класса" : category.label}</button>)}
       </div>
-      <div id="kg3-photo-strip" key={kind} ref={rail} className="kg3-photo-strip" data-kind={kind} role="region" aria-label={school ? "Фотографии 4-го класса" : "Фотографии выпускной группы"}
+      <div id="kg3-photo-strip" key={kind} ref={rail} className="kg3-photo-strip" data-kind={kind} role="region" aria-label={school ? senior ? "Фотографии 9–11-х классов" : "Фотографии 4-го класса" : "Фотографии выпускной группы"}
         onScroll={(event) => {
           const element = event.currentTarget;
           if (element.clientWidth) setCurrent(Math.max(0, Math.min(photos.length - 1, Math.round(element.scrollLeft / element.clientWidth))));
@@ -131,7 +131,7 @@ export function MobileStoryGallery({ images, Picture, school = false }: { images
             const target = rail.current?.querySelector<HTMLButtonElement>('button[tabindex="0"]') ?? opener.current;
             if (target?.isConnected) target.focus({ preventScroll: true });
           }}>
-          <header><Dialog.Title>{school ? "Фотографии 4-го класса" : "Фотографии выпускной группы"}</Dialog.Title>
+          <header><Dialog.Title>{school ? senior ? "Фотографии 9–11-х классов" : "Фотографии 4-го класса" : "Фотографии выпускной группы"}</Dialog.Title>
             <Dialog.Close asChild><button ref={closeButton} type="button" aria-label="Закрыть фотографию"><X size={24} aria-hidden="true" /></button></Dialog.Close>
           </header>
           <Dialog.Description className="sr-only">{selected.alt}</Dialog.Description>

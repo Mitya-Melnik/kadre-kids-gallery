@@ -8,7 +8,7 @@ type Consent = "accepted" | "declined" | null;
 
 const AnalyticsConsent = () => {
   const location = useLocation();
-  const kindergartenMobile = ["/kindergarten", "/school/4"].includes(location.pathname);
+  const kindergartenMobile = ["/kindergarten", "/school/4", "/school/9-11"].includes(location.pathname);
   const [consent, setConsent] = useState<Consent>(null);
   const [isReady, setIsReady] = useState(false);
   const previousPage = useRef(`${window.location.pathname}${window.location.search}`);
