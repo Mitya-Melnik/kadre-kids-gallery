@@ -3,30 +3,77 @@ on:
   push:
     branches: [feature/senior-mobile-v9]
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: senior-mobile-v9
   cancel-in-progress: true
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feature/senior-mobile-v9'
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          persist-credentials: true
-      - name: Apply verified source update to this feature branch only
-        if: hashFiles('scripts/prepare-senior-v9.py') != ''
-        run: python scripts/prepare-senior-v9.py
-      - name: Record the resulting source version
-        run: |
-          mkdir -p review-workspace
-          git rev-parse HEAD > review-workspace/commit.txt
-          git diff --name-only e587ecb3d7828522ec9957d11e83d1ef296b0425 HEAD > review-workspace/changed-files.txt
-      - uses: actions/upload-artifact@v4
+          persist-credentials: false
+      - uses: actions/setup-node@v4
         with:
-          name: senior-mobile-v9-source-applied
-          path: review-workspace/
-          retention-days: 7
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned Node dependencies
+        timeout-minutes: 4
+        run: npm ci --prefer-offline --no-audit --no-fund --fetch-retries=2 --fetch-timeout=30000
+      - name: Build candidate, original source and order-copy-only reference
+        timeout-minutes: 3
+        run: |
+          test ! -f scripts/prepare-senior-v9.py
+          npm run build
+          git worktree add /tmp/senior-base e587ecb3d7828522ec9957d11e83d1ef296b0425
+          git worktree add /tmp/senior-order-reference e587ecb3d7828522ec9957d11e83d1ef296b0425
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/senior-base/node_modules
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/senior-order-reference/node_modules
+          python scripts/prepare-senior-reference.py /tmp/senior-order-reference
+          npm --prefix /tmp/senior-base run build
+          npm --prefix /tmp/senior-order-reference run build
+          node scripts/check-mobile-types.cjs /tmp/senior-base
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs scripts/test-grade4-enquiry.mjs scripts/test-school-order-rules.mjs
+          python -m py_compile scripts/check-senior-mobile-v9.py scripts/check-senior-regression.py
+      - name: Install pinned browser verification tools
+        timeout-minutes: 6
+        run: |
+          pip install --timeout 30 --retries 2 playwright==1.55.0 Pillow==11.3.0 numpy==2.3.3
+          playwright install --with-deps chromium webkit
+      - name: Check both school order surfaces, senior interactions and unchanged layouts
+        timeout-minutes: 11
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/senior-after.log 2>&1 &
+          npm --prefix /tmp/senior-base run preview -- --host 127.0.0.1 --port 4174 > /tmp/senior-before.log 2>&1 &
+          npm --prefix /tmp/senior-order-reference run preview -- --host 127.0.0.1 --port 4175 > /tmp/senior-reference.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null && curl -fsS http://127.0.0.1:4174/ >/dev/null && curl -fsS http://127.0.0.1:4175/ >/dev/null; then break; fi
+            sleep 1
+          done
+          sed 's|/school/4|/school/9-11|g' scripts/check-grade4-consent.py > /tmp/check-senior-consent.py
+          set +e
+          python /tmp/check-senior-consent.py http://127.0.0.1:4173 senior-results
+          consent_status=$?
+          python scripts/check-senior-mobile-v9.py http://127.0.0.1:4173 http://127.0.0.1:4174 senior-results
+          mobile_status=$?
+          python scripts/check-senior-regression.py 4173 4175 senior-regression
+          regression_status=$?
+          python scripts/capture-mobile-site.py http://127.0.0.1:4173 mobile-site-results
+          capture_status=$?
+          test "$consent_status" -eq 0 && test "$mobile_status" -eq 0 && test "$regression_status" -eq 0 && test "$capture_status" -eq 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: senior-mobile-v9-review
+          path: |
+            senior-results/
+            senior-regression/
+            mobile-site-results/
+            mobile-preview-results/types.json
+          retention-days: 14
