@@ -115,9 +115,16 @@ with sync_playwright() as pw:
     phase='enquiry';pos(a,'#albums');a.locator('.km-v2-action').click();expect(a.locator('.kg-lead-dialog')).to_be_visible()
     assert 'Школьные годы' in a.locator('.kg-lead-choice').inner_text()
     a.locator('.kg-lead-submit[type="submit"]').click();assert a.locator('.kg-lead-error').count()==4;assert len(posts)==0
-    a.locator('#kg-lead-name').fill('Тест родитель');a.locator('#kg-lead-phone').fill('+7 999 0000000');a.locator('#kg-lead-institution').fill('Школа 129');a.locator('input#kg-lead-consent').check()
+    # Validation moves focus in requestAnimationFrame. Wait for that real UI action
+    # before typing; otherwise WebKit can redirect a rapid test fill into the name.
+    expect(a.locator('#kg-lead-name')).to_be_focused()
+    a.locator('#kg-lead-name').fill('Тест родитель');expect(a.locator('#kg-lead-name')).to_have_value('Тест родитель')
+    a.locator('#kg-lead-phone').fill('+7 999 0000000');expect(a.locator('#kg-lead-phone')).to_have_value('+7 999 0000000')
+    a.locator('#kg-lead-institution').fill('Школа 129');a.locator('input#kg-lead-consent').check()
+    expect(a.locator('#kg-lead-name')).to_have_value('Тест родитель')
     if engine=='chromium' and width==390:a.screenshot(path=str(OUT/'form-filled.png'))
     a.get_by_role('button',name='Закрыть заявку').click();pos(a,'#hero');a.locator('.g4-sticky a').click();expect(a.locator('#kg-lead-institution')).to_have_value('Школа 129')
+    expect(a.locator('#kg-lead-name')).to_have_value('Тест родитель');expect(a.locator('#kg-lead-phone')).to_have_value('+7 999 0000000')
     response['fail']=True;a.locator('.kg-lead-submit[type="submit"]').click();expect(a.locator('.kg-lead-failure')).to_be_visible()
     assert posts[-1]['audience']=='school' and posts[-1]['schoolLevel']=='grade9_11';assert 'Школьные годы' in posts[-1]['comment']
     assert posts[-1]['tracking']['utmSource']=='qa' and posts[-1]['tracking']['yclid']=='456'
