@@ -10,7 +10,7 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v6
         with:
@@ -23,9 +23,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install pinned Node dependencies without an unrelated network audit
+        timeout-minutes: 4
+        run: npm ci --prefer-offline --no-audit --no-fund --fetch-retries=2 --fetch-timeout=30000
       - name: Build candidate and frozen baseline, test routing with a mock CRM
+        timeout-minutes: 3
         run: |
-          npm ci
           npm run build
           git worktree add /tmp/grade4-base 1673a16afef562525406f126626f5efbad41a8dc
           ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/grade4-base/node_modules
@@ -33,9 +36,13 @@ jobs:
           node scripts/check-mobile-types.cjs /tmp/grade4-base
           node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs scripts/test-grade4-enquiry.mjs
           python -m py_compile scripts/check-grade4-mobile-v8.py scripts/check-grade4-regression.py scripts/check-grade4-consent.py
-          pip install playwright==1.55.0 Pillow==11.3.0 numpy==2.3.3
+      - name: Install pinned browser verification tools
+        timeout-minutes: 6
+        run: |
+          pip install --timeout 30 --retries 2 playwright==1.55.0 Pillow==11.3.0 numpy==2.3.3
           playwright install --with-deps chromium webkit
       - name: Read-only browser checks and review captures
+        timeout-minutes: 10
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/grade4-after.log 2>&1 &
           npm --prefix /tmp/grade4-base run preview -- --host 127.0.0.1 --port 4174 > /tmp/grade4-before.log 2>&1 &
