@@ -8,6 +8,7 @@ type Consent = "accepted" | "declined" | null;
 
 const AnalyticsConsent = () => {
   const location = useLocation();
+  const kindergartenMobile = location.pathname === "/kindergarten";
   const [consent, setConsent] = useState<Consent>(null);
   const [isReady, setIsReady] = useState(false);
   const previousPage = useRef(`${window.location.pathname}${window.location.search}`);
@@ -22,12 +23,9 @@ const AnalyticsConsent = () => {
   useEffect(() => {
     const currentPage = `${location.pathname}${location.search}`;
     const referer = `${window.location.origin}${previousPage.current}`;
-
     if (currentPage === previousPage.current) return;
     previousPage.current = currentPage;
-
     if (window.localStorage.getItem(STORAGE_KEY) !== "accepted") return;
-
     const timer = window.setTimeout(() => trackPageView(currentPage, referer), 0);
     return () => window.clearTimeout(timer);
   }, [location.pathname, location.search]);
@@ -51,7 +49,6 @@ const AnalyticsConsent = () => {
     setConsent(value);
     if (value === "accepted") loadMetrika();
   };
-
   if (!isReady || consent) return null;
 
   return (
@@ -61,9 +58,9 @@ const AnalyticsConsent = () => {
           Мы используем Яндекс Метрику, чтобы понимать, как улучшать сайт. Аналитика включится только с вашего согласия. Подробнее — в{" "}
           <Link to="/privacy#cookies" className="font-medium text-primary underline">политике обработки данных</Link>.
         </p>
-        <div className="flex shrink-0 gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => choose("declined")}>Только необходимые</Button>
-          <Button type="button" size="sm" onClick={() => choose("accepted")}>Разрешить аналитику</Button>
+        <div className={`flex shrink-0 gap-2${kindergartenMobile ? " flex-col sm:flex-row" : ""}`}>
+          <Button type="button" variant="outline" size="sm" className={kindergartenMobile ? "max-sm:min-h-11 max-sm:whitespace-normal" : undefined} onClick={() => choose("declined")}>Только необходимые</Button>
+          <Button type="button" size="sm" className={kindergartenMobile ? "max-sm:min-h-11 max-sm:whitespace-normal" : undefined} onClick={() => choose("accepted")}>Разрешить аналитику</Button>
         </div>
       </div>
     </aside>

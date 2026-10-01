@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ArrowRight, CalendarDays, Camera, CheckCircle2, ChevronDown, Images, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { reachGoal } from "@/lib/analytics";
+import { useKindergartenMobile } from "./KindergartenMobileContent";
+import { MobileAlbumSpreads } from "./MobileSwipeRail";
 
 const caseRoot = "/cases/kindergarten-108";
 
@@ -33,6 +35,7 @@ const scrollToForm = () => {
 };
 
 const KindergartenCase = () => {
+  const mobile = useKindergartenMobile();
   const [showAllAlbumImages, setShowAllAlbumImages] = useState(false);
   const visibleAlbumImages = showAllAlbumImages ? albumImages : albumImages.slice(0, 3);
 
@@ -85,6 +88,7 @@ const KindergartenCase = () => {
             <h3 className="text-3xl font-bold text-foreground">История группы внутри альбома</h3>
             <p className="mt-3 text-lg text-muted-foreground">Портреты, воспитатели, друзья и события года собраны в одной цельной истории — не в наборе одинаковых постановочных кадров.</p>
           </div>
+          {mobile ? <MobileAlbumSpreads images={albumImages} /> : <>
           <div className="grid gap-4 md:grid-cols-2">
             {visibleAlbumImages.map((image, index) => (
               <picture key={image.src} className={index === 0 ? "md:col-span-2" : undefined}>
@@ -105,6 +109,7 @@ const KindergartenCase = () => {
               </Button>
             </div>
           )}
+          </>}
         </div>
 
         <div className="mb-14">

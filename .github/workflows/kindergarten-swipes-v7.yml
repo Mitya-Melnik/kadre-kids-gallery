@@ -1,0 +1,60 @@
+name: Kindergarten story and reviews swipe preview
+on:
+  push:
+    branches: [feature/kindergarten-swipes-v7]
+permissions:
+  contents: read
+concurrency:
+  group: kindergarten-swipes-v7
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and check unchanged API and product rules
+        run: |
+          python -m py_compile scripts/check-kindergarten-swipes-v7.py
+          npm ci
+          npm run build
+          git worktree add /tmp/swipes-base 9d19bb421d9ae4298800785073f4038faa77ed72
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/swipes-base/node_modules
+          npm --prefix /tmp/swipes-base run build
+          node scripts/check-mobile-types.cjs /tmp/swipes-base
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs
+          pip install playwright==1.55.0 Pillow==11.3.0
+          playwright install --with-deps chromium webkit
+      - name: Browser checks and capture without live leads
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/swipes-after.log 2>&1 &
+          npm --prefix /tmp/swipes-base run preview -- --host 127.0.0.1 --port 4174 > /tmp/swipes-before.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
+            sleep 1
+          done
+          set +e
+          python scripts/check-kindergarten-swipes-v7.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-swipes-results
+          check_status=$?
+          python scripts/capture-mobile-site.py http://127.0.0.1:4173 mobile-site-results
+          capture_status=$?
+          test "$check_status" -eq 0 && test "$capture_status" -eq 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kindergarten-swipes-v7-review
+          path: |
+            mobile-swipes-results/
+            mobile-site-results/
+            mobile-preview-results/types.json
+          retention-days: 14

@@ -68,13 +68,13 @@ const KindergartenHero = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-hero min-h-[80vh] flex items-center">
+    <section className="kg-hero py-20 bg-gradient-hero min-h-[80vh] flex items-center">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:items-center">
+        <div className="kg-hero-grid grid grid-cols-1 lg:grid-cols-2 gap-12 lg:items-center">
           {/* Title - First on mobile, part of left column on desktop */}
           <div 
             ref={titleRef}
-            className={`order-1 lg:order-1 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            className={`kg-hero-copy order-1 lg:order-1 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
             <p className="mb-4 font-semibold uppercase tracking-[0.14em] text-primary">
               Выпускные альбомы для детского сада
@@ -85,7 +85,7 @@ const KindergartenHero = () => {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
               Живые фотографии ребёнка, друзей, воспитателей и событий группы — в одном альбоме на память о детстве.
             </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <div className="kg-hero-actions mt-7 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
                 <a href="/kindergarten#albums" onClick={(event) => { scrollTo(event, "#albums"); reachGoal("album_catalog_open", { audience: "kindergarten" }); }}>
                   Посмотреть альбомы и цены
@@ -100,7 +100,7 @@ const KindergartenHero = () => {
           </div>
 
           {/* Photo slider - Second on mobile, right column on desktop */}
-          <div className="order-2 lg:order-2 lg:row-span-2 relative w-full max-w-md mx-auto lg:max-w-none">
+          <div className="kg-hero-preview order-2 lg:order-2 lg:row-span-2 relative w-full max-w-md mx-auto lg:max-w-none">
             <Carousel
               setApi={setApi}
               opts={{
@@ -132,7 +132,7 @@ const KindergartenHero = () => {
               </CarouselContent>
               
               {/* Slide indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+              <div className="kg-hero-dots absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
                 {heroImages.map((_, index) => (
                   <button
                     key={index}
@@ -152,12 +152,12 @@ const KindergartenHero = () => {
           {/* Advantages - Third on mobile, continues left column on desktop */}
           <div 
             ref={advantagesRef}
-            className={`order-3 lg:order-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6 transition-all duration-700 ${advantagesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            className={`kg-hero-benefits order-3 lg:order-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6 transition-all duration-700 ${advantagesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
             {advantages.map((advantage, index) => (
               <div
                 key={index}
-                className={`bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1`}
+                className={`kg-hero-benefit bg-gradient-card p-6 rounded-xl shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-1`}
                 style={{ 
                   transitionDelay: advantagesVisible ? `${index * 100}ms` : '0ms'
                 }}

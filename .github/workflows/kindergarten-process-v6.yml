@@ -1,0 +1,59 @@
+name: Kindergarten process carousel preview
+on:
+  push:
+    branches: [feature/kindergarten-process-v6]
+permissions:
+  contents: read
+concurrency:
+  group: kindergarten-process-v6
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build candidate and previous preview
+        run: |
+          npm ci
+          npm run build
+          git worktree add /tmp/process-base f467b9994555374b75ceca4083e743875bb2eda2
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/process-base/node_modules
+          npm --prefix /tmp/process-base run build
+          node scripts/check-mobile-types.cjs /tmp/process-base
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs
+          pip install playwright==1.55.0 Pillow==11.3.0
+          playwright install --with-deps chromium webkit
+      - name: Check six complete steps and capture without live leads
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/process-after.log 2>&1 &
+          npm --prefix /tmp/process-base run preview -- --host 127.0.0.1 --port 4174 > /tmp/process-before.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null && curl -fsS http://127.0.0.1:4174/ > /dev/null; then break; fi
+            sleep 1
+          done
+          set +e
+          python scripts/check-kindergarten-process-v6.py http://127.0.0.1:4173 http://127.0.0.1:4174 mobile-process-results
+          check_status=$?
+          python scripts/capture-mobile-site.py http://127.0.0.1:4173 mobile-site-results
+          capture_status=$?
+          test "$check_status" -eq 0 && test "$capture_status" -eq 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kindergarten-process-v6-review
+          path: |
+            mobile-process-results/
+            mobile-site-results/
+            mobile-preview-results/types.json
+          retention-days: 14
