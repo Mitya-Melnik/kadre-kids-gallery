@@ -126,7 +126,7 @@ with sync_playwright() as pw:
      for sel in ['#albums','#process','#layouts','#participants']:
       pos(a,sel);fit(a,sel)
      # Long school titles must not be squeezed to one or two characters per line.
-     assert a.locator('.km-v2-name h3').evaluate('e=>e.getBoundingClientRect().width/parseFloat(getComputedStyle(e).fontSize)')>=5
+     assert a.locator('.km-v2-name h3').evaluate('e=>e.getBoundingClientRect().height/parseFloat(getComputedStyle(e).lineHeight)')<=3.1
      if engine=='chromium':
       pos(a,'#albums');a.screenshot(path=str(OUT/f'text200-{width}.png'))
      a.add_style_tag(content='html{font-size:100%!important}');a.wait_for_timeout(300)
