@@ -45,17 +45,17 @@ export function MobileReviews({ testimonials }: { testimonials: Review[] }) {
 }
 
 type Question = { question: string; answer: ReactNode };
-export function MobileQuestions({ items }: { items: Question[] }) {
+export function MobileQuestions({ items, school = false }: { items: Question[]; school?: boolean }) {
   const priority = ["Что входит в стоимость?", "Как родители выбирают портрет ребёнка?", "Что делать, если ребёнок пропустил съёмку?", "Когда будут готовы альбомы?"];
   const first = priority.flatMap((question) => items.filter((item) => item.question === question));
   const rest = items.filter((item) => !priority.includes(item.question));
   const render = (item: Question) => <details className="kg3-question kg3-disclosure" key={item.question} data-kg3-question>
     <summary>{item.question}</summary><div className="kg3-answer">{item.answer}</div>
   </details>;
-  return <section id="kindergarten-faq" className="kg3-section kg3-faq bg-accent-soft" aria-labelledby="kg3-faq-title">
+  return <section id={school ? "school-faq" : "kindergarten-faq"} className="kg3-section kg3-faq bg-accent-soft" aria-labelledby="kg3-faq-title">
     <div className="container mx-auto px-4">
       <h2 id="kg3-faq-title">Ответы на вопросы</h2>
-      <p className="kg3-intro">Самые частые вопросы от родителей и администрации детских садов</p>
+      <p className="kg3-intro">Самые частые вопросы от родителей и администрации {school ? "школ" : "детских садов"}</p>
       <div className="kg3-question-list">{first.map(render)}</div>
       {rest.length > 0 && <details className="kg3-disclosure kg3-more-questions">
         <summary>Остальные вопросы ({rest.length})</summary>
@@ -66,11 +66,11 @@ export function MobileQuestions({ items }: { items: Question[] }) {
 }
 
 type StoryImage = { imageNumber?: number; slug?: string; alt: string; kind: "portrait" | "group" | "life" };
-type PictureProps = { image: StoryImage; className: string; loading: "eager" | "lazy" };
+export type PictureProps = { image: StoryImage; className: string; loading: "eager" | "lazy" };
 const categories: { kind: StoryImage["kind"]; label: string }[] = [
   { kind: "portrait", label: "Портреты" }, { kind: "group", label: "Друзья" }, { kind: "life", label: "Жизнь группы" },
 ];
-export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; Picture: ComponentType<PictureProps> }) {
+export function MobileStoryGallery({ images, Picture, school = false }: { images: StoryImage[]; Picture: ComponentType<PictureProps>; school?: boolean }) {
   const [kind, setKind] = useState<StoryImage["kind"]>("portrait");
   const [current, setCurrent] = useState(0);
   const [zoomed, setZoomed] = useState(false);
@@ -98,14 +98,14 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
   return <section id="gallery" className="kg3-section kg3-gallery bg-secondary/50" aria-labelledby="kg3-gallery-title">
     <div className="container mx-auto px-4">
       <header>
-        <h2 id="kg3-gallery-title">Живые фотографии для выпускных альбомов</h2>
-        <p className="kg3-intro">Портреты, друзья, игры и знакомые моменты из жизни группы — всё, что делает альбом личной историей детей.</p>
+        <h2 id="kg3-gallery-title">{school ? "Школьные истории" : "Живые фотографии для выпускных альбомов"}</h2>
+        <p className="kg3-intro">{school ? "Портреты, друзья и знакомые школьные моменты — без одинаковых поз и натянутых улыбок." : "Портреты, друзья, игры и знакомые моменты из жизни группы — всё, что делает альбом личной историей детей."}</p>
       </header>
       <div className="kg3-photo-filters" role="group" aria-label="Какие фотографии показать">
         {categories.map((category) => <button type="button" key={category.kind} aria-pressed={kind === category.kind} aria-controls="kg3-photo-strip"
-          onClick={() => selectKind(category.kind)}>{category.label}</button>)}
+          onClick={() => selectKind(category.kind)}>{school && category.kind === "life" ? "Жизнь класса" : category.label}</button>)}
       </div>
-      <div id="kg3-photo-strip" key={kind} ref={rail} className="kg3-photo-strip" data-kind={kind} role="region" aria-label="Фотографии выпускной группы"
+      <div id="kg3-photo-strip" key={kind} ref={rail} className="kg3-photo-strip" data-kind={kind} role="region" aria-label={school ? "Фотографии 4-го класса" : "Фотографии выпускной группы"}
         onScroll={(event) => {
           const element = event.currentTarget;
           if (element.clientWidth) setCurrent(Math.max(0, Math.min(photos.length - 1, Math.round(element.scrollLeft / element.clientWidth))));
@@ -119,7 +119,7 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
         </div>)}
       </div>
       {navigation()}
-      {kind === "life" && <p className="kg3-intro kg3-life-caption">Игры, занятия и прогулки сохраняют атмосферу группы, которую дети будут узнавать спустя годы.</p>}
+      {kind === "life" && <p className="kg3-intro kg3-life-caption">{school ? "Знакомые школьные пространства становятся частью общей истории выпуска." : "Игры, занятия и прогулки сохраняют атмосферу группы, которую дети будут узнавать спустя годы."}</p>}
     </div>
     <Dialog.Root open={zoomed} onOpenChange={setZoomed}>
       <Dialog.Portal>
@@ -131,7 +131,7 @@ export function MobileStoryGallery({ images, Picture }: { images: StoryImage[]; 
             const target = rail.current?.querySelector<HTMLButtonElement>('button[tabindex="0"]') ?? opener.current;
             if (target?.isConnected) target.focus({ preventScroll: true });
           }}>
-          <header><Dialog.Title>Фотографии выпускной группы</Dialog.Title>
+          <header><Dialog.Title>{school ? "Фотографии 4-го класса" : "Фотографии выпускной группы"}</Dialog.Title>
             <Dialog.Close asChild><button ref={closeButton} type="button" aria-label="Закрыть фотографию"><X size={24} aria-hidden="true" /></button></Dialog.Close>
           </header>
           <Dialog.Description className="sr-only">{selected.alt}</Dialog.Description>

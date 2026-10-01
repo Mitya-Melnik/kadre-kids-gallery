@@ -5,6 +5,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { Check, Expand, Play, X } from "lucide-react";
 import AlbumCatalog from "./AlbumCatalog";
 import { albumPackages } from "@/config/albumPackages";
+import { schoolText, grade4PreviewImages, seniorSchoolPreviewImages, type AlbumAudience } from "@/config/albumAudience";
 import { reachGoal } from "@/lib/analytics";
 import "./kindergarten-catalog-v2.css";
 
@@ -29,14 +30,20 @@ const highlights: Record<Album["id"], readonly string[]> = {
   "ten-pages": ["Индивидуальный разворот ребёнка", "3 индивидуальных портрета", "6 страниц групповых фотографий"],
   "fourteen-pages": ["10 страниц групповых фотографий", "Персональное «Письмо в будущее»", "Фото выпускного включено в 3 дня съёмки"],
 };
-const shortName = (album: Album) => album.title.replace(/ — \d+ страниц$/, "");
+const shortName = (album: { title: string }) => album.title.replace(/ — \d+ страниц$/, "");
 const panelTitles: Record<Panel, string> = {
   details: "Состав и дополнения", comparison: "Сравнить 5 форматов",
   video: "Видео альбома", image: "Пример альбома",
 };
 const scrollBehavior = (): ScrollBehavior => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 
-function MobileCatalog() {
+export function MobileAlbumCatalog({ audience = "kindergarten" }: { audience?: AlbumAudience }) {
+  const isSchool = audience !== "kindergarten";
+  const pagePath = audience === "grade4" ? "/school/4" : audience === "school" ? "/school/9-11" : "/kindergarten";
+  // Preserve the current school minimum. The removed discount threshold is a different rule.
+  const minimum = isSchool ? 15 : 10;
+  const text = (value: string) => isSchool ? schoolText(value, audience).replace(/Воспитатели/g, "Учитель").replace(/одногруппники/g, "одноклассники") : value;
+  const packages = isSchool ? albumPackages.map((album) => ({ ...album, title: text(album.title), description: text(album.description), suitableFor: text(album.suitableFor), features: album.features.map(text), items: album.items.map((item) => ({ ...item, note: text(item.note) })), additionalInfo: "additionalInfo" in album ? album.additionalInfo.map(text) : [] })) : albumPackages;
   const [selectedId, setSelectedId] = useState<Album["id"]>("ten-pages");
   const [panel, setPanel] = useState<Panel | null>(null);
   const [previewError, setPreviewError] = useState(false);
@@ -45,8 +52,9 @@ function MobileCatalog() {
   const panelTitle = useRef<HTMLHeadingElement>(null);
   const catalog = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
-  const currentAlbum = albumPackages.find((album) => album.id === selectedId) ?? albumPackages[3];
-  const imageBase = currentAlbum.image.replace(/\.(webp|jpg|jpeg|png)$/, "");
+  const currentAlbum = packages.find((album) => album.id === selectedId) ?? packages[3];
+  const schoolPreview = audience === "grade4" ? grade4PreviewImages[selectedId] : audience === "school" ? seniorSchoolPreviewImages[selectedId] : undefined;
+  const imageBase = schoolPreview?.basePath ?? currentAlbum.image.replace(/\.(webp|jpg|jpeg|png)$/, "");
   const imagePath = `${imageBase}.webp`;
   const additions = "additionalInfo" in currentAlbum ? currentAlbum.additionalInfo : [];
 
@@ -56,20 +64,20 @@ function MobileCatalog() {
     setSelectedId(album.id);
     setPreviewError(false);
     setVideoError(false);
-    reachGoal("album_format_select", { audience: "kindergarten", album_id: album.id, placement: "mobile_catalog_tabs" });
+    reachGoal("album_format_select", { audience, album_id: album.id, placement: "mobile_catalog_tabs" });
   };
   const openPanel = (kind: Panel, event: MouseEvent<HTMLButtonElement>) => {
     returnFocus.current = event.currentTarget;
     setPanel(kind);
     reachGoal(kind === "comparison" ? "album_comparison_open" : "album_details_open", {
-      audience: "kindergarten", album_id: selectedId, section: kind, placement: "mobile_catalog_tabs",
+      audience, album_id: selectedId, section: kind, placement: "mobile_catalog_tabs",
     });
   };
   const closePanel = () => {
     video.current?.pause();
     setPanel(null);
   };
-  const chooseFromComparison = (album: Album) => {
+  const chooseFromComparison = (album: Pick<Album, "id" | "shortTitle">) => {
     selectAlbum(album.id);
     returnFocus.current = catalog.current?.querySelector<HTMLElement>(`[data-album-id="${album.id}"]`) ?? null;
     closePanel();
@@ -78,7 +86,7 @@ function MobileCatalog() {
     // <base href="/"> must not send this link to the home page or drop UTM.
     event.preventDefault();
     document.getElementById("cta")?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
-    reachGoal("consultation_click", { page: "kindergarten", placement: "mobile_catalog", album_id: selectedId });
+    reachGoal("consultation_click", { page: isSchool ? audience : "kindergarten", placement: "mobile_catalog", album_id: selectedId });
   };
 
   return (
@@ -86,11 +94,11 @@ function MobileCatalog() {
       <div className="km-v2-container">
         <header className="km-v2-heading">
           <h2 id="km-catalog-title">Альбомы и цены</h2>
-          <p>21×30 см · заказ от 10 альбомов</p>
+          <p>21×30 см · заказ от {minimum} альбомов</p>
         </header>
         <Tabs.Root value={selectedId} onValueChange={selectAlbum} className="km-v2-browser">
           <Tabs.List className="km-v2-tabs" aria-label="Формат альбома">
-            {albumPackages.map((album) => (
+            {packages.map((album) => (
               <Tabs.Trigger key={album.id} value={album.id} className="km-v2-tab" data-album-id={album.id}>
                 {album.shortTitle.includes("страниц")
                   ? <><span>{album.shortTitle.split(" ")[0]}</span><span>страниц</span></>
@@ -121,15 +129,15 @@ function MobileCatalog() {
                 )}
                 <span className="km-v2-expand" aria-hidden="true"><Expand size={20} /></span>
               </button>
-              <button type="button" className="km-v2-video" data-open="video" onClick={(event) => openPanel("video", event)}>
+              {!isSchool && <button type="button" className="km-v2-video" data-open="video" onClick={(event) => openPanel("video", event)}>
                 <Play size={16} aria-hidden="true" /> Видео
-              </button>
+              </button>}
             </figure>
             <ul className="km-v2-highlights">
-              {highlights[selectedId].map((text) => <li key={text}><Check size={17} aria-hidden="true" /><span>{text}</span></li>)}
+              {highlights[selectedId].map((text) => <li key={text}><Check size={17} aria-hidden="true" /><span>{isSchool ? schoolText(text, audience).replace(/Воспитатели/g, "Учитель").replace(/одногруппники/g, "одноклассники") : text}</span></li>)}
             </ul>
             <p className="km-v2-gift">Все удачные электронные фото — в подарок</p>
-            <a href="/kindergarten#cta" className="km-v2-action" onClick={scrollToForm}>Рассчитать для группы</a>
+            <a href={`${pagePath}#cta`} className="km-v2-action" onClick={scrollToForm}>{isSchool ? "Рассчитать для класса" : "Рассчитать для группы"}</a>
             <div className="km-v2-secondary">
               <button type="button" data-open="details" onClick={(event) => openPanel("details", event)}>Состав и дополнения</button>
               <button type="button" data-open="comparison" onClick={(event) => openPanel("comparison", event)}>Сравнить</button>
@@ -147,7 +155,7 @@ function MobileCatalog() {
             <header className="km-v2-sheet-heading">
               <div>
                 <Dialog.Title ref={panelTitle} tabIndex={-1}>{panel ? panelTitles[panel] : "Альбом"}</Dialog.Title>
-                <Dialog.Description>{panel === "comparison" ? "Цены за один альбом · заказ от 10 экземпляров" : `${currentAlbum.title} · ${currentAlbum.price}`}</Dialog.Description>
+                <Dialog.Description>{panel === "comparison" ? `Цены за один альбом · заказ от ${minimum} экземпляров` : `${currentAlbum.title} · ${currentAlbum.price}`}</Dialog.Description>
               </div>
               <Dialog.Close asChild><button type="button" className="km-v2-close" aria-label="Закрыть панель"><X size={24} aria-hidden="true" /></button></Dialog.Close>
             </header>
@@ -160,14 +168,14 @@ function MobileCatalog() {
                 {additions.length > 0 && <><h3>Дополнения и условия бонусов</h3><ul>{additions.map((text) => <li key={text}>{text}</li>)}</ul></>}
                 <h3>Общие условия</h3>
                 <ul>
-                  <li>Формат — 21×30 см. Минимальный тираж — от 10 альбомов.</li>
+                  <li>Формат — 21×30 см. Минимальный тираж — от {minimum} альбомов.</li>
                   <li>Все удачные обработанные электронные фотографии — в подарок.</li>
-                  <li>Для воспитателей: один альбом бесплатно, второй — со скидкой 50%.</li>
+                  <li>{isSchool ? "Один альбом для учителя — бесплатно." : "Для воспитателей: один альбом бесплатно, второй — со скидкой 50%."}</li>
                   <li>Доставка до пункта выдачи СДЭК включена.</li>
                 </ul>
               </>}
               {panel === "comparison" && <div className="km-v2-comparison">
-                {albumPackages.map((album) => <article key={album.id}>
+                {packages.map((album) => <article key={album.id}>
                   <div className="km-v2-compare-heading"><h3>{shortName(album)}</h3><strong>{album.price}</strong></div>
                   <p>{album.comparisonFormat} · Съёмка: {album.shootingDays.toLowerCase()}</p>
                   <p>{album.suitableFor}</p>
@@ -180,7 +188,7 @@ function MobileCatalog() {
               {panel === "video" && <>
                 <video ref={video} src={currentAlbum.video} poster={imagePath} controls playsInline preload="none"
                   aria-label={`Видео альбома «${currentAlbum.title}»`} onError={() => setVideoError(true)}
-                  onPlay={() => reachGoal("album_video_play", { audience: "kindergarten", album_id: selectedId, placement: "mobile_catalog_tabs" })} />
+                  onPlay={() => reachGoal("album_video_play", { audience, album_id: selectedId, placement: "mobile_catalog_tabs" })} />
                 {videoError && <p role="status">Видео не удалось загрузить. Попробуйте открыть файл отдельно.</p>}
                 <a className="km-v2-original" href={currentAlbum.video} target="_blank" rel="noopener noreferrer">Открыть видео в новой вкладке</a>
               </>}
@@ -198,5 +206,5 @@ function MobileCatalog() {
 
 export default function KindergartenCatalog() {
   const isMobile = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  return isMobile ? <MobileCatalog /> : <AlbumCatalog />;
+  return isMobile ? <MobileAlbumCatalog /> : <AlbumCatalog />;
 }

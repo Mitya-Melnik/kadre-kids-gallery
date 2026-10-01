@@ -12,17 +12,17 @@ export function normalizeLeadPhone(value: string): string {
   if (digits.length === 11 && /^[78]/.test(digits)) return `+7${digits.slice(1)}`;
   return "";
 }
-export function validateKindergartenLead(value: KindergartenLeadValues) {
+export function validateKindergartenLead(value: KindergartenLeadValues, institutionLabel = "детского сада") {
   const errors: Partial<Record<keyof KindergartenLeadValues, string>> = {};
   if (!value.name.trim()) errors.name = "Укажите ваше имя";
   if (!normalizeLeadPhone(value.phone)) errors.phone = "Укажите российский номер: +7 и 10 цифр";
-  if (!value.institution.trim()) errors.institution = "Укажите номер или название детского сада";
+  if (!value.institution.trim()) errors.institution = `Укажите номер или название ${institutionLabel}`;
   if (!value.consent) errors.consent = "Для ответа на заявку необходимо ваше согласие";
   return errors;
 }
 export function buildKindergartenLead(value: KindergartenLeadValues, context: {
   page: string; referrer: string; startedAt: number; now: number;
-  consentVersion: string; privacyPolicyVersion: string; albumTitle?: string;
+  consentVersion: string; privacyPolicyVersion: string; albumTitle?: string; audience?: "kindergarten" | "school"; schoolLevel?: "grade4" | "grade9_11";
 }) {
   const params = new URL(context.page).searchParams;
   // A calculation preference is not a confirmed purchase or discount entitlement.
@@ -33,7 +33,7 @@ export function buildKindergartenLead(value: KindergartenLeadValues, context: {
     institution: value.institution.trim().slice(0, 140), childrenCount: value.childrenCount,
     comment: [choice, value.comment.trim().slice(0, 600)].filter(Boolean).join("\n"),
     website: value.website, formElapsedMs: context.now - context.startedAt,
-    direction: "album", audience: "kindergarten", schoolLevel: "",
+    direction: "album", audience: context.audience ?? "kindergarten", schoolLevel: context.audience === "school" ? context.schoolLevel ?? "" : "",
     source: "detivkadre.spb.ru", page: context.page,
     tracking: {
       utmSource: params.get("utm_source") || "", utmMedium: params.get("utm_medium") || "",
