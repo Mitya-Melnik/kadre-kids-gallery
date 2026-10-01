@@ -31,8 +31,12 @@ JS_SNAPSHOT=r'''() => {
  tag:e.tagName,text:e.matches('h1,h2,h3,h4,p,label,button,a')?e.innerText.replace(/\s+/g,' ').trim():'',
  src:e.tagName==='IMG'?new URL(e.currentSrc||e.src).pathname:'',
  x:dynamic(e)?null:r.x,y:r.y+scrollY,w:r.width,h:r.height,
- styles:Object.fromEntries(['fontFamily','fontSize','fontWeight','lineHeight','color','backgroundColor','borderRadius','display','gridTemplateColumns','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','textAlign','position'].map(k=>[k,s[k]]))};});
+ styles:Object.fromEntries(['fontFamily','fontSize','fontWeight','lineHeight','color','backgroundColor','borderRadius','display','gridTemplateColumns','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','textAlign','position','opacity'].map(k=>[k,s[k]]))};});
 }'''
+def paint(page,ms=100):
+    # IO/image painting is browser work, not a JavaScript timer advanced by Clock alone.
+    page.clock.run_for(50); page.wait_for_timeout(ms); page.clock.run_for(50); page.wait_for_timeout(ms)
+
 def prepare(browser,port,path,width):
     ctx=browser.new_context(viewport={'width':width,'height':1000},reduced_motion='reduce',device_scale_factor=1)
     ctx.route('**/*',lambda route:route.continue_() if urlparse(route.request.url).hostname in ('127.0.0.1','localhost','fonts.googleapis.com','fonts.gstatic.com') and route.request.method in ('GET','HEAD') else route.abort())
@@ -41,27 +45,31 @@ def prepare(browser,port,path,width):
     page.goto(f'http://127.0.0.1:{port}{path}',wait_until='networkidle')
     page.clock.pause_at(datetime.datetime(2026,10,1,12,1,tzinfo=datetime.timezone.utc))
     page.add_style_tag(content='*{transition:none!important;animation:none!important;scroll-behavior:auto!important}')
-    page.clock.run_for(50)
+    paint(page)
     consent=page.get_by_role('button',name='Только необходимые',exact=True)
-    if consent.count(): consent.evaluate('e=>e.click()'); page.clock.run_for(50)
-    height=page.evaluate('document.documentElement.scrollHeight')
-    for y in range(0,height,700):
-        page.evaluate('(y)=>scrollTo(0,y)',y); page.clock.run_for(32); page.wait_for_timeout(8)
-    # Reveal with scrolling, not by forcing CSS visibility or changing text/layout.
-    for _ in range(2):
-        pending=page.locator('.opacity-0').evaluate_all("nodes=>nodes.filter(e=>e.getClientRects().length && !e.closest('details:not([open]),[hidden]')).map(e=>({y:e.getBoundingClientRect().top+scrollY,h:e.getBoundingClientRect().height}))")
-        for el in pending:
-            page.evaluate('(y)=>scrollTo(0,y)',max(0,el['y']+el['h']/2-500)); page.clock.run_for(64)
-    page.evaluate('scrollTo(0,0)'); page.clock.run_for(100)
+    if consent.count(): consent.evaluate('e=>e.click()'); paint(page)
     page.evaluate("() => {for(const e of document.querySelectorAll('img'))e.loading='eager';}")
-    page.wait_for_timeout(150)
+    page.evaluate('() => document.fonts.ready')
     page.evaluate('() => Promise.all([...document.images].map(i=>i.decode().catch(()=>{})))')
+    paint(page,200)
+    height=page.evaluate('document.documentElement.scrollHeight')
+    for y in range(0,height,650):
+        page.evaluate('(y)=>scrollTo(0,y)',y); paint(page,60)
+    # Reveal each original scroll-animation target through actual scrolling, never CSS overrides.
+    for _ in range(3):
+        pending=page.locator('.opacity-0').evaluate_all("nodes=>nodes.filter(e=>e.getClientRects().length && !e.closest('details:not([open]),[hidden]')).map(e=>({y:e.getBoundingClientRect().top+scrollY,h:e.getBoundingClientRect().height}))")
+        if not pending: break
+        for el in pending:
+            page.evaluate('(y)=>scrollTo(0,y)',max(0,el['y']+el['h']/2-500)); paint(page,200)
+    page.evaluate('scrollTo(0,0)'); paint(page,150)
     for label in ['Слайд 1','Показать отзыв 1','Перейти к слайду 1']:
         buttons=page.get_by_role('button',name=label,exact=True)
         for i in range(buttons.count()): buttons.nth(i).evaluate('e=>e.click()')
-    page.clock.run_for(400)
-    page.evaluate('scrollTo(0,0)'); page.clock.run_for(16)
-    return ctx,page,errors
+    page.clock.run_for(500); paint(page,200)
+    page.evaluate('scrollTo(0,0)'); paint(page,100)
+    remaining=page.locator('.opacity-0').evaluate_all("nodes=>nodes.filter(e=>e.getClientRects().length && !e.closest('details:not([open]),[hidden]')).map(e=>({tag:e.tagName,text:e.textContent.slice(0,100),height:e.getBoundingClientRect().height}))")
+    images=page.locator('img').evaluate_all("nodes=>nodes.filter(e=>e.getClientRects().length && !e.closest('details:not([open]),[hidden]')).map(e=>({src:new URL(e.currentSrc||e.src).pathname,complete:e.complete,naturalWidth:e.naturalWidth}))")
+    return ctx,page,errors,{'remaining_scroll_reveals':remaining,'images':images}
 
 def diff_nodes(before,after):
     changes=[]
@@ -79,11 +87,11 @@ with sync_playwright() as pw:
     for path,width in cases:
         key=(path.strip('/').replace('/','-') or 'home')+f'-{width}'; contexts=[]
         try:
-            ca,pa,ea=prepare(browser,4303,path,width); contexts.append(ca)
-            cb,pb,eb=prepare(browser,4302,path,width); contexts.append(cb)
+            ca,pa,ea,sa=prepare(browser,4303,path,width); contexts.append(ca)
+            cb,pb,eb,sb=prepare(browser,4302,path,width); contexts.append(cb)
             before,after=pa.evaluate(JS_SNAPSHOT),pb.evaluate(JS_SNAPSHOT)
             changes=diff_nodes(before,after)
-            (OUT/f'{key}-dom.json').write_text(json.dumps({'before':before,'after':after,'diffs':changes},ensure_ascii=False,indent=2))
+            (OUT/f'{key}-dom.json').write_text(json.dumps({'before':before,'after':after,'diffs':changes,'reference_readiness':sa,'approved_readiness':sb},ensure_ascii=False,indent=2))
             pa.screenshot(path=str(OUT/f'{key}-reference.png'),full_page=True)
             pb.screenshot(path=str(OUT/f'{key}-approved.png'),full_page=True)
             a=Image.open(OUT/f'{key}-reference.png').convert('RGB'); b=Image.open(OUT/f'{key}-approved.png').convert('RGB')
@@ -92,7 +100,7 @@ with sync_playwright() as pw:
                 delta=np.any(np.asarray(a)!=np.asarray(b),axis=2)
                 pixels.update(different_pixels=int(delta.sum()),difference_fraction=float(delta.mean()))
                 ImageChops.difference(a,b).save(OUT/f'{key}-pixel-diff.png')
-            item={'path':path,'width':width,'dom_differences':len(changes),'page_errors':ea+eb,'pixels':pixels}
+            item={'path':path,'width':width,'dom_differences':len(changes),'page_errors':ea+eb,'pixels':pixels,'remaining_scroll_reveals_reference':len(sa['remaining_scroll_reveals']),'remaining_scroll_reveals_approved':len(sb['remaining_scroll_reveals'])}
             report['screens'].append(item); print(json.dumps(item,ensure_ascii=False),flush=True)
         except Exception:
             error=traceback.format_exc(); report['errors'].append({'case':key,'error':error}); print(error,flush=True)
