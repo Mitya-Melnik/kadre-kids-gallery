@@ -4,8 +4,7 @@ import base64, hashlib, lzma, os, subprocess, shutil
 branch='feature/grade4-mobile-v8'
 assert os.environ['GITHUB_REF']==f'refs/heads/{branch}'
 assert os.environ['GITHUB_REPOSITORY']=='Mitya-Melnik/kadre-kids-gallery'
-parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
-assert parent=='997d59e7e4cf25134d3a83d32c94556570ff9408', parent
+subprocess.run(['git','merge-base','--is-ancestor','997d59e7e4cf25134d3a83d32c94556570ff9408','HEAD'],check=True)
 folder=Path('scripts/grade4-preview-stage')
 parts=sorted(folder.glob('part-*.b64'));assert len(parts)==4
 patch=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts),validate=True))
@@ -34,13 +33,10 @@ paths={line.split(' b/',1)[1] for line in patch.decode().splitlines() if line.st
 assert paths==allowed,(paths-allowed,allowed-paths)
 subprocess.run(['git','apply','--check','-'],input=patch,check=True)
 subprocess.run(['git','apply','-'],input=patch,check=True)
-workflow=Path('.github/workflows/grade4-mobile-v8.yml')
-content=workflow.read_text();assert content.count('contents: write')==1
-workflow.write_text(content.replace('contents: write','contents: read').replace('persist-credentials: true','persist-credentials: false'))
 shutil.rmtree(folder)
-subprocess.run(['git','add','--',*sorted(allowed),str(workflow),'scripts/grade4-preview-stage'],check=True)
+subprocess.run(['git','add','--',*sorted(allowed),'scripts/grade4-preview-stage'],check=True)
 subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
 subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
 subprocess.run(['git','commit','-m','Add isolated grade-4 mobile page using shared approved controls; remove one-use staging'],check=True)
 subprocess.run(['git','push','origin',f'HEAD:refs/heads/{branch}'],check=True)
-print('Applied only the allowlisted mobile preview patch; no merge or deployment.')
+print('Applied only the allowlisted mobile preview patch; no workflow write, merge or deployment.')
