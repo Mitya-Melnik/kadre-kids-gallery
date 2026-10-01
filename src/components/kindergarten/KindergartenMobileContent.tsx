@@ -2,6 +2,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 import type { ComponentType, ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeft, ArrowRight, Expand, X } from "lucide-react";
+import { MobileSwipeRail } from "./MobileSwipeRail";
 
 const query = "(max-width: 767px)";
 const subscribe = (listener: () => void) => {
@@ -29,18 +30,16 @@ function ReviewCard({ review }: { review: Review }) {
   </figure>;
 }
 export function MobileReviews({ testimonials }: { testimonials: Review[] }) {
-  // Use existing reviews verbatim: comfort of a shy child and organisation.
+  // Same verbatim reviews and priority order; all items now available by swiping.
   const preferred = [7, 2].flatMap((id) => testimonials.filter((item) => item.id === id));
   const first = [...preferred, ...testimonials.filter((item) => !preferred.includes(item))].slice(0, 2);
   const rest = testimonials.filter((item) => !first.includes(item));
+  const ordered = [...first, ...rest];
   return <section className="kg3-section kg3-reviews bg-gradient-card" aria-labelledby="kg3-reviews-title">
     <div className="container mx-auto px-4">
       <h2 id="kg3-reviews-title">Отзывы</h2>
-      <div className="kg3-review-list">{first.map((review) => <ReviewCard key={review.id} review={review} />)}</div>
-      {rest.length > 0 && <details className="kg3-disclosure kg3-more-reviews">
-        <summary>Остальные отзывы ({rest.length})</summary>
-        <div className="kg3-review-list">{rest.map((review) => <ReviewCard key={review.id} review={review} />)}</div>
-      </details>}
+      <MobileSwipeRail count={ordered.length} label="Отзывы о работе команды" itemLabel="Отзыв"
+        className="kg7-reviews" renderItem={(index) => <ReviewCard review={ordered[index]} />} />
     </div>
   </section>;
 }
