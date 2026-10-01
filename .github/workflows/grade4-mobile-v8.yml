@@ -3,7 +3,7 @@ on:
   push:
     branches: [feature/grade4-mobile-v8]
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: grade4-mobile-v8
   cancel-in-progress: true
@@ -15,10 +15,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          persist-credentials: true
-      - name: Apply verified local patch only on this isolated branch
-        if: hashFiles('scripts/grade4-preview-stage/apply.py') != ''
-        run: python scripts/grade4-preview-stage/apply.py
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
