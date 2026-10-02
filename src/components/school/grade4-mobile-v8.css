@@ -14,8 +14,8 @@
   .grade4-mobile-v8 .g4-action { display: flex; align-items: center; justify-content: center; min-height: 3rem; padding: .625rem .75rem; border-radius: .625rem; background: var(--km-accent); color: #fff; font-size: 1rem; line-height: 1.4; font-weight: 600; text-align: center; }
   .grade4-mobile-v8 .g4-secondary-action { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .5rem; text-align: center; color: var(--km-accent); text-decoration: underline; }
   .grade4-mobile-v8 .g4-hero-benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .625rem; margin-top: .75rem; }
-  .grade4-mobile-v8 .g4-hero-benefits p { display: flex; gap: .375rem; padding: .625rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; font-size: 1rem; line-height: 1.45; }
-  .grade4-mobile-v8 .g4-hero-benefits svg { color: var(--km-accent); flex-shrink: 0; margin-top: .2rem; }
+  .grade4-mobile-v8 .g4-hero-benefits p { display: flex; flex-direction: column; gap: .25rem; padding: .75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; font-size: 1rem; line-height: 1.45; }
+  .grade4-mobile-v8 .g4-benefit-icon { font-size: 1.25rem; line-height: 1.4; flex-shrink: 0; }
   .grade4-mobile-v8 .g4-participant { height: 100%; padding: 1rem; border: 1px solid hsl(var(--border)); border-radius: .875rem; background: #fff; }
   .grade4-mobile-v8 .g4-participant > svg { color: var(--km-accent); margin-bottom: .75rem; }
   .grade4-mobile-v8 .g4-participant p { color: var(--km-muted); margin-top: .5rem; }
@@ -44,4 +44,9 @@
   .grade4-mobile-v8 > .fixed:not(.inset-x-0) { display: none; }
   .grade4-mobile-v8 .g4-sticky { padding-bottom: max(.75rem, env(safe-area-inset-bottom)); }
   .grade4-mobile-v8 :focus-visible { outline: 3px solid var(--km-accent); outline-offset: 3px; }
+}
+
+@media (max-width: 359px) {
+  .grade4-mobile-v8 .g4-hero-benefits { grid-template-columns: 1fr; }
+  .grade4-mobile-v8 .g4-hero-benefits p { flex-direction: row; gap: .75rem; }
 }

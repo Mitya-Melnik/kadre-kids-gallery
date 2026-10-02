@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet";
-import { Check } from "lucide-react";
 import TopBar from "@/components/TopBar";
 import AlbumPromoStrip from "@/components/AlbumPromoStrip";
 import Footer from "@/components/Footer";
@@ -23,6 +22,8 @@ import "@/components/kindergarten/kindergarten-content-v3.css";
 import "./grade4-mobile-v8.css";
 
 import { schoolHeroImages, seniorParticipantBenefits } from "@/config/seniorContent";
+
+const heroBenefitIcons = ["🖼️", "📷", "🎁", "📄"] as const;
 
 const seniorProcessSteps = getProcessSteps(albumSteps, "school");
 const grade4ProcessSteps = getProcessSteps(albumSteps, "grade4");
@@ -66,7 +67,7 @@ export default function SchoolMobilePage({ audience = "grade4" }: { audience?: "
           </picture>} />
         <a href={`${pagePath}#albums`} className="g4-action" onClick={(event) => { event.preventDefault(); document.getElementById("albums")?.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }}>Посмотреть альбомы и цены</a>
         <a href={`${pagePath}#cta`} className="g4-secondary-action">Рассчитать стоимость</a>
-        <div className="g4-hero-benefits">{(senior ? ["Личный выбор портрета и разворота", "Бесплатная досъёмка отсутствующих", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"] : ["Портрет ребёнка выбираете вы", "Бесплатно доснимем отсутствовавших", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"]).map((item) => <p key={item}><Check size={18} aria-hidden="true" /><span>{item}</span></p>)}</div>
+        <div className="g4-hero-benefits">{(senior ? ["Личный выбор портрета и разворота", "Бесплатная досъёмка отсутствующих", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"] : ["Портрет ребёнка выбираете вы", "Бесплатно доснимем отсутствовавших", "Все удачные фотографии — в подарок", "Стоимость и сроки — в договоре"]).map((item, index) => <p key={item}><span className="g4-benefit-icon" aria-hidden="true">{heroBenefitIcons[index]}</span><span>{item}</span></p>)}</div>
       </section>
       <AlbumPromoStrip />
       <MobileAlbumCatalog audience={audience} />

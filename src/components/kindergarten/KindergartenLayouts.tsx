@@ -147,7 +147,7 @@ function LazyLayoutContent({
   );
 }
 
-const layoutDesigns = [
+export const layoutDesigns = [
   { slug: "tsvetnye-karandashi", title: "Цветные Карандаши" },
   { slug: "ushastiki", title: "Ушастики" },
   { slug: "gorodok", title: "Городок" },
