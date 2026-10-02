@@ -3,7 +3,7 @@ on:
   push:
     branches: [feature/mobile-layouts-benefits-v10]
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: mobile-layouts-benefits-v10
   cancel-in-progress: true
@@ -15,10 +15,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          persist-credentials: true
-      - name: Apply explicit source changes on this isolated branch only
-        if: hashFiles('scripts/apply-mobile-v10.py') != ''
-        run: python scripts/apply-mobile-v10.py
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -29,6 +26,7 @@ jobs:
       - name: Build current and frozen v9 source, test original assets and rules
         timeout-minutes: 4
         run: |
+          test ! -f scripts/apply-mobile-v10.py
           npm ci --prefer-offline --no-audit --no-fund --fetch-retries=2 --fetch-timeout=30000
           npm run build
           git worktree add /tmp/v10-base 09d2757fd6de2e3a534aa9c7d2677a3c822f470f
