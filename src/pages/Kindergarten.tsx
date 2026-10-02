@@ -6,6 +6,7 @@ import AlbumPromoStrip from "@/components/AlbumPromoStrip";
 import KindergartenHero from "@/components/kindergarten/KindergartenHero";
 import KindergartenGallery from "@/components/kindergarten/KindergartenGallery";
 import KindergartenLayouts from "@/components/kindergarten/KindergartenLayouts";
+import KindergartenLayoutsMobile from "@/components/kindergarten/KindergartenLayoutsMobile";
 import AlbumCatalog from "@/components/kindergarten/KindergartenCatalog";
 import CatalogViewportControls from "@/components/kindergarten/CatalogViewportControls";
 import MobileContentViewportControls from "@/components/kindergarten/MobileContentViewportControls";
@@ -37,7 +38,7 @@ const Kindergarten = () => {
     story: <KindergartenCase />,
     // All six complete steps; the owner requested a mobile carousel, not shorter content.
     process: mobile ? <KindergartenProcessMobile /> : <Process initialType="album" fixedType="album" />,
-    layouts: <KindergartenLayouts />,
+    layouts: mobile ? <KindergartenLayoutsMobile /> : <KindergartenLayouts />,
     inline: <KindergartenInlineCTA />,
     gallery: <KindergartenGallery compactMobile={mobile} />,
     reviews: <Testimonials compactMobile={mobile} />,
@@ -45,7 +46,7 @@ const Kindergarten = () => {
     form: mobile ? <KindergartenEnquirySection /> : <CTA initialDirection="album" initialAudience="kindergarten" fixedDirection="album" fixedAudience="kindergarten" />,
   };
   const order: (keyof typeof sections)[] = mobile
-    ? ["hero", "promotion", "catalog", "controls", "gallery", "story", "advantages", "process", "layouts", "inline", "reviews", "questions", "form"]
+    ? ["hero", "promotion", "catalog", "controls", "gallery", "advantages", "process", "layouts", "inline", "reviews", "questions", "form"]
     : ["hero", "promotion", "advantages", "catalog", "controls", "story", "process", "layouts", "inline", "gallery", "reviews", "questions", "form"];
 
   return (
@@ -63,7 +64,7 @@ const Kindergarten = () => {
       <TopBar />
       <main>{order.map((name) => <Fragment key={name}>{sections[name]}</Fragment>)}</main>
       {mobile && <MobileContentViewportControls />}
-      <Footer kindergartenPage />
+      <Footer kindergartenPage hideKindergartenCase={mobile} />
       <FabContact aboveMobileBar />
       <BackToTop aboveMobileBar />
       <KindergartenMobileCTA />
