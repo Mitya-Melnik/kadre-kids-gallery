@@ -1,6 +1,6 @@
 import { Building2, Check, Heart, ShieldCheck } from "lucide-react";
 
-const audiences = [
+export const audiences = [
   {
     label: "Ребёнку",
     title: "Комфортно быть собой",

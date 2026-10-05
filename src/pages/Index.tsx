@@ -1,5 +1,6 @@
 import HomeMobileHero from "@/components/home/HomeMobileHero";
 import HomeMobileEnquiry from "@/components/home/HomeMobileEnquiry";
+import HomeMobileAdvantages from "@/components/home/HomeMobileAdvantages";
 import { useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
 import "@/components/home/home-mobile.css";
 import TopBar from "@/components/TopBar";
@@ -47,7 +48,7 @@ const Index = () => {
       <Navigation />
       {mobile ? <HomeMobileHero /> : <Hero />}
       <ProductDirections compactMobile={mobile} />
-      {mobile ? <details id="advantages" className="home-advantages"><summary>Почему выбирают «Дети в кадре»</summary><div><Advantages compactMobile /></div></details> : <Advantages />}
+      {mobile ? <HomeMobileAdvantages /> : <Advantages />}
       <Gallery compactMobile={mobile} />
       {mobile ? <div className="home-reviews"><Testimonials compactMobile /></div> : <Testimonials />}
       <Process compactMobile={mobile} />
