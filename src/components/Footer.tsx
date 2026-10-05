@@ -7,11 +7,12 @@ interface FooterProps {
   hideQuickLinks?: boolean;
   hideSchoolAlbumLink?: boolean;
   kindergartenPage?: boolean;
+  hideKindergartenCase?: boolean;
   schoolPage?: boolean;
   schoolLevel?: "grade4" | "grade9_11";
 }
 
-const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergartenPage = false, schoolPage = false, schoolLevel = "grade9_11" }: FooterProps) => {
+const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergartenPage = false, hideKindergartenCase = false, schoolPage = false, schoolLevel = "grade9_11" }: FooterProps) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -132,7 +133,7 @@ const Footer = ({ hideQuickLinks = false, hideSchoolAlbumLink = false, kindergar
             <div>
               <h4 className="text-lg font-semibold mb-4 text-white">Быстрые ссылки</h4>
               <nav className="space-y-2">
-                {quickLinks.map((link, index) => (
+                {quickLinks.filter((link) => !hideKindergartenCase || link.href !== "#case-kindergarten-108").map((link, index) => (
                   <button
                     key={index}
                     onClick={() => scrollToSection(link.href)}

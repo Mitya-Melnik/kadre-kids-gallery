@@ -1,0 +1,52 @@
+/* Only opt-in /school/4. Shared typography follows the approved kindergarten mobile UI. */
+@media (max-width: 767px) {
+  .grade4-mobile-v8 { --km-ink: #262c34; --km-muted: #505963; --km-accent: #b33930; }
+  .grade4-mobile-v8 .g4-section { padding: 1.5rem 1rem; max-width: 36rem; margin-inline: auto; font-size: 1rem; line-height: 1.55; color: var(--km-ink); overflow-wrap: anywhere; scroll-margin-top: 5rem; }
+  .grade4-mobile-v8 .g4-section h1 { font-size: 1.875rem; font-weight: 700; line-height: 1.2; }
+  .grade4-mobile-v8 .g4-section h2, .grade4-mobile-v8 .kgp6 h2 { font-size: 1.625rem; line-height: 1.25; font-weight: 700; }
+  .grade4-mobile-v8 .g4-section h3 { font-size: 1.125rem; line-height: 1.4; font-weight: 700; }
+  .grade4-mobile-v8 .g4-section > p, .grade4-mobile-v8 .g4-section header > p { color: var(--km-muted); margin-block: .75rem; }
+  .grade4-mobile-v8 .g4-section .g4-eyebrow { color: var(--km-accent); font-size: .875rem; font-weight: 600; letter-spacing: .05em; margin: 0 0 .625rem; }
+  .grade4-mobile-v8 .g4-hero { padding-block: 1.5rem; }
+  .grade4-mobile-v8 .g4-hero-gallery { margin-block: 1rem .75rem; }
+  .grade4-mobile-v8 .g4-hero-gallery picture { display: block; width: 100%; }
+  .grade4-mobile-v8 .g4-hero-gallery img { display: block; width: 100%; height: auto; aspect-ratio: 1; max-height: 23rem; object-fit: contain; border-radius: 1rem; }
+  .grade4-mobile-v8 .g4-action { display: flex; align-items: center; justify-content: center; min-height: 3rem; padding: .625rem .75rem; border-radius: .625rem; background: var(--km-accent); color: #fff; font-size: 1rem; line-height: 1.4; font-weight: 600; text-align: center; }
+  .grade4-mobile-v8 .g4-secondary-action { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .5rem; text-align: center; color: var(--km-accent); text-decoration: underline; }
+  .grade4-mobile-v8 .g4-hero-benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .625rem; margin-top: .75rem; }
+  .grade4-mobile-v8 .g4-hero-benefits p { display: flex; flex-direction: column; gap: .25rem; padding: .75rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; font-size: 1rem; line-height: 1.45; }
+  .grade4-mobile-v8 .g4-benefit-icon { font-size: 1.25rem; line-height: 1.4; flex-shrink: 0; }
+  .grade4-mobile-v8 .g4-participant { height: 100%; padding: 1rem; border: 1px solid hsl(var(--border)); border-radius: .875rem; background: #fff; }
+  .grade4-mobile-v8 .g4-participant > svg { color: var(--km-accent); margin-bottom: .75rem; }
+  .grade4-mobile-v8 .g4-participant p { color: var(--km-muted); margin-top: .5rem; }
+  .grade4-mobile-v8 .g4-section header { margin-bottom: 1rem; }
+  .grade4-mobile-v8 .kgp6, .grade4-mobile-v8 .kg3-section { padding-block: 1.5rem; }
+  .grade4-mobile-v8 .kgp6 > .container { max-width: 36rem; }
+  /* Let title and price wrap into separate rows when text is enlarged. */
+  .grade4-mobile-v8 .km-v2-card-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+  .grade4-mobile-v8 .km-v2-name { flex: 1 1 9rem; }
+  .grade4-mobile-v8 .km-v2-price { margin-left: auto; }
+  .grade4-mobile-v8 .g4-layout-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5rem), 1fr)); gap: .375rem; margin-bottom: .75rem; }
+  .grade4-mobile-v8 .g4-layout-tabs button { min-height: 2.875rem; padding: .5rem .375rem; border: 1px solid hsl(var(--border)); border-radius: .625rem; font-size: .875rem; line-height: 1.4; background: #fff; }
+  .grade4-mobile-v8 .g4-layout-tabs button[aria-pressed="true"] { border-color: var(--km-accent); box-shadow: inset 0 0 0 1px var(--km-accent); background: #fff3ef; color: var(--km-accent); font-weight: 600; }
+  .grade4-mobile-v8 .g4-layout-cover { display: block; width: 100%; overflow: hidden; border: 1px solid hsl(var(--border)); border-radius: 1rem; text-align: left; }
+  .grade4-mobile-v8 .g4-layout-cover img { display: block; width: 100%; height: auto; max-height: 25rem; aspect-ratio: 1; object-fit: contain; }
+  .grade4-mobile-v8 .g4-layout-cover > span { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem .75rem; padding: .875rem; background: #fff; }
+  .grade4-mobile-v8 .g4-layout-cover > span > span { color: var(--km-accent); font-size: .875rem; }
+  .g4-layout-sheet .g4-layout-spread img { width: 100%; height: auto; object-fit: contain; aspect-ratio: 1; }
+  .g4-layout-sheet .g4-layout-spread > a { display: flex; justify-content: center; align-items: center; min-height: 2.75rem; padding-block: .5rem; font-size: .875rem; color: #b33930; text-decoration: underline; }
+  .grade4-mobile-v8 .kg3-advantages #kindergarten-advantages { padding: 0; }
+  .grade4-mobile-v8 .g4-more-benefits .kg3-advantages section { background: transparent; padding: 0 0 .75rem; }
+  .grade4-mobile-v8 .g4-more-benefits .kg3-advantages h2 { display: none; }
+  .grade4-mobile-v8 .kg-lead-section { max-width: 36rem; margin-inline: auto; padding: 1.5rem 1rem; }
+  .grade4-mobile-v8 > footer { padding-block: 2rem; }
+  /* One persistent action is enough here; do not cover gallery/carousel controls. */
+  .grade4-mobile-v8 > .fixed:not(.inset-x-0) { display: none; }
+  .grade4-mobile-v8 .g4-sticky { padding-bottom: max(.75rem, env(safe-area-inset-bottom)); }
+  .grade4-mobile-v8 :focus-visible { outline: 3px solid var(--km-accent); outline-offset: 3px; }
+}
+
+@media (max-width: 359px) {
+  .grade4-mobile-v8 .g4-hero-benefits { grid-template-columns: 1fr; }
+  .grade4-mobile-v8 .g4-hero-benefits p { flex-direction: row; gap: .75rem; }
+}

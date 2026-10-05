@@ -15,9 +15,9 @@ type SchoolStoryImage = {
   kind: "portrait" | "group" | "life";
 };
 
-const SCHOOL_STORY_ASSET_VERSION = "2026-09-14-1";
+export const SCHOOL_STORY_ASSET_VERSION = "2026-09-14-1";
 
-const schoolStoryImages: SchoolStoryImage[] = [
+export const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-glasses", alt: "Портрет выпускницы в светлом образе", kind: "portrait" },
   { slug: "portrait-boy-black", alt: "Современный портрет выпускника", kind: "portrait" },
   { slug: "portrait-boy-smile", alt: "Живой портрет выпускника", kind: "portrait" },
@@ -32,7 +32,7 @@ const schoolStoryImages: SchoolStoryImage[] = [
   { slug: "school-gym", alt: "Выпускной класс в школьном спортивном зале", kind: "life" },
 ];
 
-const grade4StoryImages: SchoolStoryImage[] = [
+export const grade4StoryImages: SchoolStoryImage[] = [
   { slug: "portrait-girl-braid", alt: "Портрет выпускницы 4 класса с косой", kind: "portrait" },
   { slug: "portrait-boy-blue", alt: "Портрет выпускника 4 класса в голубой рубашке", kind: "portrait" },
   { slug: "portrait-girl-light", alt: "Светлый портрет выпускницы 4 класса", kind: "portrait" },

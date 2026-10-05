@@ -1,0 +1,9 @@
+@media (max-width: 767px) {
+  /* Explicitly remove closed content from layout in every browser, including nested details. */
+  .kindergarten-mobile-content-v3 .kg3-disclosure:not([open]) > :not(summary) { display: none; }
+  .kindergarten-mobile-content-v3[data-kg3-reading] > .fixed:not(.inset-x-0) { display: none; }
+  /* Do not clip the persistent action when a parent increases their text size. */
+  .kindergarten-mobile-content-v3[data-kg3-reading] > .fixed.inset-x-0 button {
+    height: auto; min-height: 2.75rem; white-space: normal; line-height: 1.4;
+  }
+}

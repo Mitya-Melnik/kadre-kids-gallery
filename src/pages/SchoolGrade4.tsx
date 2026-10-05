@@ -1,6 +1,9 @@
+import { grade4HeroImages, participantBenefits } from "@/config/grade4Content";
+import SchoolGrade4Mobile from "@/components/school/SchoolGrade4Mobile";
+import { useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
 import { type MouseEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Building2, Check, Smile, UserCheck, UsersRound } from "lucide-react";
+import { Check } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import TopBar from "@/components/TopBar";
 import AlbumPromoStrip from "@/components/AlbumPromoStrip";
@@ -18,12 +21,7 @@ import SchoolStories from "@/components/school/SchoolStories";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
-const grade4HeroImages = [
-  { basePath: "/layouts-grade4/doodles/1", alt: "Альбом для 4 класса в дизайне «Каракули» — обложка" },
-  { basePath: "/layouts-grade4/colored-pencils/2", alt: "Альбом для 4 класса в дизайне «Цветные карандаши» — разворот" },
-  { basePath: "/layouts-grade4/calligraphy/4", alt: "Альбом для 4 класса в дизайне «Каллиграфия» — разворот" },
-  { basePath: "/layouts-grade4/doodles/7", alt: "Альбом для 4 класса в дизайне «Каракули» — разворот" },
-] as const;
+
 
 const Grade4HeroGallery = () => {
   const [api, setApi] = useState<CarouselApi>();
@@ -96,28 +94,7 @@ const Grade4HeroGallery = () => {
   );
 };
 
-const participantBenefits = [
-  {
-    icon: Smile,
-    title: "Ребёнку",
-    text: "Живая съёмка без одинаковых поз: портреты, друзья, уроки, перемены и знакомая школьная жизнь.",
-  },
-  {
-    icon: UserCheck,
-    title: "Родителям",
-    text: "Вы сами выбираете портрет и до печати лично подтверждаете имя и персональный разворот ребёнка.",
-  },
-  {
-    icon: UsersRound,
-    title: "Ответственному за класс",
-    text: "Помогаем выбрать формат, объясняем каждый этап и принимаем замечания к макету одним общим списком.",
-  },
-  {
-    icon: Building2,
-    title: "Школе",
-    text: "Заранее согласуем даты и график, а комплектацию, сроки и ответственность сторон фиксируем в договоре.",
-  },
-] as const;
+
 
 const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, target: string) => {
   event.preventDefault();
@@ -125,7 +102,10 @@ const scrollToSection = (event: MouseEvent<HTMLAnchorElement>, target: string) =
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
 };
 
-const SchoolGrade4 = () => (
+const SchoolGrade4 = () => {
+  const mobile = useKindergartenMobile();
+  if (mobile) return <SchoolGrade4Mobile />;
+  return (
   <div className="min-h-screen overflow-x-clip bg-background pb-16 md:pb-0">
     <Helmet>
       <title>Выпускные альбомы для 4 класса в СПб | Дети в кадре</title>
@@ -197,5 +177,6 @@ const SchoolGrade4 = () => (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur md:hidden"><Button asChild className="w-full" size="lg"><a href="/school/4#cta" onClick={(event) => scrollToSection(event, "#cta")}>Рассчитать стоимость</a></Button></div>
   </div>
 );
+};
 
 export default SchoolGrade4;

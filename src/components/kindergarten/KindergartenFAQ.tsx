@@ -4,6 +4,8 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { albumFaqs } from "@/components/FAQ";
+import { MobileQuestions } from "./KindergartenMobileContent";
+import { schoolMinimumAnswer } from "@/config/albumOrderRules";
 
 type AlbumFaqItem = {
   question: string;
@@ -56,7 +58,7 @@ const albumAnswer = (faq: AlbumFaqItem, audience: AlbumAudience) => {
         ? `Да. Для школьных альбомов доступно 6 дизайнов. Класс выбирает один общий дизайн, а фотографии, имя и персональные страницы каждого ${isGrade4 ? "ребёнка" : "выпускника"} остаются индивидуальными.`
         : "Да. Группа выбирает два разных полноценных макета: один для мальчиков и один для девочек. Фотографии и данные каждого ребёнка остаются индивидуальными.";
     case "Есть ли минимальное количество альбомов?":
-      return isSchool ? "Да. Минимальный тираж для школы — 15 альбомов одного выбранного формата." : faq.answer;
+      return isSchool ? schoolMinimumAnswer : faq.answer;
     case "Фотографируете ли вы воспитателей и учителей?":
       return isSchool ? `Да. В альбом можно добавить портрет ${isGrade4 ? "первого учителя" : "учителя"} и совместные фотографии с учениками.` : "Да. В альбом можно добавить портреты воспитателей и совместные фотографии с детьми.";
     case "Получит ли воспитатель или учитель бесплатный альбом?":
@@ -83,6 +85,7 @@ const albumAnswer = (faq: AlbumFaqItem, audience: AlbumAudience) => {
       if (faq.answerContent) return faq.answerContent;
       if (!isSchool) return faq.answer;
       return faq.answer
+        .replace(/История детства/g, "Школьные годы")
         .replace(/группы или класса/g, "класса")
         .replace(/воспитателя или учителя/g, "учителя")
         .replace(/второго воспитателя/g, "учителя")
@@ -91,7 +94,7 @@ const albumAnswer = (faq: AlbumFaqItem, audience: AlbumAudience) => {
   }
 };
 
-const KindergartenFAQ = ({ audience = "kindergarten" }: { audience?: AlbumAudience }) => {
+const KindergartenFAQ = ({ audience = "kindergarten", compactMobile = false }: { audience?: AlbumAudience; compactMobile?: boolean }) => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
   const { ref: accordionRef, isVisible: accordionVisible } = useScrollAnimation(0.1);
   
@@ -119,6 +122,8 @@ const KindergartenFAQ = ({ audience = "kindergarten" }: { audience?: AlbumAudien
   ];
   const faqs: AlbumFaqItem[] = audience === "school" || audience === "grade4" ? schoolFaqs : kindergartenFaqs;
   const isSchoolAudience = audience === "school" || audience === "grade4";
+
+  if (compactMobile) return <MobileQuestions school={isSchoolAudience} senior={audience === "school"} items={faqs.map((faq) => ({ question: albumQuestion(faq.question, audience), answer: albumAnswer(faq, audience) }))} />;
 
   return (
     <section id={isSchoolAudience ? "school-faq" : "kindergarten-faq"} className="py-20 bg-accent-soft">

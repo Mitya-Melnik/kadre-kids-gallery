@@ -1,0 +1,65 @@
+name: Mobile release audit and rollback snapshots
+on:
+  push:
+    branches: [release/kindergarten-mobile-2026-10-01]
+permissions:
+  contents: read
+concurrency:
+  group: mobile-release-audit-2026-10-01
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build frozen app and original desktop with approved commercial copy only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-audit
+          git diff --exit-code 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 -- public src/assets server nginx.conf Dockerfile package-lock.json
+          git diff --exit-code a3be32716edb16db77a09a059025cd0c00492d46 HEAD -- src public server package-lock.json
+          git diff --name-status 30469af610eea3ebfac226bf3b86e3b407700f4c a3be32716edb16db77a09a059025cd0c00492d46 > release-audit/changed-files.txt
+          git worktree add /tmp/desktop-before 30469af610eea3ebfac226bf3b86e3b407700f4c
+          git worktree add --detach /tmp/desktop-reference 30469af610eea3ebfac226bf3b86e3b407700f4c
+          for f in src/config/albumCommercial.ts src/config/albumPackages.ts src/components/AlbumPromoStrip.tsx src/components/FAQ.tsx src/components/kindergarten/AlbumCatalog.tsx; do
+            cp "$f" "/tmp/desktop-reference/$f"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/desktop-reference/src/components/kindergarten/KindergartenFAQ.tsx')
+          s=p.read_text(); old='return faq.answer\n        .replace(/группы или класса/g, "класса")'
+          assert old in s
+          p.write_text(s.replace(old,'return faq.answer\n        .replace(/История детства/g, "Школьные годы")\n        .replace(/группы или класса/g, "класса")'))
+          PY
+          git -C /tmp/desktop-reference diff > release-audit/commerce-only-reference.patch
+          npm ci
+          npm run build
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/desktop-before/node_modules
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/desktop-reference/node_modules
+          npm --prefix /tmp/desktop-reference run build
+          node scripts/check-mobile-types.cjs /tmp/desktop-before
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs > release-audit/node-tests.txt
+          cp mobile-preview-results/types.json release-audit/types.json
+          python -m py_compile scripts/check-release-desktop.py
+          pip install playwright==1.55.0 Pillow==11.3.0 numpy==2.2.6
+          playwright install --with-deps chromium
+      - name: Compare desktop geometry and screenshots without deployment
+        run: python scripts/check-release-desktop.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-release-desktop-proof
+          path: release-audit/
+          retention-days: 30

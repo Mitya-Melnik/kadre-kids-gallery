@@ -82,11 +82,9 @@ export const albumSteps = [
   },
 ] as const;
 
-type ProcessAudience = "kindergarten" | "school" | "grade4";
+export type ProcessAudience = "kindergarten" | "school" | "grade4";
 
-const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten" }: { initialType?: ProcessType; fixedType?: ProcessType; audience?: ProcessAudience }) => {
-  const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
-  const baseSteps = processType === "photo-day" ? photoDaySteps : albumSteps;
+export const getProcessSteps = (baseSteps: readonly { title: string; description: string; icon: typeof Camera; timing?: string }[], audience: ProcessAudience) => {
   const steps = audience === "school"
     ? baseSteps.map((step) => ({
         ...step,
@@ -104,6 +102,13 @@ const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarte
           .replace("Каждый родитель выбирает портрет на сайте. Ответственный родитель собирает проверку макета; включено до 3 этапов правок.", "Каждый родитель выбирает портрет ребёнка на сайте. До печати семья лично подтверждает имя, портрет и персональный разворот; включено до 3 этапов правок."),
       }))
     : baseSteps;
+  return steps;
+};
+
+const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten" }: { initialType?: ProcessType; fixedType?: ProcessType; audience?: ProcessAudience }) => {
+  const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
+  const baseSteps = processType === "photo-day" ? photoDaySteps : albumSteps;
+  const steps = getProcessSteps(baseSteps, audience);
 
   return (
     <section id="process" className="bg-secondary/30 py-20">
