@@ -1,6 +1,6 @@
 import { Building2, Check, Heart, ShieldCheck } from "lucide-react";
 
-const audiences = [
+export const audiences = [
   {
     label: "Ребёнку",
     title: "Комфортно быть собой",
@@ -39,9 +39,9 @@ const audiences = [
   },
 ] as const;
 
-const Advantages = () => {
+const Advantages = ({ compactMobile = false }: { compactMobile?: boolean }) => {
   return (
-    <section id="advantages" className="bg-background py-20">
+    <section id={compactMobile ? undefined : "advantages"} className="bg-background py-20">
       <div className="container mx-auto px-4">
         <header className="mx-auto mb-12 max-w-3xl text-center">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-primary">Почему выбирают нас</p>

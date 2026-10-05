@@ -59,12 +59,13 @@ export const albumFaqs = [
   { question: "Что такое «Письмо в будущее»?", answer: "«Письмо в будущее» — это отдельный персональный разворот в альбоме «Большая история». На нём размещаются фотография ребёнка и его ответы на вопросы: кем он хочет стать, что любит делать, что ему запомнилось в детском саду или школе и что он хотел бы пожелать себе взрослому. Родители заполняют небольшую анкету, а мы оформляем ответы в стиле выбранного альбома." },
 ] as const;
 
-const FAQ = () => {
+const FAQ = ({ compactMobile = false }: { compactMobile?: boolean }) => {
+  const initialCount = compactMobile ? 4 : 8;
   const [faqType, setFaqType] = useState<FaqType>("photo-day");
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [visibleCount, setVisibleCount] = useState(initialCount);
   const faqs = faqType === "photo-day" ? photoDayFaqs : albumFaqs;
 
-  useEffect(() => setVisibleCount(8), [faqType]);
+  useEffect(() => setVisibleCount(initialCount), [faqType, initialCount]);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -105,8 +106,8 @@ const FAQ = () => {
           <div className="mt-8 text-center">
             {visibleCount < faqs.length ? (
               <Button variant="outline" size="lg" onClick={() => setVisibleCount((current) => Math.min(current + 6, faqs.length))} className="border-primary/20 bg-gradient-card text-foreground shadow-soft transition-all hover:shadow-glow">Смотреть ещё</Button>
-            ) : faqs.length > 8 ? (
-              <Button variant="ghost" size="lg" onClick={() => setVisibleCount(8)} className="border border-border text-muted-foreground hover:bg-accent/40 hover:text-foreground">Свернуть</Button>
+            ) : faqs.length > initialCount ? (
+              <Button variant="ghost" size="lg" onClick={() => setVisibleCount(initialCount)} className="border border-border text-muted-foreground hover:bg-accent/40 hover:text-foreground">Свернуть</Button>
             ) : null}
           </div>
         </div>

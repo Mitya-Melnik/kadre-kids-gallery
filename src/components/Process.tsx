@@ -1,3 +1,4 @@
+import HomeRail from "./home/HomeRail";
 import { useState } from "react";
 import {
   CalendarCheck,
@@ -105,10 +106,35 @@ export const getProcessSteps = (baseSteps: readonly { title: string; description
   return steps;
 };
 
-const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten" }: { initialType?: ProcessType; fixedType?: ProcessType; audience?: ProcessAudience }) => {
+const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarten", compactMobile = false }: { compactMobile?: boolean; initialType?: ProcessType; fixedType?: ProcessType; audience?: ProcessAudience }) => {
   const [processType, setProcessType] = useState<ProcessType>(fixedType ?? initialType);
   const baseSteps = processType === "photo-day" ? photoDaySteps : albumSteps;
   const steps = getProcessSteps(baseSteps, audience);
+
+  const renderSteps = () => steps.map((step, index) => {
+            const Icon = step.icon;
+            const timing = "timing" in step ? step.timing : undefined;
+
+            return (
+              <article key={step.title} className="relative flex flex-col rounded-2xl border border-border bg-background p-5 shadow-soft">
+                <div className="mb-5 flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="text-sm font-bold text-primary-dark">{index + 1}</span>
+                </div>
+                <h3 className="text-lg font-bold text-foreground">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+                {timing && (
+                  <div className="mt-auto pt-4">
+                    <p className="inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
+                      {timing}
+                    </p>
+                  </div>
+                )}
+              </article>
+            );
+          });
 
   return (
     <section id="process" className="bg-secondary/30 py-20">
@@ -141,32 +167,7 @@ const Process = ({ initialType = "photo-day", fixedType, audience = "kindergarte
           </div>}
         </header>
 
-        <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const timing = "timing" in step ? step.timing : undefined;
-
-            return (
-              <article key={step.title} className="relative flex flex-col rounded-2xl border border-border bg-background p-5 shadow-soft">
-                <div className="mb-5 flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span className="text-sm font-bold text-primary-dark">{index + 1}</span>
-                </div>
-                <h3 className="text-lg font-bold text-foreground">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-                {timing && (
-                  <div className="mt-auto pt-4">
-                    <p className="inline-flex rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-soft">
-                      {timing}
-                    </p>
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
+        {compactMobile ? <HomeRail key={processType} label="Этапы работы">{renderSteps()}</HomeRail> : <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">{renderSteps()}</div>}
       </div>
     </section>
   );

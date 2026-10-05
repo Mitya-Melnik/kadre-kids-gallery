@@ -1,3 +1,8 @@
+import HomeMobileHero from "@/components/home/HomeMobileHero";
+import HomeMobileEnquiry from "@/components/home/HomeMobileEnquiry";
+import HomeMobileAdvantages from "@/components/home/HomeMobileAdvantages";
+import { useKindergartenMobile } from "@/components/kindergarten/KindergartenMobileContent";
+import "@/components/home/home-mobile.css";
 import TopBar from "@/components/TopBar";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
@@ -16,6 +21,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 const Index = () => {
+  const mobile = useKindergartenMobile();
   useEffect(() => {
     if (!window.location.hash) return;
 
@@ -32,7 +38,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-background">
+    <div className={`min-h-screen overflow-x-clip bg-background ${mobile ? "home-mobile" : ""}`}>
       <Helmet>
         <meta name="description" content="Фотодни и выпускные альбомы для детских садов и школ Санкт-Петербурга. Бережная съёмка, закрытые галереи и понятные сроки." />
         <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -40,17 +46,17 @@ const Index = () => {
       </Helmet>
       <TopBar />
       <Navigation />
-      <Hero />
-      <ProductDirections />
-      <Advantages />
-      <Gallery />
-      <Testimonials />
-      <Process />
+      {mobile ? <HomeMobileHero /> : <Hero />}
+      <ProductDirections compactMobile={mobile} />
+      {mobile ? <HomeMobileAdvantages /> : <Advantages />}
+      <Gallery compactMobile={mobile} />
+      {mobile ? <div className="home-reviews"><Testimonials compactMobile /></div> : <Testimonials />}
+      <Process compactMobile={mobile} />
       <Pricing />
-      <CTA />
-      <FAQ />
-      <FabContact />
-      <BackToTop />
+      {mobile ? <HomeMobileEnquiry /> : <CTA />}
+      <FAQ compactMobile={mobile} />
+      {!mobile && <FabContact />}
+      {!mobile && <BackToTop />}
       <Footer />
     </div>
   );
