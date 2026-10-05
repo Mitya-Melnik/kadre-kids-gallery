@@ -1,3 +1,4 @@
+import HomeRail from "./home/HomeRail";
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { analyzeGalleryLayout, type GalleryAnalysis } from "@/lib/imageUtils";
@@ -94,7 +95,7 @@ const albums = [
   { slug: "vderevne", title: "В деревне", audiences: ["kindergarten"] },
 ];
 
-const Gallery = () => {
+const Gallery = ({ compactMobile = false }: { compactMobile?: boolean }) => {
   const [audience, setAudience] = useState<Audience>("kindergarten");
   const [galleryAnalyses, setGalleryAnalyses] = useState<Record<string, GalleryAnalysis>>({});
   const visibleAlbums = albums.filter((album) => album.audiences.includes(audience));
@@ -129,48 +130,13 @@ const Gallery = () => {
     analyzeAllGalleries();
   }, []);
 
-  return (
-    <section id="gallery" className="py-20 bg-secondary/50">
-      <div className="container mx-auto px-4">
-        <header className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Наши съемки
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Выберите возраст, чтобы увидеть подходящие варианты фотодней.
-          </p>
-          <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft" aria-label="Возраст участников">
-            <button
-              type="button"
-              onClick={() => setAudience("kindergarten")}
-              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
-                audience === "kindergarten" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
-              }`}
-            >
-              Детский сад
-            </button>
-            <button
-              type="button"
-              disabled={!hasSchoolAlbums}
-              onClick={() => setAudience("school")}
-              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
-                audience === "school" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-              } disabled:cursor-not-allowed disabled:opacity-70`}
-              title={!hasSchoolAlbums ? "Добавим после загрузки школьного портфолио" : undefined}
-            >
-              Школа {!hasSchoolAlbums && <span className="ml-1 text-xs">— добавляем</span>}
-            </button>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {visibleAlbums.map((album) => {
+  const renderAlbums = () => visibleAlbums.map((album) => {
             const coverBase = `/galleries/${album.slug}/cover`;
 
             return (
               <Dialog key={album.slug}>
                 <DialogTrigger asChild>
-                  <article className="group cursor-pointer">
+                  <article className="group cursor-pointer" tabIndex={compactMobile ? 0 : undefined} role={compactMobile ? "button" : undefined} onKeyDown={compactMobile ? event => { if(event.key === "Enter" || event.key === " ") {event.preventDefault(); event.currentTarget.click();} } : undefined}>
                     <div className="relative overflow-hidden rounded-xl shadow-soft hover:shadow-glow transition-all duration-300">
                       <ResponsiveImage
                         basePath={coverBase}
@@ -186,6 +152,7 @@ const Gallery = () => {
                         </h3>
                       </div>
                     </div>
+                    {compactMobile && <span className="home-gallery-name">{album.title}<small>Открыть фотографии →</small></span>}
                   </article>
                 </DialogTrigger>
 
@@ -226,8 +193,43 @@ const Gallery = () => {
                 </DialogContent>
               </Dialog>
             );
-          })}
-        </div>
+          });
+
+  return (
+    <section id="gallery" className="py-20 bg-secondary/50">
+      <div className="container mx-auto px-4">
+        <header className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Наши съемки
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Выберите возраст, чтобы увидеть подходящие варианты фотодней.
+          </p>
+          <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1 shadow-soft" aria-label="Возраст участников">
+            <button
+              type="button"
+              onClick={() => setAudience("kindergarten")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                audience === "kindergarten" ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent"
+              }`}
+            >
+              Детский сад
+            </button>
+            <button
+              type="button"
+              disabled={!hasSchoolAlbums}
+              onClick={() => setAudience("school")}
+              className={`rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
+                audience === "school" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              } disabled:cursor-not-allowed disabled:opacity-70`}
+              title={!hasSchoolAlbums ? "Добавим после загрузки школьного портфолио" : undefined}
+            >
+              Школа {!hasSchoolAlbums && <span className="ml-1 text-xs">— добавляем</span>}
+            </button>
+          </div>
+        </header>
+
+        {compactMobile ? <HomeRail label="Наши съёмки">{renderAlbums()}</HomeRail> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">{renderAlbums()}</div>}
       </div>
     </section>
   );

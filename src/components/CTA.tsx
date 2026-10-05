@@ -34,12 +34,14 @@ const CTA = ({
   fixedDirection,
   fixedAudience,
   schoolLevel,
+  compactMobile = false,
 }: {
   initialDirection?: Direction;
   initialAudience?: Audience;
   fixedDirection?: Direction;
   fixedAudience?: Audience;
   schoolLevel?: SchoolLevel;
+  compactMobile?: boolean;
 }) => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
@@ -136,7 +138,7 @@ const CTA = ({
   const isFixedAlbum = isKindergartenAlbum || isSchoolAlbum;
 
   return (
-    <section id="cta" className="py-16 md:py-24 bg-accent-soft scroll-mt-24">
+    <section id={compactMobile ? undefined : "cta"} className={compactMobile ? "home-enquiry-form" : "py-16 md:py-24 bg-accent-soft scroll-mt-24"}>
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-10 max-w-3xl text-center">

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ArrowRight, BookOpen, Camera, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,8 @@ const directions = [
   },
 ] as const;
 
-const ProductDirections = () => {
+const ProductDirections = ({ compactMobile = false }: { compactMobile?: boolean }) => {
+  const [selected, setSelected] = useState(0);
   const handleAnchor = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -45,8 +47,9 @@ const ProductDirections = () => {
           </p>
         </header>
 
+        {compactMobile && <div className="home-product-tabs" role="group" aria-label="Выбор продукта">{directions.map((item, index) => <button key={item.title} type="button" aria-pressed={index === selected} onClick={() => setSelected(index)}>{index === 0 ? "Альбомы" : "Фотодни"}</button>)}</div>}
         <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
-          {directions.map((direction) => {
+          {(compactMobile ? [directions[selected]] : directions).map((direction) => {
             const Icon = direction.icon;
             const button = (
               <Button size="lg" className="mt-auto w-full gap-2 sm:w-fit">
