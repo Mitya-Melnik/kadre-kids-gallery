@@ -1,0 +1,93 @@
+name: Verify public site against approved mobile release
+on:
+  push:
+    branches: [release/mobile-publish-2026-10-05]
+permissions:
+  contents: read
+concurrency:
+  group: mobile-publication-check-2026-10-05
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 85fc9dfacfea41e8440ffbd53b337f19ad6706f1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Build exact merged release, without changing application or server
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          node --test scripts/test-album-commercial.mjs scripts/test-album-enquiry.mjs scripts/test-grade4-enquiry.mjs scripts/test-school-order-rules.mjs scripts/test-mobile-v10.mjs
+      - name: Read-only public DNS and version check (no deployment and no lead submission)
+        run: |
+          mkdir -p publication-check
+          python - <<'PY'
+          import json, hashlib, re, socket, datetime
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from urllib.parse import urljoin, urlparse
+          host = 'detivkadre.spb.ru'
+          base = 'https://' + host
+          expected = '85fc9dfacfea41e8440ffbd53b337f19ad6706f1'
+          index = Path('dist/index.html').read_text()
+          assets = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))"', index)
+          report = {'expected_commit': expected, 'checked_at': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'operation': 'GET and DNS only; no server changes or lead submissions', 'expected_assets': assets, 'routes': [], 'asset_comparison': [], 'site_state': 'unconfirmed'}
+          try:
+              report['addresses'] = sorted({x[4][0] for x in socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)})
+          except Exception as exc:
+              report['dns_error'] = str(exc)
+          live_assets = set()
+          for route in ['/', '/kindergarten', '/school/4', '/school/9-11', '/albums']:
+              item = {'path': route}
+              try:
+                  req = Request(base + route, headers={'User-Agent': 'DetiVkadre-ReleaseVerification/1.0', 'Cache-Control': 'no-cache'})
+                  with urlopen(req, timeout=12) as response:
+                      body = response.read(1000000)
+                      item.update(status=response.status, final_url=response.url, content_type=response.headers.get('Content-Type'), server=response.headers.get('Server'))
+                  text = body.decode('utf-8', errors='replace')
+                  found = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))"', text)
+                  item['assets'] = found
+                  item['matches_asset_names'] = bool(assets) and all(a in found for a in assets)
+                  live_assets.update(found)
+              except Exception as exc:
+                  item['error'] = str(exc)
+              report['routes'].append(item)
+          for asset in assets:
+              item = {'asset': asset}
+              url = urljoin(base, asset)
+              try:
+                  if urlparse(url).hostname != host:
+                      raise ValueError('Only same-site assets may be checked')
+                  with urlopen(Request(url, headers={'Cache-Control': 'no-cache'}), timeout=12) as response:
+                      remote = response.read(5000000)
+                      item['status'] = response.status
+                  local = (Path('dist') / asset.lstrip('/')).read_bytes()
+                  item['expected_sha256'] = hashlib.sha256(local).hexdigest()
+                  item['actual_sha256'] = hashlib.sha256(remote).hexdigest()
+                  item['matches'] = remote == local
+              except Exception as exc:
+                  item['error'] = str(exc)
+                  item['matches'] = False
+              report['asset_comparison'].append(item)
+          if all(r.get('status') == 200 and r.get('matches_asset_names') for r in report['routes']) and all(a.get('matches') for a in report['asset_comparison']):
+              report['site_state'] = 'matches_merged_release'
+          elif any(r.get('status') == 200 for r in report['routes']):
+              report['site_state'] = 'responds_but_release_not_confirmed'
+          else:
+              report['site_state'] = 'unavailable_to_this_runner'
+          Path('publication-check/report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-publication-check-85fc9df
+          path: publication-check/
+          retention-days: 14
